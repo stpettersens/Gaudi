@@ -1,0 +1,3 @@
+Main-Class: gaudi.GaudiApp
+Class-Path: lib/scala-library.jar lib/json_simple-1.1.jar
+
