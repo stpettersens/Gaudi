@@ -1,0 +1,10 @@
+/home/sam/projects/Gaudi/bin:/home/sam/.eclipse/org.eclipse.platform_3.5.0_1621213927/configuration/org.eclipse.osgi/bundles/195/1/.cp/lib/scala-library.jar:/home/sam/.eclipse/org.eclipse.platform_3.5.0_1621213927/configuration/org.eclipse.osgi/bundles/195/1/.cp/lib/scala-dbc.jar:/home/sam/.eclipse/org.eclipse.platform_3.5.0_1621213927/configuration/org.eclipse.osgi/bundles/195/1/.cp/lib/scala-swing.jar:/usr/lib/jvm/java-6-openjdk/jre/lib/resources.jar:/usr/lib/jvm/java-6-openjdk/jre/lib/rt.jar:/usr/lib/jvm/java-6-openjdk/jre/lib/jsse.jar:/usr/lib/jvm/java-6-openjdk/jre/lib/jce.jar:/usr/lib/jvm/java-6-openjdk/jre/lib/charsets.jar:/usr/lib/jvm/java-6-openjdk/jre/lib/rhino.jar:/usr/share/java/gnome-java-bridge.jar:/usr/lib/jvm/java-6-openjdk/jre/lib/ext/sunpkcs11.jar:/usr/lib/jvm/java-6-openjdk/jre/lib/ext/sunjce_provider.jar:/usr/lib/jvm/java-6-openjdk/jre/lib/ext/dnsns.jar:/usr/lib/jvm/java-6-openjdk/jre/lib/ext/localedata.jar:/usr/lib/jvm/java-6-openjdk/jre/lib/ext/pulse-java.jar:/home/sam/projects/Gaudi/lib/json_simple-1.1.jar
+-------
+/home/sam/projects/Gaudi/src/gaudi/GaudiApp.scala -> /home/sam/projects/Gaudi/src/gaudi/GaudiBuildParser.scala
+/home/sam/projects/Gaudi/src/gaudi/GaudiApp.scala -> /home/sam/projects/Gaudi/src/gaudi/GaudiApp.scala
+/home/sam/projects/Gaudi/src/gaudi/GaudiBuildParser.scala -> /home/sam/projects/Gaudi/src/gaudi/GaudiBuildParser.scala
+-------
+/home/sam/projects/Gaudi/src/gaudi/GaudiApp.scala -> /home/sam/projects/Gaudi/bin/gaudi/GaudiApp.class
+/home/sam/projects/Gaudi/src/gaudi/GaudiApp.scala -> /home/sam/projects/Gaudi/bin/gaudi/GaudiApp$$anonfun$doBuild$1.class
+/home/sam/projects/Gaudi/src/gaudi/GaudiApp.scala -> /home/sam/projects/Gaudi/bin/gaudi/GaudiApp$.class
+/home/sam/projects/Gaudi/src/gaudi/GaudiBuildParser.scala -> /home/sam/projects/Gaudi/bin/gaudi/GaudiBuildParser.class
