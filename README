@@ -1,3 +1,5 @@
-Gauldi is a platform agnostic build tool
-written in Scala which runs on a Java VM
+Gaudi is a platform agnostic build tool
+written in Scala which runs on a Java virtual machine.
 
+As it is a build tool, it is named after an architect.
+http://en.wikipedia.org/wiki/Antoni_Gaudi
