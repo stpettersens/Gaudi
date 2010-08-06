@@ -1,0 +1,6 @@
+# Git should ignore the following files #
+.jar # Java ARchives
+.class	# JVM classes
+.project # Eclipse SDK project file
+.classpath # Eclipse SDK classpath definitions
+.scala_dependencies # Eclipse SDK scala dependencies
