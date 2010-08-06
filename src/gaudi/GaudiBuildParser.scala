@@ -15,6 +15,11 @@ class GaudiBuildParser(buildConf: String) {
 	def getBuildString(): String = {
 		buildConf
 	}
+	def getTarget(): String  = {
+		val preambleInfo = getPreamble()
+		val targetStr = JSONValue.toJSONString(preambleInfo.get("target"))
+		targetStr.replaceAll("\"", "")
+	}
 	def getPreamble(): JSONObject = {
 		val buildInfo = parseBuildJSON()
 		val preambleStr = JSONValue.toJSONString(buildInfo.get("preamble"))
@@ -49,5 +54,4 @@ class GaudiBuildParser(buildConf: String) {
 		val buildJson = buildObj.asInstanceOf[JSONObject]
 		buildJson
 	}
-	
 }

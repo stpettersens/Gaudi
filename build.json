@@ -1,14 +1,15 @@
 {
 	"preamble": {
-
+	
 		"source": "helloworld.cpp",
 		"target": "helloworld",
-		"tool": "gcc"
+		"assembler": "gcc"
+		"dependOn": "null <-zip:http://www.domain.xyz/somefile/file.zip"
 	}
 
 	"build": [
 
-		{ "exec": "$tool $source -o $target" },
+		{ "exec": "$assembler $source -o $target" },
 		{ "mkdir": "bin" },
 		{ "copy": "$target->bin" }
 	]
@@ -20,6 +21,6 @@
 	
 	"clean": [
 
-		{ "delete": "*.c" } 
+		{ "erase": "*.c" } 
 	]
 }
