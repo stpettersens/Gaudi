@@ -29,7 +29,7 @@ object GaudiApp {
 	 	 	 	  case "-m" => generateMakefile()
 	 	 	 	  case "-q" => beVerbose = false
 	 	 	 	  case "-f" => fOverride = true
-	 	 	 	  case _ => if(fOverride) doBuild(arg)
+	 	 	 	  case _ => if(fOverride) doBuild(arg) // TODO 
 	 	 	  }
 	 	  }
 	  }
@@ -75,14 +75,11 @@ object GaudiApp {
   def displayVersion(): Unit = {
 	  // TODO
   }
-  def displayInfo(): Unit = {
+  def displayUsage(): Unit = {
 	  println("\nGaudi platform agnostic build tool")
 	  println("Copyright (c) 2010 Sam Saint-Pettersen")
-	  println("\nReleased under the MIT License.\n")
-  }
-  def displayUsage(): Unit = {
-	  displayInfo()
-	  println("Usage: gaudi [-i|-v|-g|-m][-q -f <Gaudi build file>]")
+	  println("\nReleased under the MIT License.")
+	  println("\nUsage: gaudi [-i|-v|-g|-m][-q -f <Gaudi build file>]")
 	  println("\n-i: Display usage information and quit.")
 	  println("-v: Display version information and quit.")
 	  println("-g: Generate native Gaudi build file (build.json).")
