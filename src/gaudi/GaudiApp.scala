@@ -12,7 +12,7 @@ import org.json.simple.{JSONObject,JSONArray}
 
 object GaudiApp {
 	
-  var buildFile: String = "build.json" // Default build file
+  val buildFile: String = "build.json" // Default build file
   var beVerbose: Boolean = true // Gaudi is verbose by default
 	  
   def main(args: Array[String]): Unit = {
