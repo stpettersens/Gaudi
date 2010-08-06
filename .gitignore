@@ -1,5 +1,5 @@
-.jar
-.class
+*.jar
+*.class
 .project
 .classpath
 .scala_dependencies
