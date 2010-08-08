@@ -4,7 +4,7 @@
 		"source": "helloworld.cpp",
 		"target": "helloworld",
 		"assembler": "gcc"
-		"dependOn": "file.zip <-http://www.domain.xyz/somefile/file.zip"
+		"dependOn": "file.txt <-http://www.domain.xyz/somefile/file.zip"
 	}
 
 	"build": [

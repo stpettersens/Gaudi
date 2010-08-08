@@ -10,48 +10,42 @@ import org.json.simple.{JSONValue,JSONObject,JSONArray}
 
 class GaudiBuildParser(buildConf: String) {
 	
+	// Parse build config into build JSON object on initialization
+	val buildJson: JSONObject = parseBuildJSON()
+	
+	private def parseBuildJSON(): JSONObject = { 
+		val buildObj: Object = JSONValue.parse(buildConf)
+		buildObj.asInstanceOf[JSONObject]
+	}
+	// Get sub-object 'shard' from build JSON object 
+	private def getShard(objectName: String): Object = {
+		val shardStr = JSONValue.toJSONString(buildJson.get(objectName))
+		JSONValue.parse(shardStr)
+	}
 	// Return raw build configuration in string,
 	// for debugging purposes only
 	def getBuildString(): String = {
 		buildConf
 	}
+	// Get target from parsed preamble
 	def getTarget(): String  = {
-		val preambleInfo = getPreamble()
-		val targetStr = JSONValue.toJSONString(preambleInfo.get("target"))
+		val targetStr = JSONValue.toJSONString(getPreamble().get("target"))
 		targetStr.replaceAll("\"", "")
 	}
+	// Get the preamble from build object
 	def getPreamble(): JSONObject = {
-		val buildInfo = parseBuildJSON()
-		val preambleStr = JSONValue.toJSONString(buildInfo.get("preamble"))
-		val preambleObj = JSONValue.parse(preambleStr)
-		val preambleJson = preambleObj.asInstanceOf[JSONObject]
-		preambleJson
+		getShard("preamble").asInstanceOf[JSONObject]
 	}	
+	// Get the build steps from build object
 	def getBuildSteps(): JSONArray = {
-		val buildInfo = parseBuildJSON()
-		val bStepsStr = JSONValue.toJSONString(buildInfo.get("build"))
-		val bStepsObj = JSONValue.parse(bStepsStr)
-		val bStepsJson = bStepsObj.asInstanceOf[JSONArray]
-		bStepsJson
+		getShard("build").asInstanceOf[JSONArray]
 	}
+	// Get the install steps from build object
 	def getInstallSteps(): JSONArray = {
-		val buildInfo = parseBuildJSON()
-		val iStepsStr = JSONValue.toJSONString(buildInfo.get("install"))
-		val iStepsObj = JSONValue.parse(iStepsStr)
-		val iStepsJson = iStepsObj.asInstanceOf[JSONArray]
-		iStepsJson
+		getShard("install").asInstanceOf[JSONArray]
 	}
+	// Get the clean steps from build object
 	def getCleanSteps(): JSONArray = {
-		parseBuildJSON()
-		val buildInfo = parseBuildJSON()
-		val cStepsStr = JSONValue.toJSONString(buildInfo.get("clean"))
-		val cStepsObj = JSONValue.parse(cStepsStr)
-		val cStepsJson = cStepsObj.asInstanceOf[JSONArray]
-		cStepsJson
-	}
-	private def parseBuildJSON(): JSONObject = { 
-		val buildObj: Object = JSONValue.parse(buildConf)
-		val buildJson = buildObj.asInstanceOf[JSONObject]
-		buildJson
+		getShard("clean").asInstanceOf[JSONArray]
 	}
 }
