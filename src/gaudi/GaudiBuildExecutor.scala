@@ -11,11 +11,23 @@ import scala.collection.immutable.HashMap
 
 class GaudiBuildExecutor(preamble: JSONObject) {
 	
-	/* 
-	 * TODO: Implement commands dictionary
-	 * e.g. "erase" -> call to rm/del, etc...
-	*/
-	
+	private def processPreamble(): Unit = {
+		// TODO
+	}
+	private def splitCmdParam(cmdParam: String): Any = {
+		// TODO 
+	}
+	private def doCommand(cmd: String, param: String): Unit = {
+		cmd match {
+			case "exec" => {
+				val rt = Runtime.getRuntime()
+				rt.exec(param)
+			}
+			case "mkdir" => {
+				// TODO
+			}
+		}
+	}
 	def doBuild(buildSteps: JSONArray): Unit = {
 		// TODO
 	}
