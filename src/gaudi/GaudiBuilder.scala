@@ -6,7 +6,7 @@
  * 
 */
 package gaudi
-import org.json.simple.{JSONValue,JSONObject,JSONArray}
+import org.json.simple.{JSONObject,JSONArray}
 import scala.util.matching.Regex
 import java.io._
 
@@ -17,14 +17,12 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		val cP = cmdParam.split(":")
 		cP
 	}
-	
 	// Print executed command
 	private def printCommand(cmd: String, param: String): Unit = {
 		if(beVerbose) {
 			println(String.format("\t%s %s", cmd, param))
 		}
 	}
-	
 	// Execute a command in the action
 	private def doCommand(cmd: String, param: String): Boolean = {
 		cmd match {
