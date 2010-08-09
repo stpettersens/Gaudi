@@ -7,6 +7,7 @@
 */
 package gaudi
 import scala.io.Source
+import scala.util.matching.Regex
 import java.io.IOException
 import org.json.simple.{JSONObject,JSONArray}
 
@@ -17,29 +18,28 @@ object GaudiApp {
 	  
   def main(args: Array[String]): Unit = {
 	  var fOverride: Boolean = false
-	  /* Default behavior is to lbuild project following
+	  /* Default behavior is to build project following
 	  build file in the current directory */
-	  if(args.length == 0) doRun(0)
+	  if(args.length == 0) loadBuild("build")
 	  // Handle command line arguments
-	  else if(args.length > 0 && args.length < 4){
+	  else if(args.length > 0 && args.length < 6){
 	 	  for(arg <- args) {
 	 	 	  arg match {
-	 	 	 	  case "install" => doRun(1)
-	 	 	 	  case "clean" => doRun(2)
-	 	 	 	  case "-i" => displayUsage()
+	 	 	 	  case "-i" => displayUsage(false)
 	 	 	 	  case "-v" => displayVersion() 	 
 	 	 	 	  case "-g" => generateNativeFile()
 	 	 	 	  case "-m" => generateMakefile()
 	 	 	 	  case "-q" => beVerbose = false
 	 	 	 	  case "-f" => fOverride = true
-	 	 	 	  case _ => if(fOverride) buildFile = arg
+	 	 	 	  // TODO implement overwrite, use a regex pattern
+	 	 	 	  case _ => loadBuild(arg) // Maybe use a regex pattern here too
 	 	 	  }
 	 	  }
 	  }
-	  else displayError("Arguments (requires 0-3 arguments)")
+	  else displayError("Arguments (requires 0-6 arguments)")
   }
   // Load and delegate parse and execution of build file
-  def doRun(operation: Int): Unit = {
+  def loadBuild(action: String): Unit = {
 	  var buildConf: String = ""
 	  try {
 	 	  for(line <- Source.fromFile(buildFile).getLines()) {
@@ -54,48 +54,41 @@ object GaudiApp {
 	 	  case e: Exception => displayError(e)
 	  }
 	  finally {   
-	 	  val bParser = new GaudiBuildParser(buildConf)
-	 	  val bExecutor = new GaudiBuildExecutor(bParser.getPreamble())
-	 	  var taskVerb: String = ""
-	 	  val taskTarget: String = bParser.getTarget()
-	 	  operation match {
-	 	 	  case 0 => { // Build project
-	 	 	 	  taskVerb = "Building"
-	 	 	 	  bExecutor.doBuild(bParser.getBuildSteps())
-	 	 	  }
-	 	 	  case 1 => { // Install project
-	 	 	 	  taskVerb = "Installing"
-	 	 	 	  bExecutor.doInstall(bParser.getInstallSteps())
-	 	 	  }
-	 	 	  case 2 =>{ // Clean project
-	 	 	 	  taskVerb = "Cleaning"
-	 	 	 	  bExecutor.doClean(bParser.getCleanSteps())
-	 	 	  }
-	 	  }
+	 	  // Delegate to the foreman and builder
+	 	  val foreman = new GaudiForeman(buildConf)
+	 	  val builder = new GaudiBuilder(foreman.getPreamble(), beVerbose)
 	 	  if(beVerbose) {
-	 	 	  println(String.format("%s %s...", taskVerb, taskTarget))
-	 	  }
+	 	 	  println(String.format("[%s]", foreman.getTarget()))
+	 	 	  println(String.format("\t\t[Action => %s]", action))
+	 	  }	  
+	 	  builder.doAction(foreman.getAction(action))
 	  }
   }
+  // Generate a Gaudi build file (build.json)
   def generateNativeFile(): Unit = {
 	  // TODO
   }
+  // Generate a Make compatible Makefile
   def generateMakefile(): Unit = {
 	  // TODO
   }
+  // Display an error
   def displayError(ex: Exception): Unit = {
 	  println(String.format("\nError with: %s.", ex.getMessage()))
-	  displayUsage()
+	  displayUsage(true)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
 	  println(String.format("\nError with: %s.", ex))
-	  displayUsage()
+	  displayUsage(true)
   }
+  // Display version information and exit
   def displayVersion(): Unit = {
 	  // TODO
+	  System.exit(0)
   }
-  def displayUsage(): Unit = {
+  // Display usage information and exit
+  def displayUsage(fromError: Boolean): Unit = {
 	  println("\nGaudi platform agnostic build tool")
 	  println("Copyright (c) 2010 Sam Saint-Pettersen")
 	  println("\nReleased under the MIT License.")
@@ -106,6 +99,6 @@ object GaudiApp {
 	  println("-m: Generate GNU Makefile from build.json.")
 	  println("-q: Mute console output, except for errors (Quiet mode).")
 	  println("-f: Use <build file> instead of build.json.\n")
-	  System.exit(-1)
+	  if(fromError) System.exit(-1) else System.exit(0)
   }
 }

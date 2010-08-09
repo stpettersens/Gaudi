@@ -8,7 +8,7 @@
 package gaudi
 import org.json.simple.{JSONValue,JSONObject,JSONArray}
 
-class GaudiBuildParser(buildConf: String) {
+class GaudiForeman(buildConf: String) {
 	
 	// Parse build config into build JSON object on initialization
 	val buildJson: JSONObject = parseBuildJSON()
@@ -22,11 +22,6 @@ class GaudiBuildParser(buildConf: String) {
 		val shardStr = JSONValue.toJSONString(buildJson.get(objectName))
 		JSONValue.parse(shardStr)
 	}
-	// Return raw build configuration in string,
-	// for debugging purposes only
-	def getBuildString(): String = {
-		buildConf
-	}
 	// Get target from parsed preamble
 	def getTarget(): String  = {
 		val targetStr = JSONValue.toJSONString(getPreamble().get("target"))
@@ -35,17 +30,9 @@ class GaudiBuildParser(buildConf: String) {
 	// Get the preamble from build object
 	def getPreamble(): JSONObject = {
 		getShard("preamble").asInstanceOf[JSONObject]
-	}	
-	// Get the build steps from build object
-	def getBuildSteps(): JSONArray = {
-		getShard("build").asInstanceOf[JSONArray]
 	}
-	// Get the install steps from build object
-	def getInstallSteps(): JSONArray = {
-		getShard("install").asInstanceOf[JSONArray]
-	}
-	// Get the clean steps from build object
-	def getCleanSteps(): JSONArray = {
-		getShard("clean").asInstanceOf[JSONArray]
+	// Get an execution action
+	def getAction(action: String): JSONArray = {
+		getShard(action).asInstanceOf[JSONArray]
 	}
 }
