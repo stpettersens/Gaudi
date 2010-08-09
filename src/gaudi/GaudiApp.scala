@@ -31,8 +31,8 @@ object GaudiApp {
 	 	 	 	  case "-m" => generateMakefile()
 	 	 	 	  case "-q" => beVerbose = false
 	 	 	 	  case "-f" => fOverride = true
-	 	 	 	  // TODO implement overwrite, use a regex pattern
-	 	 	 	  case _ => loadBuild(arg) // Maybe use a regex pattern here too
+	 	 	 	  case _ => if(fOverride) buildFile = arg 
+	 	 	 	  // Maybe use a regex pattern here too
 	 	 	  }
 	 	  }
 	  }

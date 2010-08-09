@@ -1,3 +1,4 @@
+*.json
 *.jar
 *.class
 .project
