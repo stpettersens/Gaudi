@@ -22,17 +22,17 @@ object GaudiApp {
 	  build file in the current directory */
 	  if(args.length == 0) loadBuild("build")
 	  // Handle command line arguments
-	  else if(args.length > 0 && args.length < 6){
+	  else if(args.length > 0 && args.length < 7) {
+	 	  
 	 	  for(arg <- args) {
 	 	 	  arg match {
-	 	 	 	  case "-i" => displayUsage(false)
+	 	 	 	  case "-i" => displayUsage(0)
 	 	 	 	  case "-v" => displayVersion() 	 
 	 	 	 	  case "-g" => generateNativeFile()
 	 	 	 	  case "-m" => generateMakefile()
 	 	 	 	  case "-q" => beVerbose = false
 	 	 	 	  case "-f" => fOverride = true
-	 	 	 	  case _ => if(fOverride) buildFile = arg 
-	 	 	 	  // Maybe use a regex pattern here too
+	 	 	 	  //...
 	 	 	  }
 	 	  }
 	  }
@@ -58,8 +58,9 @@ object GaudiApp {
 	 	  val foreman = new GaudiForeman(buildConf)
 	 	  val builder = new GaudiBuilder(foreman.getPreamble(), beVerbose)
 	 	  if(beVerbose) {
-	 	 	  println(String.format("[%s]", foreman.getTarget()))
-	 	 	  println(String.format("\t\t[Action => %s]", action))
+	 	 	  println(
+	 	 	  String.format("[ %s => %s ]", foreman.getTarget(), action)
+	 	 	  )
 	 	  }	  
 	 	  builder.doAction(foreman.getAction(action))
 	  }
@@ -75,12 +76,12 @@ object GaudiApp {
   // Display an error
   def displayError(ex: Exception): Unit = {
 	  println(String.format("\nError with: %s.", ex.getMessage()))
-	  displayUsage(true)
+	  displayUsage(-1)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
 	  println(String.format("\nError with: %s.", ex))
-	  displayUsage(true)
+	  displayUsage(-1)
   }
   // Display version information and exit
   def displayVersion(): Unit = {
@@ -88,7 +89,7 @@ object GaudiApp {
 	  System.exit(0)
   }
   // Display usage information and exit
-  def displayUsage(fromError: Boolean): Unit = {
+  def displayUsage(exitCode: Int): Unit = {
 	  println("\nGaudi platform agnostic build tool")
 	  println("Copyright (c) 2010 Sam Saint-Pettersen")
 	  println("\nReleased under the MIT License.")
@@ -99,6 +100,6 @@ object GaudiApp {
 	  println("-m: Generate GNU Makefile from build.json.")
 	  println("-q: Mute console output, except for errors (Quiet mode).")
 	  println("-f: Use <build file> instead of build.json.\n")
-	  if(fromError) System.exit(-1) else System.exit(0)
+	  System.exit(exitCode)
   }
 }

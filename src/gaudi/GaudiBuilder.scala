@@ -7,34 +7,50 @@
 */
 package gaudi
 import org.json.simple.{JSONValue,JSONObject,JSONArray}
+import scala.util.matching.Regex
 import java.io._
 
 class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	
-	private def printAction(cmd: String, param: String): Unit = {
+	// Format command for execution 
+	private def formatCommand(cmdParam: String): Array[String] = {
+		val cP = cmdParam.split(":")
+		cP
+	}
+	
+	// Print executed command
+	private def printCommand(cmd: String, param: String): Unit = {
 		if(beVerbose) {
-			println(String.format("\t\t\t^%s %s", cmd, param))
+			println(String.format("\t%s %s", cmd, param))
 		}
 	}
 	
+	// Execute a command in the action
 	private def doCommand(cmd: String, param: String): Boolean = {
-		val padding: String = "\t\t\t^"
 		cmd match {
 			case "exec" => {
-				printAction(cmd, param)
+				printCommand(cmd, param)
 				val rt = Runtime.getRuntime()
 				rt.exec(param)
 				true
 			}
 			case "mkdir" => {
-				printAction(cmd, param)
+				printCommand(cmd, param)
 				val aDir: Boolean = new File(param).mkdir()
 				aDir
 			}
+			case _ => {
+				printCommand("Error: " + cmd, "is an invalid command.")
+				false
+			}
 		}
 	}
+	// Execute an action 
 	def doAction(action: JSONArray): Unit = {
-		if(true) doCommand("exec", "gcc") //! dummy code
-		else println("Fatal problem!")
+		val actionArray = action.toArray()
+		for(cmdParam <- actionArray) {
+			val cP: Array[String] = formatCommand(cmdParam.toString())
+			doCommand(cP(0), cP(1))
+		}
 	}
 }
