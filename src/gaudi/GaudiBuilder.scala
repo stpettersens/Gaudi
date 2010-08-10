@@ -17,6 +17,10 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		val cP = cmdParam.split(":")
 		cP
 	}
+	// Print an error related to building
+	def printError(error: String): Unit = {
+		println(String.format("\tAborting: %s.", error))
+	}
 	// Print executed command
 	private def printCommand(cmd: String, param: String): Unit = {
 		if(beVerbose) {
@@ -45,10 +49,16 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	}
 	// Execute an action 
 	def doAction(action: JSONArray): Unit = {
-		val actionArray = action.toArray()
-		for(cmdParam <- actionArray) {
-			val cP: Array[String] = formatCommand(cmdParam.toString())
-			doCommand(cP(0), cP(1))
+		try {
+			val actionArray = action.toArray()
+			for(cmdParam <- actionArray) {
+				// TODO
+			}
+		}
+		catch {
+			case ex: Exception => {
+				printError("Action corrupted or undefined")
+			}
 		}
 	}
 }

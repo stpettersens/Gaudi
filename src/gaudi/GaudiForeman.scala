@@ -7,6 +7,7 @@
 */
 package gaudi
 import org.json.simple.{JSONValue,JSONObject,JSONArray}
+import scala.util.matching.Regex
 
 class GaudiForeman(buildConf: String) {
 	
@@ -19,6 +20,7 @@ class GaudiForeman(buildConf: String) {
 	}
 	// Get sub-object 'shard' from build JSON object 
 	private def getShard(objectName: String): Object = {
+		val objPattn = new Regex(objectName)
 		val shardStr = JSONValue.toJSONString(buildJson.get(objectName))
 		JSONValue.parse(shardStr)
 	}

@@ -17,13 +17,17 @@ object GaudiApp {
   var beVerbose: Boolean = true // Gaudi is verbose by default
 	  
   def main(args: Array[String]): Unit = {
-	  var fOverride: Boolean = false
+	  var fSwitch: Boolean = false
+	  var action: String = "build"
+	  val filePattn: Regex = """(\w+.json)""".r
+	  val actPattn: Regex = """([a-z]+)""".r
+	  
 	  /* Default behavior is to build project following
 	  build file in the current directory */
-	  if(args.length == 0) loadBuild("build")
+	  if(args.length == 0) loadBuild(action)
+	  
 	  // Handle command line arguments
 	  else if(args.length > 0 && args.length < 7) {
-	 	  
 	 	  for(arg <- args) {
 	 	 	  arg match {
 	 	 	 	  case "-i" => displayUsage(0)
@@ -31,10 +35,12 @@ object GaudiApp {
 	 	 	 	  case "-g" => generateNativeFile()
 	 	 	 	  case "-m" => generateMakefile()
 	 	 	 	  case "-q" => beVerbose = false
-	 	 	 	  case "-f" => fOverride = true
-	 	 	 	  //...
+	 	 	 	  case "-f" => fSwitch = true
+	 	 	 	  case filePattn(f) => if(fSwitch) buildFile = arg
+	 	 	 	  case actPattn(a) => action = arg
 	 	 	  }
 	 	  }
+	 	  loadBuild(action)
 	  }
 	  else displayError("Arguments (requires 0-6 arguments)")
   }
