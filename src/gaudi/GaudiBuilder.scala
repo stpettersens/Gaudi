@@ -12,11 +12,11 @@ import java.io._
 
 class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	
-	// Format command for execution 
-	private def formatCommand(cmdParam: String): (String, String) = {
-		// TODO Pattern matching and splitting into tuple
-		val cmdParamPair: (String, String) = ("x", "y")
-		cmdParamPair
+	// Extract comamnd and param for execution 
+	private def extractCommand(cmdParam: String): (String, String) = {
+		val cpPattn: Regex = """\{\"(\w+)\"\:\"(\s*\w*)\"\}""".r
+		var cpPattn(c: String, p: String) = cmdParam
+		(c, p)
 	}
 	// Print an error related to action or command and exit
 	private def printError(error: String): Unit = {
@@ -26,7 +26,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	// Print executed command
 	private def printCommand(cmd: String, param: String): Unit = {
 		if(beVerbose) {
-			println(String.format("\t%s %s", cmd, param))
+			println(String.format("\t-> %s %s", cmd, param))
 		}
 	}
 	// Execute a command in the action
@@ -57,7 +57,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		try {
 			val actionArray = action.toArray()
 			for(cmdParam <- actionArray) {
-				val cpPair = formatCommand(cmdParam.toString())
+				val cpPair = extractCommand(cmdParam.toString())
 				doCommand(cpPair._1, cpPair._2)
 			}
 		}

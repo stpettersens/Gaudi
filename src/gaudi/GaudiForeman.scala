@@ -20,8 +20,16 @@ class GaudiForeman(buildConf: String) {
 	}
 	// Get sub-object 'shard' from build JSON object 
 	private def getShard(objectName: String): Object = {
-		val objPattn = new Regex(objectName)
-		val shardStr = JSONValue.toJSONString(buildJson.get(objectName))
+		var shardStr = ""
+		try {
+			val objPattn = new Regex(objectName)
+			shardStr = JSONValue.toJSONString(buildJson.get(objectName))
+		}
+		catch {
+			case ex: Exception => {
+				GaudiApp.displayError("Instructions (Bad JSON)")
+			}
+		}
 		JSONValue.parse(shardStr)
 	}
 	// Get target from parsed preamble
