@@ -38,6 +38,11 @@ object GaudiApp {
 	 	 	 	  case "-f" => fSwitch = true
 	 	 	 	  case filePattn(f) => if(fSwitch) buildFile = arg
 	 	 	 	  case actPattn(a) => action = arg
+	 	 	 	  case _ => {
+	 	 	 	 	  displayError(
+	 	 	 	 	  String.format("Argument (%s is invalid)", arg)
+	 	 	 	 	  )
+	 	 	 	  }
 	 	 	  }
 	 	  }
 	 	  loadBuild(action)

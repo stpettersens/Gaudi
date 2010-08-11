@@ -13,13 +13,15 @@ import java.io._
 class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	
 	// Format command for execution 
-	private def formatCommand(cmdParam: String): Array[String] = {
-		val cP = cmdParam.split(":")
-		cP
+	private def formatCommand(cmdParam: String): (String, String) = {
+		// TODO Pattern matching and splitting into tuple
+		val cmdParamPair: (String, String) = ("x", "y")
+		cmdParamPair
 	}
-	// Print an error related to building
-	def printError(error: String): Unit = {
+	// Print an error related to action or command and exit
+	private def printError(error: String): Unit = {
 		println(String.format("\tAborting: %s.", error))
+		System.exit(-1)
 	}
 	// Print executed command
 	private def printCommand(cmd: String, param: String): Unit = {
@@ -28,22 +30,25 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		}
 	}
 	// Execute a command in the action
-	private def doCommand(cmd: String, param: String): Boolean = {
+	private def doCommand(cmd: String, param: String): Unit = {
+		printCommand(cmd, param)
 		cmd match {
 			case "exec" => {
-				printCommand(cmd, param)
 				val rt = Runtime.getRuntime()
 				rt.exec(param)
-				true
 			}
 			case "mkdir" => {
-				printCommand(cmd, param)
 				val aDir: Boolean = new File(param).mkdir()
-				aDir
+				if(!aDir) {
+					printError(
+					String.format("Problem creating dir -> %s", param)
+					)
+				}
 			}
 			case _ => {
-				printCommand("Error: " + cmd, "is an invalid command.")
-				false
+				printError(
+				String.format("%s is an invalid command", cmd)
+				)
 			}
 		}
 	}
@@ -52,12 +57,13 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		try {
 			val actionArray = action.toArray()
 			for(cmdParam <- actionArray) {
-				// TODO
+				val cpPair = formatCommand(cmdParam.toString())
+				doCommand(cpPair._1, cpPair._2)
 			}
 		}
 		catch {
 			case ex: Exception => {
-				printError("Action corrupted or undefined")
+				printError("Encounted an invalid action")
 			}
 		}
 	}
