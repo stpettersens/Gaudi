@@ -5,7 +5,7 @@
  * Released under the MIT License.
  * 
 */
-package gaudi
+package org.stpettersens.gaudi
 import org.json.simple.{JSONObject,JSONArray}
 import scala.util.matching.Regex
 import java.io._
@@ -16,7 +16,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	private def substituteVars(action: Array[Object]): Unit = {
 		println(preamble)
 	}
-	// Extract comamnd and param for execution 
+	// Extract command and param for execution 
 	private def extractCommand(cmdParam: String): (String, String) = {
 		val cpPattn: Regex = """\{\"(\w+)\"\:\"([\\\"\w\s\.\+\-\_]+)\"\}""".r
 		var cpPattn(cmd: String, param: String) = cmdParam

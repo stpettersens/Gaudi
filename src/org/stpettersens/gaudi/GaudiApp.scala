@@ -5,7 +5,7 @@
  * Released under the MIT License.
  * 
 */
-package gaudi
+package org.stpettersens.gaudi
 import scala.io.Source
 import scala.util.matching.Regex
 import java.io.IOException

@@ -5,7 +5,7 @@
  * Released under the MIT License.
  * 
 */
-package gaudi
+package org.stpettersens.gaudi
 import org.json.simple.{JSONValue,JSONObject,JSONArray}
 import scala.util.matching.Regex
 
