@@ -18,7 +18,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	}
 	// Extract comamnd and param for execution 
 	private def extractCommand(cmdParam: String): (String, String) = {
-		val cpPattn: Regex = """\{\"(\w+)\"\:\"([\w\s\.\-\_]+)\"\}""".r
+		val cpPattn: Regex = """\{\"(\w+)\"\:\"([\\\"\w\s\.\+\-\_]+)\"\}""".r
 		var cpPattn(cmd: String, param: String) = cmdParam
 		(cmd, param)
 	}
@@ -35,12 +35,16 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	}
 	// Execute a command in the action
 	private def doCommand(cmd: String, param: String): Unit = {
-		printCommand(cmd, param)
+		if(cmd != "echo") printCommand(cmd, param)
 		cmd match {
 			case "exec" => {
 				var p: Process = Runtime.getRuntime().exec(param)
 				// TODO: CAPTURE STDOUT FOR EXECUTED PROGRAM
 				// ...
+				val reader = new BufferedReader(
+				new InputStreamReader(p.getErrorStream()))
+				var line: String = reader.readLine()
+				if(line != null) println(String.format("\t<- %s", line))
 			}
 			case "mkdir" => {
 				val aDir: Boolean = new File(param).mkdir()
@@ -50,6 +54,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 					)
 				}
 			}
+			case "echo" => println(String.format("\t# %s", param))
 			case "rm" => new File(param).delete()
 			case _ => {
 				printError(
@@ -70,7 +75,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		}
 		catch {
 			case ex: Exception => {
-				println(ex)
+				println(ex) // !
 				printError("Encounted an invalid action or command")
 			}
 		}

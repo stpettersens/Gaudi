@@ -1,0 +1,18 @@
+{
+	"preamble": {
+	
+		"source": "helloworld.cpp",
+		"target": "helloworld",
+		"assembler": "g++"
+	}
+
+	"build": [
+
+		{ "exec": "g++ hw.cpp -o hw" }
+	]
+	
+	"clean": [
+
+		{ "rm": "hw" } 
+	]
+}
