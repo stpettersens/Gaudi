@@ -12,11 +12,15 @@ import java.io._
 
 class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	
+	// Substitute variables for values
+	private def substituteVars(action: Array[Object]): Unit = {
+		println(preamble)
+	}
 	// Extract comamnd and param for execution 
 	private def extractCommand(cmdParam: String): (String, String) = {
-		val cpPattn: Regex = """\{\"(\w+)\"\:\"(\s*\w*)\"\}""".r
-		var cpPattn(c: String, p: String) = cmdParam
-		(c, p)
+		val cpPattn: Regex = """\{\"(\w+)\"\:\"([\w\s\.\-\_]+)\"\}""".r
+		var cpPattn(cmd: String, param: String) = cmdParam
+		(cmd, param)
 	}
 	// Print an error related to action or command and exit
 	private def printError(error: String): Unit = {
@@ -34,17 +38,19 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		printCommand(cmd, param)
 		cmd match {
 			case "exec" => {
-				val rt = Runtime.getRuntime()
-				rt.exec(param)
+				var p: Process = Runtime.getRuntime().exec(param)
+				// TODO: CAPTURE STDOUT FOR EXECUTED PROGRAM
+				// ...
 			}
 			case "mkdir" => {
 				val aDir: Boolean = new File(param).mkdir()
 				if(!aDir) {
 					printError(
-					String.format("Problem creating dir -> %s", param)
+					String.format("Problem making dir -> %s", param)
 					)
 				}
 			}
+			case "rm" => new File(param).delete()
 			case _ => {
 				printError(
 				String.format("%s is an invalid command", cmd)
@@ -56,6 +62,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	def doAction(action: JSONArray): Unit = {
 		try {
 			val actionArray = action.toArray()
+			//substituteVars(actionArray)
 			for(cmdParam <- actionArray) {
 				val cpPair = extractCommand(cmdParam.toString())
 				doCommand(cpPair._1, cpPair._2)
@@ -63,7 +70,8 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		}
 		catch {
 			case ex: Exception => {
-				printError("Encounted an invalid action")
+				println(ex)
+				printError("Encounted an invalid action or command")
 			}
 		}
 	}
