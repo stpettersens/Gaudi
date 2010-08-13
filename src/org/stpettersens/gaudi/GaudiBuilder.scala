@@ -9,6 +9,7 @@ package org.stpettersens.gaudi
 import org.json.simple.{JSONObject,JSONArray}
 import scala.util.matching.Regex
 import java.io._
+import java.nio.channels._
 
 class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	
@@ -30,17 +31,44 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	// Print executed command
 	private def printCommand(cmd: String, param: String): Unit = {
 		if(beVerbose) {
-			println(String.format("\t-> %s %s", cmd, param))
+			println(String.format("\t:%s %s", cmd, param))
 		}
 	}
 	// Execute a command in the action
-	private def doCommand(cmd: String, param: String): Unit = {
+	def doCommand(cmd: String, param: String): Unit = {
+	
+		// Do not print "echo" commands, but do others
 		if(cmd != "echo") printCommand(cmd, param)
+		
+		// Copy a file method
+		def cp(): String = {
+			val srcDestPair: Array[String] = param.split("->")
+			val srcFile = new File(srcDestPair(0))
+			val destFile = new File(srcDestPair(1))	
+			var in, out: FileChannel = null
+			try {
+				in = new FileInputStream(srcFile).getChannel()
+				out = new FileOutputStream(destFile).getChannel()
+				in.transferTo(0, in.size(), out)
+			}
+			catch {
+				case ex: Exception => {
+					println(ex)
+					printError(
+					String.format("Problem copying %s -> %s", 
+					srcDestPair(0), srcDestPair(1)) 
+					)
+				}
+			}
+			finally {
+				if(in != null) in.close()
+				if(out != null) out.close()
+			}
+			srcDestPair(0) // Return src filename
+		}
 		cmd match {
 			case "exec" => {
 				var p: Process = Runtime.getRuntime().exec(param)
-				// TODO: CAPTURE STDOUT FOR EXECUTED PROGRAM
-				// ...
 				val reader = new BufferedReader(
 				new InputStreamReader(p.getErrorStream()))
 				var line: String = reader.readLine()
@@ -56,6 +84,8 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 			}
 			case "echo" => println(String.format("\t# %s", param))
 			case "rm" => new File(param).delete()
+			case "cp" => cp() // Just copy file
+			case "mv" => new File(cp()).delete() // Copy and delete src file
 			case _ => {
 				printError(
 				String.format("%s is an invalid command", cmd)

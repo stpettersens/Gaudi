@@ -21,6 +21,7 @@ object GaudiApp {
 	  var action: String = "build"
 	  val filePattn: Regex = """(\w+.json)""".r
 	  val actPattn: Regex = """([a-z]+)""".r
+	  val cmdPattn: Regex = """:([a-z]+)\s([\sA-Za-z0-9\.\-\>\!\,]+)""".r
 	  
 	  /* Default behavior is to build project following
 	  build file in the current directory */
@@ -37,7 +38,8 @@ object GaudiApp {
 	 	 	 	  case "-q" => beVerbose = false
 	 	 	 	  case "-f" => fSwitch = true
 	 	 	 	  case filePattn(f) => if(fSwitch) buildFile = arg
-	 	 	 	  case actPattn(a) => action = arg
+	 	 	 	  case actPattn(a) => action = a
+	 	 	 	  case cmdPattn(c, p) => runCommand(c, p)
 	 	 	 	  case _ => {
 	 	 	 	 	  displayError(
 	 	 	 	 	  String.format("Argument (%s is invalid)", arg)
@@ -48,6 +50,14 @@ object GaudiApp {
 	 	  loadBuild(action)
 	  }
 	  else displayError("Arguments (requires 0-6 arguments)")
+  }
+  // Just peform a stdin command; really just for testing implemented commands.
+  // E.g. argument ":mv a->b"
+  def runCommand(cmd: String, param: String): Unit = {
+	  // Create a new builder and feed it a dummy JSONObject
+	  val builder = new GaudiBuilder(new JSONObject, beVerbose)
+	  builder.doCommand(cmd, param)
+	  System.exit(0)
   }
   // Load and delegate parse and execution of build file
   def loadBuild(action: String): Unit = {
@@ -109,7 +119,7 @@ object GaudiApp {
 	  println("-v: Display version information and quit.")
 	  println("-g: Generate native Gaudi build file (build.json).")
 	  println("-m: Generate GNU Makefile from build.json.")
-	  println("-q: Mute console output, except for errors (Quiet mode).")
+	  println("-q: Mute console output, except for :echo and errors (Quiet mode).")
 	  println("-f: Use <build file> instead of build.json.\n")
 	  System.exit(exitCode)
   }
