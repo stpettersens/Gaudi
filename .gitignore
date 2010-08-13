@@ -1,6 +1,7 @@
 *.json
 *.jar
 *.class
+*.exe
 .project
 .classpath
 .scala_dependencies
