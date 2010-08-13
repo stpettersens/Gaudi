@@ -53,7 +53,6 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 			}
 			catch {
 				case ex: Exception => {
-					println(ex)
 					printError(
 					String.format("Problem copying %s -> %s", 
 					srcDestPair(0), srcDestPair(1)) 
