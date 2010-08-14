@@ -19,7 +19,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	}
 	// Extract command and param for execution 
 	private def extractCommand(cmdParam: String): (String, String) = {
-		val cpPattn: Regex = """\{\"(\w+)\"\:\"([\/\\\"\w\s\.\*\,\+\-\>\_]+)\"\}""".r
+		val cpPattn: Regex = """\{\"(\w+)\"\:\"([\/\\\"\w\s\.\*\,\_\+\-\>\_]+)\"\}""".r
 		var cpPattn(cmd: String, param: String) = cmdParam
 		(cmd, param)
 	}
@@ -41,7 +41,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		if(cmd != "echo") printCommand(cmd, param)
 		
 		// Copy a file method
-		def cp(): String = {
+		def copy(): String = {
 			val srcDestPair: Array[String] = param.split("->")
 			val srcFile = new File(srcDestPair(0))
 			val destFile = new File(srcDestPair(1))	
@@ -82,9 +82,9 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 				}
 			}
 			case "echo" => println(String.format("\t# %s", param))
-			case "rm" => new File(param).delete()
-			case "cp" => cp() // Just copy file
-			case "mv" => new File(cp()).delete() // Copy and delete src file
+			case "rmve" => new File(param).delete()
+			case "copy" => copy() // Just copy file
+			case "move" => new File(copy()).delete() // Copy and delete src file
 			case _ => {
 				printError(
 				String.format("%s is an invalid command", cmd)

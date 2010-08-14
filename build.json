@@ -8,13 +8,17 @@
 
 	"build" [
 
-		{ "echo": "Naturally, Gaudi can build itself" },	
+		{ "echo": "Naturally, Gaudi can build itself." },	
 		{ "echo": "Need to change Gaudi to assume .BATs, .CMDs, .SHs" },
 		{ "echo": "Compiling..." },
-		{ "exec": "scalac.bat -d bin -deprecation -unchecked src/*.scala" },
+		{ "exec": "_scalac.bat -d bin -deprecation -unchecked src/*.scala" },
 		{ "echo": "Packaging..." },
-		{ "cp": "Manifest.mf->bin/Manifest.mf" },
-		{ "exec": "jar -cfm Gaudi.jar bin/Manifest.mf bin/*" },
+		{ "exec": "jar cfm Gaudi.jar Manifest.mf -C bin/ ." },
 		{ "echo": "Done." }
+	]
+
+	"clean" [
+		
+		{ "echo": "todo" }
 	]
 }
