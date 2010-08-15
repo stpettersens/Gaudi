@@ -3,12 +3,12 @@
 
 echo Compiling...
 cd src
-scalac -d ../bin -deprecation -unchecked *.scala
+scalac -d ../bin2 -deprecation -unchecked *.scala
 
 echo Packaging...
 cd ..
-cp Manifest.mf bin
-cd bin
+cp Manifest.mf bin2
+cd bin2
 jar -cfm Gaudi.jar Manifest.mf *
 rm -f Manifest.mf
 mv Gaudi.jar ..

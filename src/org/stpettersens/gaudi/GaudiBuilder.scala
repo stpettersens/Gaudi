@@ -9,7 +9,7 @@ package org.stpettersens.gaudi
 import org.json.simple.{JSONObject,JSONArray}
 import scala.util.matching.Regex
 import java.io._
-import java.nio.channels._
+import java.nio.channels.FileChannel
 
 class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	
@@ -19,7 +19,8 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	}
 	// Extract command and param for execution 
 	private def extractCommand(cmdParam: String): (String, String) = {
-		val cpPattn: Regex = """\{\"(\w+)\"\:\"([\/\\\"\w\s\.\*\,\_\+\-\>\_]+)\"\}""".r
+		val cpPattn: Regex = 
+		"""\{\"(\w+)\"\:\"([\/\\\"\w\s\.\*\,\_\+\-\>\_]+)\"\}""".r
 		var cpPattn(cmd: String, param: String) = cmdParam
 		(cmd, param)
 	}
@@ -67,11 +68,13 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		}
 		cmd match {
 			case "exec" => {
-				var p: Process = Runtime.getRuntime().exec(param)
+				val exe: String = GaudiHabitat.getExeWithExt(param)
+				var p: Process = Runtime.getRuntime().exec(exe)
 				val reader = new BufferedReader(
-				new InputStreamReader(p.getErrorStream()))
+				new InputStreamReader(p.getErrorStream())
+				)
 				var line: String = reader.readLine()
-				if(line != null) println(String.format("\t<- %s", line))
+				if(line != null) println(String.format("\t~ %s", line))
 			}
 			case "mkdir" => {
 				val aDir: Boolean = new File(param).mkdir()

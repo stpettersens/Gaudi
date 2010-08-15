@@ -12,7 +12,10 @@ import java.io.IOException
 import org.json.simple.{JSONObject,JSONArray}
 
 object GaudiApp {
-	
+  //////////////////////////////////////////////////////
+  val appVersion: String = "0.1"
+  val env: (String, String) = GaudiHabitat.getEnvAndOS()
+  //////////////////////////////////////////////////////
   var buildFile: String = "build.json" // Default build file
   var beVerbose: Boolean = true // Gaudi is verbose by default
 	  
@@ -106,7 +109,9 @@ object GaudiApp {
   }
   // Display version information and exit
   def displayVersion(): Unit = {
-	  // TODO
+	  println(
+	  String.format("\nGaudi v.%s [JVM %s (%s)]", appVersion, env._1, env._2)
+	  )
 	  System.exit(0)
   }
   // Display usage information and exit
