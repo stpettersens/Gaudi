@@ -20,7 +20,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	// Extract command and param for execution 
 	private def extractCommand(cmdParam: String): (String, String) = {
 		val cpPattn: Regex = 
-		"""\{\"(\w+)\"\:\"([\/\\\"\w\s\.\*\,\_\+\-\>\_]+)\"\}""".r
+		"""\{\"(\w+)\"\:\"([\/\\\"\w\d\s\$\.\*\,\_\+\-\>\_]+)\"\}""".r
 		var cpPattn(cmd: String, param: String) = cmdParam
 		(cmd, param)
 	}

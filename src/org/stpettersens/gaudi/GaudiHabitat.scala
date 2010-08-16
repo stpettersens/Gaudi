@@ -15,7 +15,7 @@ object GaudiHabitat {
 
 	private def getPaths(): List[String] = {
 		val pathVar: String = System.getProperty("java.library.path")
-		val pathPattn: Regex = """([\w\d\s\:\.\-\_\\\/]+);*""".r
+		val pathPattn: Regex = """([\:\w\d\s\.\-\_\\\/]+)""".r
 		val paths = new ListBuffer[String]()
 		for(p <- pathPattn.findAllIn(pathVar)) {
 			paths += p
@@ -42,12 +42,12 @@ object GaudiHabitat {
 		val paths: List[String] = getPaths()
 		var path: String = ""
 		for(p <- paths) {
-			path = p.replace(";","\\")
+			path = p+"\\"
 			if(new File(path+exe+ext).exists()) {
 				doExec = true
-				return (doExec, path+exe+ext, " "+"*.scala")
+				return (doExec, path+exe+ext, " "+param)
 			}	
 		}
-		(doExec, path+exe+ext, param)
+		(doExec, path+exe+ext, " "+param)
 	}
 }

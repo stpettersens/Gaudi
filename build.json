@@ -9,16 +9,21 @@
 	"build" [
 
 		{ "echo": "Naturally, Gaudi can build itself." },	
-		{ "echo": "Need to change Gaudi to assume .BATs, .CMDs, .SHs" },
 		{ "echo": "Compiling..." },
-		{ "exec": "scalac -d bin -deprecation -unchecked src\org\stpettersens\gauldi\*.scala" },
+		{ "exec": "scalac -d bin -deprecation -unchecked *.scala" },
 		{ "echo": "Packaging..." },
 		{ "echo": "jar cfm Gaudi.jar Manifest.mf -C bin/ ." },
 		{ "echo": "Done." }
 	]
 
 	"clean" [
-		
-		{ "echo": "todo" }
+		{ "echo": "Removing classes..." },
+		{ "echo": "TODO Implement patterns for commands themselves." }, 
+		{ "rmve": "PathVar.class" },
+		{ "rmve": "PathVar$.class" },
+		{ "rmve": "PathVar$$anonfunc$1.class" },
+		{ "rmve": "PathVar2.class" },
+		{ "rmve": "PathVar2$.class" },
+		{ "rmve": "PathVar2$$anonfunc$1.class" }
 	]
 }
