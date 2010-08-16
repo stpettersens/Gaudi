@@ -68,13 +68,17 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		}
 		cmd match {
 			case "exec" => {
-				val exe: String = GaudiHabitat.getExeWithExt(param)
-				var p: Process = Runtime.getRuntime().exec(exe)
-				val reader = new BufferedReader(
-				new InputStreamReader(p.getErrorStream())
-				)
-				var line: String = reader.readLine()
-				if(line != null) println(String.format("\t~ %s", line))
+				val exe: (Boolean, String, String) =
+				GaudiHabitat.getExeWithExt(param)
+				println("Exec tuple:" + exe) // DEBUG
+				if(exe._1) {
+					var p: Process = Runtime.getRuntime().exec(exe._2 + exe._3)
+					val reader = new BufferedReader(
+					new InputStreamReader(p.getErrorStream())
+					)
+					var line: String = reader.readLine()
+					if(line != null) println(String.format("\t~ %s", line))
+				}
 			}
 			case "mkdir" => {
 				val aDir: Boolean = new File(param).mkdir()

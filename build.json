@@ -11,9 +11,9 @@
 		{ "echo": "Naturally, Gaudi can build itself." },	
 		{ "echo": "Need to change Gaudi to assume .BATs, .CMDs, .SHs" },
 		{ "echo": "Compiling..." },
-		{ "exec": "scalac -d bin -deprecation -unchecked src/*.scala" },
+		{ "exec": "scalac -d bin -deprecation -unchecked src\org\stpettersens\gauldi\*.scala" },
 		{ "echo": "Packaging..." },
-		{ "exec": "jar cfm Gaudi.jar Manifest.mf -C bin/ ." },
+		{ "echo": "jar cfm Gaudi.jar Manifest.mf -C bin/ ." },
 		{ "echo": "Done." }
 	]
 
