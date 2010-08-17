@@ -2,13 +2,11 @@
 # Build Gaudi on *nix systems
 
 echo Compiling...
-cd src
-scalac -d ../bin2 -deprecation -unchecked *.scala
+scalac -d bin -sourcepath /src/org/stpettersens/gaudi -verbose -deprecation -unchecked *.scala
 
 echo Packaging...
-cd ..
-cp Manifest.mf bin2
-cd bin2
+cp Manifest.mf bin
+cd bin
 jar -cfm Gaudi.jar Manifest.mf *
 rm -f Manifest.mf
 mv Gaudi.jar ..
