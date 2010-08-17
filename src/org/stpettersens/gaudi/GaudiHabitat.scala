@@ -24,7 +24,11 @@ object GaudiHabitat {
 	}	
 	def getEnvAndOS(): (String, String) = {
 		(
-		System.getProperty("java.version"), 
+		String.format(
+		"%s %s", 
+		System.getProperty("java.vm.name"), 
+		System.getProperty("java.version")
+		),
 		System.getProperty("os.name")
 		)
 	}

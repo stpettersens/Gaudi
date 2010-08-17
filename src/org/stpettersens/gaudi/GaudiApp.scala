@@ -55,7 +55,7 @@ object GaudiApp {
 	  else displayError("Arguments (requires 0-6 arguments)")
   }
   // Just peform a stdin command; really just for testing implemented commands.
-  // E.g. argument ":mv a->b"
+  // E.g. argument ":move a->b"
   def runCommand(cmd: String, param: String): Unit = {
 	  // Create a new builder and feed it a dummy JSONObject
 	  val builder = new GaudiBuilder(new JSONObject, beVerbose)
@@ -110,7 +110,7 @@ object GaudiApp {
   // Display version information and exit
   def displayVersion(): Unit = {
 	  println(
-	  String.format("\nGaudi v.%s [JVM %s (%s)]", appVersion, env._1, env._2)
+	  String.format("\nGaudi v.%s [%s (%s)]\n", appVersion, env._1, env._2)
 	  )
 	  System.exit(0)
   }
