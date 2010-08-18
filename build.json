@@ -8,15 +8,15 @@
 
 	"build" [
 
-		{ "echo": "Naturally, Gaudi can build itself." },	
 		{ "echo": "Compiling..." },
-		{ "exec": "scalac -d bin -sourcepath src/org/stpettersens/gaudi *.scala" },
+		{ "exec": "scalac -d bin src//org//stpettersens//gaudi//GaudiApp.scala" },
 		{ "echo": "Packaging..." },
-		{ "exec": "jar cfm Gaudi.jar Manifest.mf -C bin/ ." },
+		{ "exec": "//"}
 		{ "echo": "Done." }
 	]
 
 	"clean" [
+	
 		{ "echo": "Removing classes..." }
 		
 	]

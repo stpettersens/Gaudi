@@ -20,14 +20,13 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	// Extract command and param for execution 
 	private def extractCommand(cmdParam: String): (String, String) = {
 		val cpPattn: Regex = 
-		"""\{\"(\w+)\"\:\"([\/\\\"\w\d\s\$\.\*\,\_\+\-\>\_]+)\"\}""".r
+		"""\{\"(\w+)\"\:\"([\\\/\"\w\d\s\$\.\*\,\_\+\-\>\_]+)\"\}""".r
 		var cpPattn(cmd: String, param: String) = cmdParam
 		(cmd, param)
 	}
 	// Print an error related to action or command and exit
 	private def printError(error: String): Unit = {
 		println(String.format("\tAborting: %s.", error))
-		GaudiLogger ! error
 		System.exit(-1)
 	}
 	// Print executed command
@@ -35,7 +34,6 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		if(beVerbose) {
 			println(String.format("\t:%s %s", cmd, param))
 		}
-		//GaudiLogger ! (cmd, param)
 	}
 	// Execute a command in the action
 	def doCommand(cmd: String, param: String): Unit = {
@@ -59,7 +57,6 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 					printError(
 					String.format("Problem copying %s -> %s", 
 					srcDestPair(0), srcDestPair(1)))
-					GaudiLogger ! ex
 				}
 			}
 			finally {
@@ -71,7 +68,6 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		cmd match {
 			case "exec" => {
 				val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
-				GaudiLogger ! exe
 				if(exe._1 != null) {
 					var p: Process = Runtime.getRuntime().exec(exe._1 + " " + exe._2)
 					val reader = new BufferedReader(
@@ -94,10 +90,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 			case "copy" => copy() // Just copy file
 			case "move" => new File(copy()).delete() // Copy and delete src file
 			case _ => {
-				printError(
-				String.format("%s is an invalid command", cmd)
-				)
-				GaudiLogger ! ("Invalid command ->", cmd)
+				printError(String.format("%s is an invalid command", cmd))
 			}
 		}
 	}
@@ -107,7 +100,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 			val actionArray = action.toArray()
 			//substituteVars(actionArray)
 			for(cmdParam <- actionArray) {
-				val cpPair = extractCommand(cmdParam.toString())
+				val cpPair = extractCommand(cmdParam.toString)
 				doCommand(cpPair._1, cpPair._2)
 			}
 		}

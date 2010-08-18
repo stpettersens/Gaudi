@@ -27,8 +27,7 @@ class GaudiForeman(buildConf: String) {
 		}
 		catch {
 			case ex: Exception => {
-				GaudiApp.displayError("Instructions (Bad JSON)")
-				GaudiLogger ! ex
+				GaudiApp.displayError("Instructions (Badly formatted JSON)")
 			}
 		}
 		JSONValue.parse(shardStr)

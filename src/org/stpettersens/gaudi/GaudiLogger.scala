@@ -1,4 +1,4 @@
-/*
+/*/*
  * Gaudi platform agnostic build tool
  * Copyright (c) 2010 Sam Saint-Pettersen
  * 
@@ -33,7 +33,7 @@ object GaudiLogger extends Actor {
 	}
 	def act() {
 		loop {
-			react {
+			receive {
 				case strMsg: String => dump(strMsg)
 				case tstrMsg: (String, String) => {
 					dump(String.format("%s %s", tstrMsg._1, tstrMsg._2))
@@ -43,4 +43,4 @@ object GaudiLogger extends Actor {
 			}
 		}
 	}
-}
+}*/
