@@ -8,7 +8,7 @@
 
 	"build": [
 
-		{ "exec": "g++ hw.cpp -o hw" }
+		{ "exec": "g++ -c hw.cpp" }
 	]
 	
 	"clean": [

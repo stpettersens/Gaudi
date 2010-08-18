@@ -1,0 +1,14 @@
+{
+	"preamble": {
+
+		"target": "Gaudi.jar",
+		"source": "src/*.scala",
+		"compiler": "scalac"
+	},
+
+	"build" [
+
+		{ "echo": "Run notepad" },	
+		{ "exec": "notepad build.json" },
+	]
+}

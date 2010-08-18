@@ -35,7 +35,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		if(beVerbose) {
 			println(String.format("\t:%s %s", cmd, param))
 		}
-		GaudiLogger ! (cmd, param)
+		//GaudiLogger ! (cmd, param)
 	}
 	// Execute a command in the action
 	def doCommand(cmd: String, param: String): Unit = {
