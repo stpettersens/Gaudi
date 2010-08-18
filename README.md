@@ -18,8 +18,8 @@ but differs in that:
 - It is *not* tailored to offer advanced features for a particular programming
   language, unlike Ant which is highly specialised for Java development.
 
-- It is licensed under the [MIT License](/blob/master/LICENSE) rather than the Apache License
-  (except third party libraries where applicable, see [DEP.LICENSE](/blob/master/DEP.LICENSE)).
+- It is licensed under the [MIT License](stpettersens/Gaudi/blob/master/LICENSE) rather than the Apache License
+  (except third party libraries where applicable, see [DEP.LICENSE](stpettersens/Gaudi/blob/master/DEP.LICENSE)).
 
 Gaudi's implementation has been inspired by both Ant and Make.
 
