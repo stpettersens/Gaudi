@@ -1,25 +1,17 @@
 #!/bin/sh
 # Build Gaudi on *nix systems
-# 
-# Notes:
-# Problem with -sourcepath switch for scalac?
 
 pkg="org/stpettersens/gaudi"
 jarF="Gaudi.jar"
 
 echo "Compiling..."
-cd src/$pkg
-scalac -deprecation -unchecked *.scala
-
-echo "Copying over classes..."
-cp -r org ../../../../bin
-rm -r -f org
+scalac -verbose -deprecation -unchecked -d bin src/$pkg/*.scala
 
 echo "Packaging..."
-cd ../../../../
 cp Manifest.mf bin
 cd bin
 jar cfm $jarF Manifest.mf *
-rm Manifest.mf
 mv $jarF ..
+rm Manifest.mf
+cd ..
 echo "Done."

@@ -27,6 +27,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	// Print an error related to action or command and exit
 	private def printError(error: String): Unit = {
 		println(String.format("\tAborting: %s.", error))
+		GaudiLogger ! error
 		System.exit(-1)
 	}
 	// Print executed command
@@ -34,6 +35,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		if(beVerbose) {
 			println(String.format("\t:%s %s", cmd, param))
 		}
+		GaudiLogger ! (cmd, param)
 	}
 	// Execute a command in the action
 	def doCommand(cmd: String, param: String): Unit = {
@@ -56,8 +58,8 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 				case ex: Exception => {
 					printError(
 					String.format("Problem copying %s -> %s", 
-					srcDestPair(0), srcDestPair(1)) 
-					)
+					srcDestPair(0), srcDestPair(1)))
+					GaudiLogger ! ex
 				}
 			}
 			finally {
@@ -69,6 +71,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		cmd match {
 			case "exec" => {
 				val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
+				GaudiLogger ! exe
 				if(exe._1 != null) {
 					var p: Process = Runtime.getRuntime().exec(exe._1 + " " + exe._2)
 					val reader = new BufferedReader(
@@ -94,6 +97,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 				printError(
 				String.format("%s is an invalid command", cmd)
 				)
+				GaudiLogger ! ("Invalid command ->", cmd)
 			}
 		}
 	}

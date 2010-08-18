@@ -67,7 +67,7 @@ object GaudiHabitat {
 		exts(2) = ".cmd"
 		exts(3) = ".sh"
 		exts(4) = ""
-		val exePattn: Regex = """(\w+)\s*(.*)""".r
+		val exePattn: Regex = """([\w\d\+\-\_]+)\s*(.*)""".r
 		var exePattn(exe, param) = command
 		var ext: String = null
 		val paths: List[String] = getPaths()

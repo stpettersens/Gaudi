@@ -21,11 +21,14 @@ object GaudiApp {
 	  
   def main(args: Array[String]): Unit = {
 	  var fSwitch: Boolean = false
+	  var lSwitch: Boolean = true
 	  var action: String = "build"
 	  val filePattn: Regex = """(\w+.json)""".r
 	  val actPattn: Regex = """([a-z]+)""".r
 	  val cmdPattn: Regex =
 	  """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
+	  
+	  GaudiLogger.start
 	  
 	  /* Default behavior is to build project following
 	  build file in the current directory */
@@ -40,14 +43,14 @@ object GaudiApp {
 	 	 	 	  case "-g" => generateNativeFile()
 	 	 	 	  case "-m" => generateMakefile()
 	 	 	 	  case "-q" => beVerbose = false
+	 	 	 	  case "-s" => lSwitch = false
 	 	 	 	  case "-f" => fSwitch = true
 	 	 	 	  case filePattn(f) => if(fSwitch) buildFile = arg
 	 	 	 	  case actPattn(a) => action = a
 	 	 	 	  case cmdPattn(c, p) => runCommand(c, p)
 	 	 	 	  case _ => {
 	 	 	 	 	  displayError(
-	 	 	 	 	  String.format("Argument (%s is invalid)", arg)
-	 	 	 	 	  )
+	 	 	 	 	  String.format("Argument (%s is invalid)", arg))
 	 	 	 	  }
 	 	 	  }
 	 	  }
@@ -81,12 +84,13 @@ object GaudiApp {
 	  finally {   
 	 	  // Delegate to the foreman and builder
 	 	  val foreman = new GaudiForeman(buildConf)
-	 	  val builder = new GaudiBuilder(foreman.getPreamble(), beVerbose)
+	 	  val builder = new GaudiBuilder(foreman.getPreamble, beVerbose)
 	 	  if(beVerbose) {
 	 	 	  println(
-	 	 	  String.format("[ %s => %s ]", foreman.getTarget(), action)
+	 	 	  String.format("[ %s => %s ]", foreman.getTarget, action)
 	 	 	  )
 	 	  }	  
+	 	  GaudiLogger ! (foreman.getTarget, action)
 	 	  builder.doAction(foreman.getAction(action))
 	  }
   }
@@ -101,11 +105,13 @@ object GaudiApp {
   // Display an error
   def displayError(ex: Exception): Unit = {
 	  println(String.format("\nError with: %s.", ex.getMessage()))
+	  GaudiLogger ! ex
 	  displayUsage(-1)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
 	  println(String.format("\nError with: %s.", ex))
+	  GaudiLogger ! ex
 	  displayUsage(-1)
   }
   // Display version information and exit
