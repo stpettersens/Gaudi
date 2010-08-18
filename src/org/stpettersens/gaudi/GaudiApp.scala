@@ -25,7 +25,7 @@ object GaudiApp {
 	  val filePattn: Regex = """(\w+.json)""".r
 	  val actPattn: Regex = """([a-z]+)""".r
 	  val cmdPattn: Regex =
-	  """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\_\-\>\!\,]+)""".r
+	  """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
 	  
 	  /* Default behavior is to build project following
 	  build file in the current directory */
