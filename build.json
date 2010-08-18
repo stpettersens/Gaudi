@@ -10,20 +10,14 @@
 
 		{ "echo": "Naturally, Gaudi can build itself." },	
 		{ "echo": "Compiling..." },
-		{ "exec": "scalac -d bin -deprecation -unchecked *.scala" },
+		{ "exec": "scalac -d bin -sourcepath src/org/stpettersens/gaudi *.scala" },
 		{ "echo": "Packaging..." },
-		{ "echo": "jar cfm Gaudi.jar Manifest.mf -C bin/ ." },
+		{ "exec": "jar cfm Gaudi.jar Manifest.mf -C bin/ ." },
 		{ "echo": "Done." }
 	]
 
 	"clean" [
-		{ "echo": "Removing classes..." },
-		{ "echo": "TODO Implement patterns for commands themselves." }, 
-		{ "rmve": "PathVar.class" },
-		{ "rmve": "PathVar$.class" },
-		{ "rmve": "PathVar$$anonfunc$1.class" },
-		{ "rmve": "PathVar2.class" },
-		{ "rmve": "PathVar2$.class" },
-		{ "rmve": "PathVar2$$anonfunc$1.class" }
+		{ "echo": "Removing classes..." }
+		
 	]
 }

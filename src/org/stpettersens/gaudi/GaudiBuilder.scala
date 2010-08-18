@@ -70,9 +70,8 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 			case "exec" => {
 				val exe: (Boolean, String, String) =
 				GaudiHabitat.getExeWithExt(param)
-				println("Exec tuple:" + exe) // DEBUG
-				if(exe._1) {
-					var p: Process = Runtime.getRuntime().exec(exe._2 + exe._3)
+				if(exe._2 != null) {
+					var p: Process = Runtime.getRuntime().exec(exe._2 + " " + exe._3)
 					val reader = new BufferedReader(
 					new InputStreamReader(p.getErrorStream())
 					)
