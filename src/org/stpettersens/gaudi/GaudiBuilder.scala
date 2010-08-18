@@ -7,9 +7,10 @@
 */
 package org.stpettersens.gaudi
 import org.json.simple.{JSONObject,JSONArray}
+import org.apache.commons.io.FileUtils._
+import org.apache.commons.io.filefilter.WildcardFileFilter
 import scala.util.matching.Regex
 import java.io._
-import java.nio.channels.FileChannel
 
 class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	
@@ -17,7 +18,22 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	private def substituteVars(action: Array[Object]): Unit = {
 		println(preamble)
 	}
-	// Extract command and param for execution 
+	// Handle wild cards in parameters such as *.scala, *.cpp,
+	// to compile all Scala or C++ files in the specied dir
+	private def handleWildcards(param: String): String = {
+		var dir = new File(".")
+		val filePattn: Regex = """(\*)\.(\w\d+)""".r
+		var filePattn(wc, ext) = param
+		val fileFilter = new WildcardFileFilter("*." + ext)
+		val files: Array[File] = dir.listFiles(fileFilter)
+		val files = new Array[String](2)
+		var newParam: String = null
+		for(file <- files) {
+			newParam += file
+		}
+		newParam
+	}
+	// Extract command and param for execution
 	private def extractCommand(cmdParam: String): (String, String) = {
 		val cpPattn: Regex = 
 		"""\{\"(\w+)\"\:\"([\\\/\"\w\d\s\$\.\*\,\_\+\-\>\_]+)\"\}""".r
@@ -40,36 +56,13 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	
 		// Do not print "echo" commands, but do others
 		if(cmd != "echo") printCommand(cmd, param)
-		
-		// Copy a file method
-		def copy(): String = {
-			val srcDestPair: Array[String] = param.split("->")
-			val srcFile = new File(srcDestPair(0))
-			val destFile = new File(srcDestPair(1))	
-			var in, out: FileChannel = null
-			try {
-				in = new FileInputStream(srcFile).getChannel()
-				out = new FileOutputStream(destFile).getChannel()
-				in.transferTo(0, in.size(), out)
-			}
-			catch {
-				case ex: Exception => {
-					printError(
-					String.format("Problem copying %s -> %s", 
-					srcDestPair(0), srcDestPair(1)))
-				}
-			}
-			finally {
-				if(in != null) in.close()
-				if(out != null) out.close()
-			}
-			srcDestPair(0) // Return src filename
-		}
 		cmd match {
 			case "exec" => {
 				val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
 				if(exe._1 != null) {
-					var p: Process = Runtime.getRuntime().exec(exe._1 + " " + exe._2)
+					val param: String = handleWildcards(exe._2)
+					println(param)
+					var p: Process = Runtime.getRuntime().exec(exe._1 + " " + param)
 					val reader = new BufferedReader(
 					new InputStreamReader(p.getErrorStream())
 					)
@@ -87,8 +80,14 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 			}
 			case "echo" => println(String.format("\t# %s", param))
 			case "rmve" => new File(param).delete()
-			case "copy" => copy() // Just copy file
-			case "move" => new File(copy()).delete() // Copy and delete src file
+			case "copy" => {
+				val srcDest: Array[String] = param.split("->")
+				copyFile(new File(srcDest(0)), new File(srcDest(1)))
+			}
+			case "move" => {
+				val srcDest = param.split("->") 
+				moveFile(new File(srcDest(0)), new File(srcDest(1)))
+			}
 			case _ => {
 				printError(String.format("%s is an invalid command", cmd))
 			}
@@ -106,7 +105,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		}
 		catch {
 			case ex: Exception => {
-				println("\t[" + ex.getMessage() + "]")
+				println(String.format("\t[%s]", ex.getMessage))
 				printError("Encounted an invalid action or command")
 			}
 		}
