@@ -13,7 +13,8 @@ but differs in that:
 * Its build files are based on a JSON rather than an XML format.
 
 * It is not tailored to offer advanced features for a particular
-  language, unlike Ant which is highly specialised for Java development.
+  programming language, unlike Ant which is highly specialised for 
+  Java development.
 
 * It is licensed under the MIT License rather than the Apache License
   (except third party libraries where applicable, see DEP.LICENSE).

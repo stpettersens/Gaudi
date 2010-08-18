@@ -68,10 +68,9 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		}
 		cmd match {
 			case "exec" => {
-				val exe: (Boolean, String, String) =
-				GaudiHabitat.getExeWithExt(param)
-				if(exe._2 != null) {
-					var p: Process = Runtime.getRuntime().exec(exe._2 + " " + exe._3)
+				val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
+				if(exe._1 != null) {
+					var p: Process = Runtime.getRuntime().exec(exe._1 + " " + exe._2)
 					val reader = new BufferedReader(
 					new InputStreamReader(p.getErrorStream())
 					)
@@ -110,7 +109,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		}
 		catch {
 			case ex: Exception => {
-				println(ex) // !
+				println("\t[" + ex.getMessage() + "]")
 				printError("Encounted an invalid action or command")
 			}
 		}
