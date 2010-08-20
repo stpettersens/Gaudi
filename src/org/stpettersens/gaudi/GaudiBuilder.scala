@@ -1,9 +1,20 @@
 /*
- * Gaudi platform agnostic build tool
- * Copyright (c) 2010 Sam Saint-Pettersen
- * 
- * Released under the MIT License.
- * 
+Gaudi platform agnostic build tool
+Copyright 2010 Sam Saint-Pettersen.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+For dependencies, please see LICENSE file.
 */
 package org.stpettersens.gaudi
 import org.json.simple.{JSONObject,JSONArray}
@@ -19,19 +30,23 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 		println(preamble)
 	}
 	// Handle wild cards in parameters such as *.scala, *.cpp,
-	// to compile all Scala or C++ files in the specied dir
+	// to compile all Scala or C++ files in the specified dir
 	private def handleWildcards(param: String): String = {
-		var dir = new File(".")
-		val filePattn: Regex = """(\*)\.(\w\d+)""".r
-		var filePattn(wc, ext) = param
-		val fileFilter = new WildcardFileFilter("*." + ext)
-		val files: Array[File] = dir.listFiles(fileFilter)
-		val files = new Array[String](2)
-		var newParam: String = null
-		for(file <- files) {
-			newParam += file
+		if(param.contains("*")) {
+		    val rawParamPattn: Regex = """[\w\d]*\s*(.*)""".r
+		    val rawParamPattn(raw_param) = param
+			var dir = new File(".")
+			val filePattn: Regex = """\*([\.\w\d]+)""".r
+			val filePattn(ext) = raw_param
+			val filter: FileFilter = new WildcardFileFilter("*" + ext)
+			var newParam: String = ""
+			val files: Array[File] = dir.listFiles(filter)
+			for(file <- files) {
+				newParam += file
+			}
+			return newParam.replace(".\\", " ")
 		}
-		newParam
+		param
 	}
 	// Extract command and param for execution
 	private def extractCommand(cmdParam: String): (String, String) = {
@@ -54,15 +69,18 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	// Execute a command in the action
 	def doCommand(cmd: String, param: String): Unit = {
 	
+		// Handle any potential wildcards in parameters
+	    val wcc_param: String = handleWildcards(param)
+	    println("wcc_param -> " + wcc_param)
+
 		// Do not print "echo" commands, but do others
 		if(cmd != "echo") printCommand(cmd, param)
 		cmd match {
 			case "exec" => {
 				val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
 				if(exe._1 != null) {
-					val param: String = handleWildcards(exe._2)
-					println(param)
-					var p: Process = Runtime.getRuntime().exec(exe._1 + " " + param)
+					var p: Process = Runtime.getRuntime().exec(
+					String.format("%s %s", exe._1, wcc_param))
 					val reader = new BufferedReader(
 					new InputStreamReader(p.getErrorStream())
 					)
@@ -78,12 +96,14 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 					)
 				}
 			}
+			case "list" => println("\t-> " + handleWildcards(param))
 			case "echo" => println(String.format("\t# %s", param))
-			case "rmve" => new File(param).delete()
+			case "erase" => new File(wcc_param).delete() // Add support for wildcard
 			case "copy" => {
 				val srcDest: Array[String] = param.split("->")
 				copyFile(new File(srcDest(0)), new File(srcDest(1)))
 			}
+			case "rcopy" => "Recur. copy" // TODO
 			case "move" => {
 				val srcDest = param.split("->") 
 				moveFile(new File(srcDest(0)), new File(srcDest(1)))

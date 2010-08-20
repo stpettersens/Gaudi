@@ -1,9 +1,20 @@
 /*
- * Gaudi platform agnostic build tool
- * Copyright (c) 2010 Sam Saint-Pettersen
- * 
- * Released under the MIT License.
- * 
+Gaudi platform agnostic build tool
+Copyright 2010 Sam Saint-Pettersen.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+For dependencies, please see LICENSE file.
 */
 package org.stpettersens.gaudi
 import scala.io.Source
@@ -12,10 +23,11 @@ import java.io.IOException
 import org.json.simple.{JSONObject,JSONArray}
 
 object GaudiApp {
-  //////////////////////////////////////////////////////
+	
+  //--------------------------------------------------------
   val appVersion: String = "0.1"
   val env: (String, String) = GaudiHabitat.getEnvAndOS()
-  //////////////////////////////////////////////////////
+  //--------------------------------------------------------
   var buildFile: String = "build.json" // Default build file
   var beVerbose: Boolean = true // Gaudi is verbose by default
 	  
@@ -43,7 +55,7 @@ object GaudiApp {
 	 	 	 	  case "-f" => fSwitch = true
 	 	 	 	  case filePattn(f) => if(fSwitch) buildFile = arg
 	 	 	 	  case actPattn(a) => action = a
-	 	 	 	  case cmdPattn(c, p) => runCommand(c, p)
+	 	 	 	  case cmdPattn(cmd, param) => runCommand(cmd, param)
 	 	 	 	  case _ => {
 	 	 	 	 	  displayError(
 	 	 	 	 	  String.format("Argument (%s is invalid)", arg))
@@ -115,7 +127,7 @@ object GaudiApp {
   def displayUsage(exitCode: Int): Unit = {
 	  println("\nGaudi platform agnostic build tool")
 	  println("Copyright (c) 2010 Sam Saint-Pettersen")
-	  println("\nReleased under the MIT License.")
+	  println("\nReleased under the Apache License v2.")
 	  println("\nUsage: gaudi [-i|-v|-g|-m][-q -f <build file> <operation>]")
 	  println("\n-i: Display usage information and quit.")
 	  println("-v: Display version information and quit.")

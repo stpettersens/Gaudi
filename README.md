@@ -1,8 +1,8 @@
 Gaudi
 =====
 
-Synopsis
---------
+What is it?
+-----------
 Gaudi is a platform agnostic build tool
 written in Scala which runs on a Java virtual machine (JVM).
 
@@ -33,4 +33,3 @@ License
 ------------
 Gaudi is licensed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
 For the summary of the license, please see the [LICENSE](http://github.com/stpettersens/Gaudi/blob/master/LICENSE) file.
-
