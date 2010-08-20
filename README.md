@@ -9,10 +9,9 @@ written in Scala which runs on a Java virtual machine (JVM).
 As it is a build tool, it is named after an architect, *Antoni Gaudi*;
 the designer of the famous *Sagrada Familia*.
 
-Gaudi can be thought of as being similar to
-[Apache Ant](http://ant.apache.org) in that it *too* also abstracts commands related
+Gaudi can be thought of as being similar to Apache Ant in that it *too* also abstracts commands related
 to building software away from the operating system 
-(e.g. `erase` instead of `rm` on Unix-likes or `del` on Windows); 
+(e.g. `:erase` instead of `rm` on Unix-likes or `del` on Windows); 
 but differs in that:
 
 - Its build files are based on a JSON format rather than an XML format.
