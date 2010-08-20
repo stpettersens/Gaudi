@@ -31,5 +31,5 @@ with Sun's Java HotSpot/OpenJDK JVM and Apache Harmony/DRLVM.
 
 License
 ------------
-Gaudi is licensed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
+Gaudi is licensed under the [Apache License Version 2.0].(http://www.apache.org/licenses/LICENSE-2.0)
 For the summary of the license, please see the [LICENSE](http://github.com/stpettersens/Gaudi/blob/master/LICENSE) file.
