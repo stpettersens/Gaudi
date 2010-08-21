@@ -26,7 +26,7 @@ Gaudi's implementation has been inspired by both Ant (command agnosticism) and M
 Status
 ------
 Gaudi is still in the *earlier* stages of development.
-If you are curious, please feel free to look at the source code.
+If you are curious, please feel free to look at the [source code](/stpettersens/Gaudi/tree/master/src/org/stpettersens/gaudi).
 Though, as-is in this repository Gaudi is *not yet ready* for general
 use.
 
