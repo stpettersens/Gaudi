@@ -51,8 +51,9 @@ Gaudi depends on the following third-party Java libraries:
 - [Apache Commons IO Library](http://commons.apache.org/io)
 
 If building Gaudi with Gaudi (as in the case of potential upgrading),
-it supports dependency gathering like Apache Ant does. By convention:
->`$ gaudi dependencies`
+it supports dependency gathering like Apache Ant does. 
+Dependencies will be checked automatically before building the project,
+but you will be prompted to download any, unless the `-a` switch is provided.
 
 License
 ------------
