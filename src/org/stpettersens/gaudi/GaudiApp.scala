@@ -128,7 +128,7 @@ object GaudiApp {
 	  println("\nGaudi platform agnostic build tool")
 	  println("Copyright (c) 2010 Sam Saint-Pettersen")
 	  println("\nReleased under the Apache License v2.")
-	  println("\nUsage: gaudi [-i|-v|-g|-m][-q -f <build file> <operation>]")
+	  println("\nUsage: gaudi [-i|-v|-g|-m][-q -f <build file> \":<operation>\"]")
 	  println("\n-i: Display usage information and quit.")
 	  println("-v: Display version information and quit.")
 	  println("-g: Generate native Gaudi build file (build.json).")
