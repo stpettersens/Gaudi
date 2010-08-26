@@ -14,14 +14,14 @@ also abstracts commands related to building software away from the operating sys
 (e.g. `:erase` instead of `rm` on Unix-likes or `del` on Windows); 
 but differs in that:
 
-- Its build files are based on a JSON format rather than an XML format.
+- Its build files are based on a [JSON](http://www.json.org) format rather than an XML format.
 
 - It is *not* tailored to offer advanced features for a particular programming
   language, unlike Ant which is highly specialised for Java development.
 
 Inspiration
 -----------
-Gaudi's implementation has been inspired by both Ant (command agnosticism) and Make (task notation).
+Gaudi's implementation has been inspired by both Ant (command agnosticism) and [GNU Make](http://www.gnu.org/software/make) (task notation).
 
 Status
 ------
@@ -44,11 +44,13 @@ with the following (e.g. I ran Gaudi with...):
 
 Dependencies
 ------------
-Gaudi depends on the following third-party Java libraries:
+Gaudi depends on the following third-party JVM libraries:
 
 - [JSON.simple](http://code.google.com/p/json-simple)
 
 - [Apache Commons IO Library](http://commons.apache.org/io)
+
+- [Scala Library](http://www.scala-lang.org)
 
 If building Gaudi with Gaudi (as in the case of potential upgrading),
 it supports dependency gathering like Apache Ant does. 
