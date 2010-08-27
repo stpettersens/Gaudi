@@ -26,7 +26,7 @@ object GaudiLogger {
 	val logFile: String = "gaudiDebug.log"
 	val timestamp: DateFormat = new SimpleDateFormat("[MM-dd-yyyy HH:mm:ss]")
 
-	def dump(message: String) {
+	def dump(message: String): Unit = {
 		var out: PrintWriter = null
 		try {
 			out = new PrintWriter(new FileOutputStream(logFile, true))
