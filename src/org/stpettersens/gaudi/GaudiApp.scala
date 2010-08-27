@@ -36,8 +36,7 @@ object GaudiApp {
 	  var action: String = "build"
 	  val filePattn: Regex = """(\w+.json)""".r
 	  val actPattn: Regex = """([a-z]+)""".r
-	  val cmdPattn: Regex =
-	  """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
+	  val cmdPattn: Regex = """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
 	  
 	  /* Default behavior is to build project following
 	  build file in the current directory */
@@ -57,8 +56,8 @@ object GaudiApp {
 	 	 	 	  case actPattn(a) => action = a
 	 	 	 	  case cmdPattn(cmd, param) => runCommand(cmd, param)
 	 	 	 	  case _ => {
-	 	 	 	 	  displayError(
-	 	 	 	 	  String.format("Argument (%s is invalid)", arg))
+					  GaudiLogger.dump("Argument is invalid.")
+	 	 	 	 	  displayError(String.format("Argument (%s is invalid)", arg)) 	 	  
 	 	 	 	  }
 	 	 	  }
 	 	  }
@@ -119,8 +118,7 @@ object GaudiApp {
   }
   // Display version information and exit
   def displayVersion(): Unit = {
-	  println(
-	  String.format("\nGaudi v.%s [%s (%s)]\n", appVersion, env._1, env._2))
+	  println(String.format("\nGaudi v.%s [%s (%s)]\n", appVersion, env._1, env._2))
 	  System.exit(0)
   }
   // Display usage information and exit
@@ -128,7 +126,7 @@ object GaudiApp {
 	  println("\nGaudi platform agnostic build tool")
 	  println("Copyright (c) 2010 Sam Saint-Pettersen")
 	  println("\nReleased under the Apache License v2.")
-	  println("\nUsage: gaudi [-i|-v|-g|-m][-q -f <build file> \":<operation>\"]")
+	  println("\nUsage: gaudi [-i|-v|-g|-m][-q -f <build file>][\":<operation>\"]")
 	  println("\n-i: Display usage information and quit.")
 	  println("-v: Display version information and quit.")
 	  println("-g: Generate native Gaudi build file (build.json).")
