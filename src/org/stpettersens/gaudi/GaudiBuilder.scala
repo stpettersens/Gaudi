@@ -50,40 +50,40 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	}
 	// Extract command and param for execution
 	private def extractCommand(cmdParam: String): (String, String) = {
-		val cpPattn: Regex = 
-		"""\{\"(\w+)\"\:\"([\\\/\"\w\d\s\$\.\*\,\_\+\-\>\_]+)\"\}""".r
+		val cpPattn: Regex = """\{\"(\w+)\"\:\"([\\\/\"\w\d\s\$\.\*\,\_\+\-\>\_]+)\"\}""".r
 		var cpPattn(cmd: String, param: String) = cmdParam
 		(cmd, param)
 	}
 	// Print an error related to action or command and exit
 	private def printError(error: String): Unit = {
 		println(String.format("\tAborting: %s.", error))
+		GaudiLogger.dump(error)
 		System.exit(-1)
 	}
 	// Print executed command
-	private def printCommand(cmd: String, param: String): Unit = {
+	private def printCommand(command: String, param: String): Unit = {
 		if(beVerbose) {
-			println(String.format("\t:%s %s", cmd, param))
+			println(String.format("\t:%s %s", command, param))
 		}
 	}
 	// Execute a command in the action
-	def doCommand(cmd: String, param: String): Unit = {
-	
+	def doCommand(command: String, param: String): Unit = {
 		// Handle any potential wildcards in parameters
+		// for all commands other than :exec and :echo
 	    val wcc_param: String = handleWildcards(param)
-	    println("wcc_param -> " + wcc_param)
 
-		// Do not print "echo" commands, but do others
-		if(cmd != "echo") printCommand(cmd, param)
-		cmd match {
+		// Do not print "echo" commands, but do print others
+		if(command != "echo") printCommand(command, param)
+		command match {
 			case "exec" => {
 				val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
+				// -----------------------------------------------------------------
+				GaudiLogger.dump(String.format("Executed -> %s %s\n" +
+				"Wildcard matched -> %s", exe._1, exe._2, handleWildcards(exe._2)))
+				// -----------------------------------------------------------------
 				if(exe._1 != null) {
-					var p: Process = Runtime.getRuntime().exec(
-					String.format("%s %s", exe._1, wcc_param))
-					val reader = new BufferedReader(
-					new InputStreamReader(p.getErrorStream())
-					)
+					var p: Process = Runtime.getRuntime().exec(String.format("%s %s", exe._1, handleWildcards(exe._2)))
+					val reader = new BufferedReader(new InputStreamReader(p.getErrorStream()))
 					var line: String = reader.readLine()
 					if(line != null) println(String.format("\t~ %s", line))
 				}
@@ -91,14 +91,12 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 			case "mkdir" => {
 				val aDir: Boolean = new File(param).mkdir()
 				if(!aDir) {
-					printError(
-					String.format("Problem making dir -> %s", param)
-					)
+					printError(String.format("Problem making dir -> %s", param))
 				}
 			}
-			case "list" => println("\t-> " + handleWildcards(param))
+			case "list" => println(String.format("\t-> %s", wcc_param))
 			case "echo" => println(String.format("\t# %s", param))
-			case "erase" => new File(wcc_param).delete() // Add support for wildcard
+			case "erase" => new File(wcc_param).delete() // Add support for wildcards
 			case "copy" => {
 				val srcDest: Array[String] = param.split("->")
 				copyFile(new File(srcDest(0)), new File(srcDest(1)))
@@ -109,7 +107,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 				moveFile(new File(srcDest(0)), new File(srcDest(1)))
 			}
 			case _ => {
-				printError(String.format("%s is an invalid command", cmd))
+				printError(String.format("%s is an invalid command", command))
 			}
 		}
 	}

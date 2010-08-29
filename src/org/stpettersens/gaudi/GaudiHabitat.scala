@@ -64,7 +64,6 @@ object GaudiHabitat {
 		System.getProperty("os.name")
 		)
 	}
-	// TODO: Possibly change this to just return the executable, no param
 	def getExeWithExt(command: String): (String, String) = {
 		var pathTerm: String = null
 		if(getOSFamily() == 0) {

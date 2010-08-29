@@ -56,7 +56,6 @@ object GaudiApp {
 	 	 	 	  case actPattn(a) => action = a
 	 	 	 	  case cmdPattn(cmd, param) => runCommand(cmd, param)
 	 	 	 	  case _ => {
-					  GaudiLogger.dump("Argument is invalid.")
 	 	 	 	 	  displayError(String.format("Argument (%s is invalid)", arg)) 	 	  
 	 	 	 	  }
 	 	 	  }
@@ -108,12 +107,14 @@ object GaudiApp {
   }
   // Display an error
   def displayError(ex: Exception): Unit = {
-	  println(String.format("\nError with: %s.", ex.getMessage()))
+	  println(String.format("\nError with: %s.", ex.getMessage))
+	  GaudiLogger.dump(ex.getMessage)
 	  displayUsage(-1)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
 	  println(String.format("\nError with: %s.", ex))
+	  GaudiLogger.dump(ex)
 	  displayUsage(-1)
   }
   // Display version information and exit
