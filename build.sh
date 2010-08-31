@@ -1,5 +1,5 @@
 #!/bin/sh
-# Build Gaudi on *nix systems
+# Build Gaudi
 
 pkg="org/stpettersens/gaudi"
 jarF="Gaudi.jar"

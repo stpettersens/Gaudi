@@ -1,1 +1,0 @@
-Move GaudiLogger.dump() call into displayError()

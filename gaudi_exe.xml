@@ -1,0 +1,40 @@
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>console</headerType>
+  <jar>Gaudi.jar</jar>
+  <outfile>bin\gaudi.exe</outfile>
+  <errTitle>JVM is required...</errTitle>
+  <cmdLine></cmdLine>
+  <chdir></chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl>http://github.com/stpettersens/Gaudi</supportUrl>
+  <customProcName>true</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon></icon>
+  <classPath>
+    <mainClass>org.stpettersens.gaudi.GaudiApp</mainClass>
+    <cp>lib/scala-library.jar</cp>
+    <cp>lib/commons-io-1.4.jar</cp>
+    <cp>lib/json_simple-1.1.jar</cp>
+  </classPath>
+  <jre>
+    <path></path>
+    <minVersion>1.6.0</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+  </jre>
+  <versionInfo>
+    <fileVersion>0.1.0.0</fileVersion>
+    <txtFileVersion>0.1.0.0</txtFileVersion>
+    <fileDescription>Gaudi platform agnostic build tool</fileDescription>
+    <copyright>(c) 2010 Sam Saint-Pettersen</copyright>
+    <productVersion>0.1.0.0</productVersion>
+    <txtProductVersion>0.1.0.0</txtProductVersion>
+    <productName>Gaudi</productName>
+    <companyName>http://github.com/stpettersens/Gaudi</companyName>
+    <internalName>gaudi</internalName>
+    <originalFilename>gaudi.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>
