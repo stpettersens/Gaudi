@@ -1,14 +1,14 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>console</headerType>
-  <jar>Gaudi.jar</jar>
+  <jar>bin\Gaudi.jar</jar>
   <outfile>bin\gaudi.exe</outfile>
-  <errTitle>JVM is required...</errTitle>
+  <errTitle>gaudi.exe</errTitle>
   <cmdLine></cmdLine>
   <chdir></chdir>
   <priority>normal</priority>
   <downloadUrl>http://java.com/download</downloadUrl>
-  <supportUrl>http://github.com/stpettersens/Gaudi</supportUrl>
+  <supportUrl></supportUrl>
   <customProcName>true</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>

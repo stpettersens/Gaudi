@@ -11,7 +11,6 @@ echo "Packaging..."
 cp Manifest.mf bin
 cd bin
 jar cfm $jarF Manifest.mf *
-mv $jarF ..
 rm Manifest.mf
 cd ..
 echo "Done."
