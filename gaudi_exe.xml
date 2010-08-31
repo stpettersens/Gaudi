@@ -33,7 +33,7 @@
     <productVersion>0.1.0.0</productVersion>
     <txtProductVersion>0.1.0.0</txtProductVersion>
     <productName>Gaudi</productName>
-    <companyName>http://github.com/stpettersens/Gaudi</companyName>
+    <companyName>Sam Saint-Pettersen</companyName>
     <internalName>gaudi</internalName>
     <originalFilename>gaudi.exe</originalFilename>
   </versionInfo>
