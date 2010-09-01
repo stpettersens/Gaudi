@@ -3,9 +3,11 @@
 
 echo "Cleaning up..."
 rm *.log
-rm bin/*.exe
+rm dist/*.exe
+rm dist/*.jar
+rm dist/*.log
 rm bin/*.jar
 rm bin/*.log
 rm -f -r bin/org
+rm -f -r dist/lib
 echo "Done."
-
