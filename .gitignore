@@ -7,6 +7,7 @@
 .scala_dependencies
 .settings
 .metadata
+.version
 dist/lib/
-
+cjar
 
