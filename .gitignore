@@ -7,4 +7,6 @@
 .scala_dependencies
 .settings
 .metadata
+dist/lib/
+
 
