@@ -5,7 +5,6 @@
 
 if [[ -e "bin/Gaudi.jar" ]]; then
 	cd dist
-	rm *.log
 	echo "Generating Windows executable (with deps).."
 	launch4jc gaudi_exe.xml
 	echo "Done."
