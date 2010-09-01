@@ -1,7 +1,7 @@
 #!/bin/bash
 # Build Gaudi
 
-sep=";" # initially use Windows, ";"
+sep=";" # Initially use Windows, ";"
 
 # For Linux, Unix/xBSD - use ":"
 if [[ `uname` =~ .*n.*x|.+BSD ]]; then

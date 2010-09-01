@@ -1,10 +1,16 @@
-#!/bin/sh
+#!/bin/bash
 # Generate Gaudi executable for Windows
-# using Launch4j(c)
+# using Launch4j with libs/ deps
+# (installation version)
 # http://launch4j.sourceforge.net
 
-echo "Generating Windows executable.."
-cp -r lib dist/
-cp bin/Gaudi.jar dist/
-launch4jc dist/gaudi_exe.xml
-echo "Done."
+if [[ -e "bin/Gaudi.jar" ]]; then
+	cd dist
+	rm *.log
+	echo "Generating Windows executable (with deps).."
+	launch4jc gaudi_exe.xml
+	echo "Built .exe *has* deps." >> built_exe.log
+	echo "Done."
+
+else echo "Important! You must run 'sh/build.sh' first."
+fi
