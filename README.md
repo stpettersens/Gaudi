@@ -59,7 +59,7 @@ but you will be prompted to download any, unless the `-a` switch is provided.
 
 License
 ------------
-Gaudi (and the used third-party libraries) is licensed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+Gaudi and its dependencies, except the Scala Library, are licensed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 For the summary of the license, please see the [LICENSE](http://github.com/stpettersens/Gaudi/blob/master/LICENSE) file.
 
 Usage
