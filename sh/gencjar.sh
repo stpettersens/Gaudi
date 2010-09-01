@@ -40,5 +40,5 @@ if [[ -e "bin/"$appJar ]]; then
 	rm -f -r cjar
 	echo "Done."
 else
-	echo "Important! You must run 'sh/build.sh' first."
+	echo "Important! Run 'sh/build.sh' first."
 fi
