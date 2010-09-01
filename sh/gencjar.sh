@@ -3,9 +3,15 @@
 # using One-JAR bootstrap jar
 # http://one-jar.sourceforge.net
 
+wcard=* # Initially use Windows, "*"
 appJar="Gaudi.jar"
 oneJar="one-jar-boot-0.97.jar"
-mainClass="One-Jar-Main-Class: org.stpettersens.gaudi.GaudiApp\r\n"
+mainClass="One-Jar-Main-Class: org.stpettersens.gaudi.GaudiApp"
+
+# For Linux, Unix/xBSD - use "."
+if [[ `uname` =~ .*n.*x|.+BSD ]]; then
+	wcard="."
+fi
 
 if [[ -e "bin/"$appJar ]]; then
 	echo "**************************"
@@ -21,15 +27,16 @@ if [[ -e "bin/"$appJar ]]; then
 	rm OneJar.class
 	rm -r -f src
 	echo $mainClass >> boot-manifest.mf
+	echo "" >> boot-manifest.mf
 	mkdir main
 	cd ..
 	cp bin/$appJar cjar/main
 
 	echo "Packaging..."
 	cd cjar
-	jar cfvm $appJar boot-manifest.mf .
+	jar cfvm c$appJar boot-manifest.mf $wcard
 	cd ..
-	mv cjar/$appJar dist
+	mv cjar/c$appJar dist/$appJar
 	rm -f -r cjar
 	echo "Done."
 else
