@@ -4,7 +4,7 @@
 sep=";" # Initially use Windows, ";"
 
 # For Unix-likes (Linux/Unix/xBSD/Darwin/Mac OS X) - use ":"
-if [[ `uname` =~ .*n.*x|.+BSD|Darwin]]; then
+if [[ `uname` =~ .+n.+x|.+BSD|Darwin ]]; then
 	sep=":"
 fi
 
@@ -18,7 +18,7 @@ scalac -classpath $deps -verbose -deprecation -unchecked -d bin src/$pkg/*.scala
 echo "Packaging..."
 cp Manifest.mf bin
 cd bin
-jar cfm $jarF Manifest.mf *
+jar cfvm $jarF Manifest.mf *
 rm Manifest.mf
 cd ..
 echo "Done."

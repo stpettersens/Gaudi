@@ -11,5 +11,5 @@ For example:
 
 `sam@ubuntu:~/Gaudi$ sh/build.sh`
 
-... would build Gaudi.
+... will build Gaudi.
 

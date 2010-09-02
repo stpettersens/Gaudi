@@ -10,3 +10,4 @@ if [[ -e "dist/gaudi.exe" ]]; then
 else
 	echo "Important! 'Run sh/genexe.sh' first."
 fi
+

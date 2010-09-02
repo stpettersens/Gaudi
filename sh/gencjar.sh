@@ -8,8 +8,8 @@ appJar="Gaudi.jar"
 oneJar="one-jar-boot-0.97.jar"
 mainClass="One-Jar-Main-Class: org.stpettersens.gaudi.GaudiApp"
 
-# For Linux, Unix/xBSD/Darwin/Mac OS X - use "."
-if [[ `uname` =~ .*n.*x|.+BSD|Darwin ]]; then
+# For Unix-likes (Linux,Unix/xBSD/Darwin/Mac OS X - use "."
+if [[ `uname` =~ .+n.+x|.+BSD|Darwin ]]; then
 	wcard="."
 fi
 

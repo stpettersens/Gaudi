@@ -1,3 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 # Run Gaudi on *nix systems
-java -jar Gaudi.jar "$@"
+
+jar=Gaudi.jar
+if [[ -n $JAVA_HOME ]]; then 
+	$JAVA_HOME -jar $jar $@
+else
+	java -jar $jar  $@
+fi
+
