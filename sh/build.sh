@@ -3,8 +3,8 @@
 
 sep=";" # Initially use Windows, ";"
 
-# For Linux, Unix/xBSD - use ":"
-if [[ `uname` =~ .*n.*x|.+BSD ]]; then
+# For Unix-likes (Linux/Unix/xBSD/Darwin/Mac OS X) - use ":"
+if [[ `uname` =~ .*n.*x|.+BSD|Darwin]]; then
 	sep=":"
 fi
 
@@ -22,3 +22,4 @@ jar cfm $jarF Manifest.mf *
 rm Manifest.mf
 cd ..
 echo "Done."
+

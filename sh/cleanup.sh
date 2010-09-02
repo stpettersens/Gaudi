@@ -11,3 +11,4 @@ rm bin/*.log
 rm -f -r bin/org
 rm -f -r dist/lib
 echo "Done."
+

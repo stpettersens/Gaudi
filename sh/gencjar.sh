@@ -8,8 +8,8 @@ appJar="Gaudi.jar"
 oneJar="one-jar-boot-0.97.jar"
 mainClass="One-Jar-Main-Class: org.stpettersens.gaudi.GaudiApp"
 
-# For Linux, Unix/xBSD - use "."
-if [[ `uname` =~ .*n.*x|.+BSD ]]; then
+# For Linux, Unix/xBSD/Darwin/Mac OS X - use "."
+if [[ `uname` =~ .*n.*x|.+BSD|Darwin ]]; then
 	wcard="."
 fi
 
@@ -42,3 +42,4 @@ if [[ -e "bin/"$appJar ]]; then
 else
 	echo "Important! Run 'sh/build.sh' first."
 fi
+
