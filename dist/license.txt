@@ -27,3 +27,14 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+The wrapped executable, created with:
+
+Launch4j
+Copyright 2005-2008 Grzegorz Kowal.
+http://lauch4j.sourceforge.net
+
+This program is free software licensed under the BSD license, 
+the 'head' subproject (the code which is attached to the wrapped jars) is 
+licensed under the MIT license. Launch4j may be used for 
+wrapping closed source, commercial applications.
