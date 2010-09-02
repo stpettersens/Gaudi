@@ -77,10 +77,6 @@ The distributable all-in-one JAR is additionally licensed in part under
 a [BSD-style license](http://one-jar.sourceforge.net/index.php?page=documents&file=license),
 included within the distributed JAR.
 
-The Launch4j Windows executable is additonally licensed in part under the 
-[BSD](http://www.opensource.org/licenses/bsd-license.html) and 
-[MIT](http://www.opensource.org/licenses/mit-license.html) licenses.
-
 Usage
 -----
 For instructions on how to use Gaudi, please run Gaudi itself with the information (`-i`) switch,
