@@ -4,9 +4,11 @@
 # http://launch4j.sourceforge.net
 
 if [[ -e "bin/Gaudi.jar" ]]; then
-	cd dist
 	echo "Generating Windows executable (with deps).."
-	launch4jc gaudi_exe.xml
+	cp -r lib dist
+	cp bin/Gaudi.jar dist
+	launch4jc dist/gaudi_exe.xml
+	rm -f dist/Gaudi.jar
 	echo "Done."
 
 else 

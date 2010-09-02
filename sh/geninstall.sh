@@ -3,7 +3,7 @@
 # using MakeNSIS with NSIS script
 # http://nsis.sourceforge.net
 
-if [[ -b "dist/gaudi.exe" ]]; then
+if [[ -e "dist/gaudi.exe" ]]; then
 	echo "Generating Windows installer.."
 	makensis dist/gaudi_setup.nsi
 	echo "Done."
