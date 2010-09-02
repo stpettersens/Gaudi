@@ -42,6 +42,17 @@ with the following (e.g. I ran Gaudi with...):
 
 - [GNU GIJ (GCJ project)](http://gcc.gnu.org/java)
 
+Distributions
+-------------
+Gaudi will be available as installable Windows executable
+(courtesy of [NSIS](http://nsis.sourceforge.net) and 
+[Launch4j](http://launch4j.sourceforge.net)) and
+also a an all-in-jar executable JAR (courtesy of [One-JAR](http://one-jar.sourceforge.net)).
+If you want to specify which JVM other than the system default you want to use or
+are using a system other than Windows, please use the all-in-one JAR version.
+
+For more information, consult the Wiki. (Coming soon).
+
 Dependencies
 ------------
 Gaudi depends on the following third-party JVM libraries:
@@ -59,13 +70,21 @@ but you will be prompted to download any, unless the `-a` switch is provided.
 
 License
 ------------
-Gaudi and its dependencies, except the Scala Library, are licensed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+Gaudi and its dependencies, [except the Scala Library](http://www.scala-lang.org/node/146), are licensed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 For the summary of the license, please see the [LICENSE](http://github.com/stpettersens/Gaudi/blob/master/LICENSE) file.
+
+The distributable all-in-one JAR is additionally licensed in part under
+a [BSD-style license](http://one-jar.sourceforge.net/index.php?page=documents&file=license),
+included within the distributed JAR.
+
+The Launch4j Windows executable is additonally licensed in part under the 
+[BSD](http://www.opensource.org/licenses/bsd-license.html) and 
+[MIT](http://www.opensource.org/licenses/mit-license.html) licenses.
 
 Usage
 -----
 For instructions on how to use Gaudi, please run Gaudi itself with the information (`-i`) switch,
-like so:
+like so (assuming in system PATH):
 >`$ gaudi -i`
 
 For more in-depth explanation of usage, please refer to the Wiki. (Coming later).
