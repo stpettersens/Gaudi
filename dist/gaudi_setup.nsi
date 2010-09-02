@@ -1,6 +1,9 @@
 # Gaudi installation script (NSIS) for Windows
 # Auto-generated in part by EclipseNSIS Script Wizard
 
+# This script uses EnvVarUpdate.nsh from:
+# http://nsis.sourceforge.net/Environmental_Variables:_append,_prepend,_and_remove_entries
+
 Name Gaudi
 
 # General Symbol Definitions
@@ -25,6 +28,8 @@ Name Gaudi
 # Included files
 !include Sections.nsh
 !include MUI2.nsh
+!include LogicLib.nsh
+!include EnvVarUpdate.nsh
 
 # Variables
 Var StartMenuGroup
@@ -70,6 +75,7 @@ Section -Main SEC0000
     File lib\json_simple-1.1.jar
     File lib\commons-io-1.4.jar
     WriteRegStr HKLM "${REGKEY}\Components" Main 1
+    
 SectionEnd
 
 Section -post SEC0001
@@ -87,7 +93,8 @@ Section -post SEC0001
     WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayIcon $INSTDIR\uninstall.exe
     WriteRegStr HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" UninstallString $INSTDIR\uninstall.exe
     WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoModify 1
-    WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoRepair 1
+    WriteRegDWORD HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoRepair 1 
+    ${EnvVarUpdate} $0 "PATH" "A" "HKLM" $INSTDIR ; Append to PATH
 SectionEnd
 
 # Macro for selecting uninstaller sections
@@ -124,7 +131,9 @@ Section -un.post UNSEC0001
     RmDir $SMPROGRAMS\$StartMenuGroup
     RmDir $INSTDIR\lib
     RmDir $INSTDIR
+    ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" $INSTDIR ; Remove from PATH
 SectionEnd
+
 
 # Installer functions
 Function .onInit
