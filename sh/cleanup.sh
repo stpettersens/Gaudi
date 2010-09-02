@@ -13,6 +13,6 @@ for file in ${files[@]}
 			echo Cleaning $f
 			rm -f -r $f
 		fi
-done
+	done
 echo "Done."
 
