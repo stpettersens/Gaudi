@@ -81,7 +81,7 @@ Usage
 -----
 For instructions on how to use Gaudi, please run Gaudi itself with the information (`-i`) switch,
 like so (assuming in system PATH):
->`$ gaudi -i`
+>`sam@ubuntu:~$ gaudi -i`
 
 For more in-depth explanation of usage, please refer to the Wiki. (Coming later).
 

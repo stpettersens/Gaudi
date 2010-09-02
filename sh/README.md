@@ -9,7 +9,7 @@ to build Gaudi and generate its distributables
 These scripts should be run from the root directory.
 For example:
 
-`sam@ubuntu:~/Gaudi$ sh/build.sh`
+`sam@ubuntu:~/Gaudi$ _sh/build.sh_`
 
 ... will build Gaudi.
 
