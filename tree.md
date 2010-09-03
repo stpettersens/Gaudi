@@ -4,24 +4,24 @@ Tree
 This is an experiment to print a tree structure
 as echoed by `tree` with *Markdown*.
 
->Gaudi
+`Gaudi
 |-- bin/
 |-- build.json
 |-- dist/
 |   |-- gaudi*
 |   |-- gaudi_exe.xml
 |   |-- gaudi_setup.nsi
-|   `-- license.txt
+|   |-- license.txt
 |-- examples/
-|   `-- HelloWorld/
+|   |-- HelloWorld/
 |       |-- build.json
 |       |-- hw.cpp
-|       `-- README
+|       |-- README
 |-- lib/
 |   |-- commons-io-1.4.jar
 |   |-- json_simple-1.1.jar
 |   |-- one-jar-boot-0.97.jar
-|   `-- scala-library.jar
+|   |-- scala-library.jar
 |-- LICENSE
 |-- Manifest.mf
 |-- README.md
@@ -31,15 +31,15 @@ as echoed by `tree` with *Markdown*.
 |   |-- gencjar.sh*
 |   |-- genexe.sh*
 |   |-- geninstall.sh*
-|   `-- README.md
-`-- src/
-    `-- org/
-        `-- stpettersens/
-            `-- gaudi/
+|   |-- README.md
+|-- src/
+    |-- org/
+        |-- stpettersens/
+            |-- gaudi/
                 |-- GaudiApp.scala
                 |-- GaudiBuilder.scala
                 |-- GaudiForeman.scala
                 |-- GaudiHabitat.scala
-                `-- GaudiLogger.scala
+                |-- GaudiLogger.scala
 `
 
