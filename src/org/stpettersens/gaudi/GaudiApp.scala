@@ -109,13 +109,13 @@ object GaudiApp {
   def displayError(ex: Exception): Unit = {
 	  println(String.format("\nError with: %s.", ex.getMessage))
 	  GaudiLogger.dump(ex.getMessage)
-	  displayUsage(-1)
+	  displayUsage(1)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
 	  println(String.format("\nError with: %s.", ex))
 	  GaudiLogger.dump(ex)
-	  displayUsage(-1)
+	  displayUsage(1)
   }
   // Display version information and exit
   def displayVersion(): Unit = {
@@ -128,7 +128,7 @@ object GaudiApp {
 	  println("Copyright (c) 2010 Sam Saint-Pettersen")
 	  println("\nReleased under the Apache License v2.")
 	  println("\nUsage: gaudi [-i|-v|-g|-m][-q -f <build file>][\":<operation>\"]")
-	  println("\n-i: Display usage information and quit.")
+	  println("\n-i: Di`splay usage information and quit.")
 	  println("-v: Display version information and quit.")
 	  println("-g: Generate native Gaudi build file (build.json).")
 	  println("-m: Generate GNU Makefile from build.json.")

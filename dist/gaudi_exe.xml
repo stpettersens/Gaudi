@@ -8,7 +8,7 @@
   <chdir></chdir>
   <priority>normal</priority>
   <downloadUrl>http://java.com/download</downloadUrl>
-  <supportUrl></supportUrl>
+  <supportUrl>http://github.com/stpettersens/Gaudi</supportUrl>
   <customProcName>true</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>
@@ -23,7 +23,7 @@
     <path></path>
     <minVersion>1.5.0</minVersion>
     <maxVersion></maxVersion>
-    <jdkPreference>preferJre</jdkPreference>
+    <jdkPreference>jreOnly</jdkPreference>
   </jre>
   <versionInfo>
     <fileVersion>0.1.0.0</fileVersion>
