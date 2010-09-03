@@ -4,7 +4,7 @@ Tree
 This is an experiment to print a tree structure
 as echoed by `tree` with *Markdown*.
 
-`Gaudi
+>Gaudi
 |-- bin/
 |-- build.json
 |-- dist/
