@@ -1,5 +1,5 @@
 #!/bin/bash
-# Clean-up Gaudi generated files
+# Clean-up files built for Gaudi
 
 files=( 
 	dist/*.log dist/*.exe dist/*.jar bin/org bin/*.jar 
@@ -8,11 +8,10 @@ files=(
 echo "Cleaning up..."
 for file in ${files[@]}
 	do
-		f=$dir$file
+		f=$file
 		if [[ -e $f ]]; then
 			echo Cleaning $f
 			rm -f -r $f
 		fi
 	done
 echo "Done."
-
