@@ -7,7 +7,7 @@ makensis=makensis # For Windows, use as-is
 
 # For Unix-likes (Linux/Unix/xBSD/Darwin/Mac OS X) - use wine
 if [[ `uname` =~ .+n.+x|.+BSD|Darwin ]]; then
-     makensis="wine $makensis"
+	makensis="wine $makensis"
 fi
 
 if [[ -e "dist/gaudi.exe" ]]; then
