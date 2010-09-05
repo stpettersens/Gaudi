@@ -12,6 +12,7 @@ Name Gaudi
 !define COMPANY "Sam Saint-Pettersen"
 !define URL github.com/stpettersens/Gaudi
 !define DESC "Gaudi platform agnostic build tool"
+!define COPYRIGHT "(c) 2010 Sam Saint-Pettersen"
 
 # MUI Symbol Definitions
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\orange-install.ico"
@@ -37,6 +38,7 @@ Var StartMenuGroup
 # Installer pages
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE license.txt
+!insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
 !insertmacro MUI_PAGE_INSTFILES
@@ -60,20 +62,48 @@ VIAddVersionKey CompanyName "${COMPANY}"
 VIAddVersionKey CompanyWebsite "${URL}"
 VIAddVersionKey FileVersion "${VERSION}"
 VIAddVersionKey FileDescription "${DESC}"
-VIAddVersionKey LegalCopyright ""
+VIAddVersionKey LegalCopyright "${COPYRIGHT}"
 InstallDirRegKey HKLM "${REGKEY}" Path
 ShowUninstDetails show
 
-# Installer sections
-Section -Main SEC0000
+# Component selection
+InstType /COMPONENTSONLYONCUSTOM
+Section "Gaudi tool" GaudiTool
+    SectionIn 1 RO
     SetOutPath $INSTDIR
-    SetOverwrite on
     File gaudi.exe
     File license.txt
+SectionEnd
+
+Section "Scala library" ScalaLib
     SetOutPath $INSTDIR\lib
     File lib\scala-library.jar
+SectionEnd
+
+Section "JSON.simple lib." JSONLib
+    SetOutPath $INSTDIR\lib
     File lib\json_simple-1.1.jar
+SectionEnd
+
+Section "Apache Commons IO lib." IOLib
+    SetOutPath $INSTDIR\lib
     File lib\commons-io-1.4.jar
+SectionEnd
+
+LangString DESC_GaudiTool ${LANG_ENGLISH} "Gaudi executable (required)."
+LangString DESC_ScalaLib ${LANG_ENGLISH} "Scala language library."
+LangString DESC_JSONLib ${LANG_ENGLISH} "JSON.simple library."
+LangString DESC_IOLib ${LANG_ENGLISH} "Apache Commons IO library."
+!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+  !insertmacro MUI_DESCRIPTION_TEXT ${GaudiTool} $(DESC_GaudiTool)
+  !insertmacro MUI_DESCRIPTION_TEXT ${ScalaLib} $(DESC_ScalaLib)
+  !insertmacro MUI_DESCRIPTION_TEXT ${JSONLib} $(DESC_JSONLib)
+  !insertmacro MUI_DESCRIPTION_TEXT ${IOLib} $(DESC_IOLib)
+!insertmacro MUI_FUNCTION_DESCRIPTION_END
+
+# Installer sections
+Section -Main SEC0000
+    SetOverwrite on
     WriteRegStr HKLM "${REGKEY}\Components" Main 1
     
 SectionEnd
