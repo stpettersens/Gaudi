@@ -1,8 +1,9 @@
 # Gaudi installation script (NSIS) for Windows
 # Auto-generated in part by EclipseNSIS Script Wizard
-
+#
 # This script uses EnvVarUpdate.nsh from:
 # http://nsis.sourceforge.net/Environmental_Variables:_append,_prepend,_and_remove_entries
+#
 
 Name Gaudi
 
@@ -30,10 +31,12 @@ Name Gaudi
 !include Sections.nsh
 !include MUI2.nsh
 !include LogicLib.nsh
-!include EnvVarUpdate.nsh
+; " " Quoted includes do not ship with NSIS by default
+!include "EnvVarUpdate.nsh" 
 
 # Variables
 Var StartMenuGroup
+Var FoundLibs
 
 # Installer pages
 !insertmacro MUI_PAGE_WELCOME
@@ -42,7 +45,6 @@ Var StartMenuGroup
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
 !insertmacro MUI_PAGE_INSTFILES
-!insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 
@@ -67,9 +69,65 @@ InstallDirRegKey HKLM "${REGKEY}" Path
 ShowUninstDetails show
 
 # Detect presence of a suitable JVM environment on system
+# That is, that it exists and is at least version 1.5+ capable
+Function detectJVM
+	SetOutPath .
+	ReserveFile JavaCheck.class
+	nsExec::ExecToStack `java -cp . JavaCheck 1.5` ; Attempt to execute Java checker program
+	Pop $0 ; Pop return code from program from stack
+	Pop $1 ; Pop stdout from program from stack
+	${If} $0 == "error" ; Error occcurs when 'java' cannot be found...
+		DetailPrint "No JVM detected!"
+		${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "No JVM was detected. Download one now?" IDYES`
+		downloadJVM:
+		; Go to download site for Java; possibly change to list of Gaudi-compatible JVMs
+		DetailPrint "Opening Java download page in your web browser."
+		ExecShell "open" "http://www.java.com/download" 
+		GoTo badJVM
+		${Else}
+			GoTo badJVM
+		${EndIf}
+	${EndIf}
+	Delete JavaCheck.class
+	DetailPrint "Detected JVM: version $1" ; Display detected version 
+	# Check this JVM meets minimum version requirement (v1.5.x)
+	${If} $0 == "1"
+		DetailPrint "JVM reports suitable version (1.5+)"
+		GoTo goodJVM
+	${Else}
+		DetailPrint "JVM reports unsuitable version (< 1.5)"
+		DetailPrint "Please update it."
+		GoTo downloadJVM
+		badJVM:
+		DetailPrint "JVM requirement was not met, so installation was aborted."
+		DetailPrint "Please download and/or install a suitable JVM and run this setup again."
+		Abort
+		goodJVM: 
+	${EndIf}
+FunctionEnd
 
 # Detect if third-party libraries Gaudi requires are
-# present on system and add them to found JVM's CLASSPATH
+# present on system. If so, add them to found JVM's CLASSPATH
+Function detectTPLibs
+	# TODO ...
+	StrCpy $FoundLibs "dummyDir"
+	;${EnvVarUpdate} $0 "CLASSPATH" "A" "HKLM" $FoundLibs ;TODO
+FunctionEnd
+
+# Prompt user if they want installed libraries to be available
+# to other JVM-based programs, when called from detectTBLibs this is done automatically
+Function addLibsToClassPath
+	${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Add libraries to CLASSPATH?" IDYES`
+		;${EnvVarUpdate} $0 "CLASSPATH" "A" "HKLM" $INSTDIR\libs ; Add libraries to CLASSPATH
+	${EndIf}
+FunctionEnd
+
+# Installer sections
+Section -Main SEC0000
+	Call detectJVM
+	Call detectTPLibs
+	SetOverwrite on
+SectionEnd
 
 # Component selection
 InstType /COMPONENTSONLYONCUSTOM
@@ -94,13 +152,9 @@ LangString DESC_TPLibs ${LANG_ENGLISH} "Third party libraries Gaudi depends on."
   !insertmacro MUI_DESCRIPTION_TEXT ${TPLibs} $(DESC_TPLibs)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
-# Installer sections
-Section -Main SEC0000
-    SetOverwrite on
-    WriteRegStr HKLM "${REGKEY}\Components" Main 1
-SectionEnd
-
 Section -post SEC0001
+	
+    WriteRegStr HKLM "${REGKEY}\Components" Main 1
     WriteRegStr HKLM "${REGKEY}" Path $INSTDIR
     SetOutPath $INSTDIR
     WriteUninstaller $INSTDIR\uninstall.exe
@@ -136,9 +190,8 @@ done${UNSECTION_ID}:
 Section /o -un.Main UNSEC0000
     Delete $INSTDIR\gaudi.exe
     Delete $INSTDIR\license.txt
-    Delete $INSTDIR\lib\scala-library.jar
-    Delete $INSTDIR\lib\json_simple-1.1.jar
-    Delete $INSTDIR\lib\commons-io-1.4.jar
+	Delete $INSTDIR\*.log
+    Delete $INSTDIR\lib\*
     DeleteRegValue HKLM "${REGKEY}\Components" Main
 SectionEnd
 
@@ -151,9 +204,11 @@ Section -un.post UNSEC0001
     DeleteRegKey /IfEmpty HKLM "${REGKEY}\Components"
     DeleteRegKey /IfEmpty HKLM "${REGKEY}"
     RmDir $SMPROGRAMS\$StartMenuGroup
-    RmDir $INSTDIR\lib
+	RmDir $INSTDIR\lib
     RmDir $INSTDIR
     ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" $INSTDIR ; Remove from PATH
+	;${un.EnvVarUpdate} $0 "CLASSPATH" "R" "HKLM" $FoundLibs ; Remove any found libs from CLASSPATH (CP)
+	;${un.EnvVarUpdate} $0 "CLASSPATH" "R" "HKLM" $INSTDIR\libs ; Remove any libs installed with Gaudi from CP
 SectionEnd
 
 
