@@ -14,7 +14,7 @@
 	
 	Usage: java -cp . JavaCheck <desired version>
 	Output: x.x.x_x (Java version)
-	Exit code: 0 (true) / 1 (false)(Java installed, is desired version or greater)
+	Exit code: 0 (false) / 1 (true)(Java installed, is desired version or greater)
 */
 import java.util.regex.*;
 
