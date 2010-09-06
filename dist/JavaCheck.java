@@ -12,7 +12,7 @@
 	Output: x.x.x_x (Java version)
 	Exit code: -1 (neither true or false)
 	
-	Usage: java -cp . JavaCheck <desired version>
+	Usage: java -cp . JavaCheck <minimal version>
 	Output: x.x.x_x (Java version)
 	Exit code: 0 (false) / 1 (true)(Java installed, is desired version or greater)
 */
