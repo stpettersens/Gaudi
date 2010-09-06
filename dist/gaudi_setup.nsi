@@ -39,10 +39,10 @@ Var StartMenuGroup
 Var FoundLibs
 
 # Installer pages
-!insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE license.txt
+;!insertmacro MUI_PAGE_WELCOME
+;!insertmacro MUI_PAGE_LICENSE license.txt
 !insertmacro MUI_PAGE_COMPONENTS
-!insertmacro MUI_PAGE_DIRECTORY
+;!insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_UNPAGE_CONFIRM
@@ -72,11 +72,11 @@ ShowUninstDetails show
 # That is, that it exists and is at least version 1.5+ capable
 Function detectJVM
 	SetOutPath .
-	ReserveFile JavaCheck.class
-	nsExec::ExecToStack `java -cp . JavaCheck 1.5` ; Attempt to execute Java checker program
+	File JavaCheck.class ; Extract small Java version checker program
+	nsExec::ExecToStack `java -classpath . JavaCheck 1.5` ; Attempt to execute Java version checker program
 	Pop $0 ; Pop return code from program from stack
 	Pop $1 ; Pop stdout from program from stack
-	${If} $0 == "error" ; Error occcurs when 'java' cannot be found...
+	${If} $0 == "error" ; Error occurs when a JVM cannot be found...
 		DetailPrint "No JVM detected!"
 		${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "No JVM was detected. Download one now?" IDYES`
 		downloadJVM:
@@ -88,7 +88,7 @@ Function detectJVM
 			GoTo badJVM
 		${EndIf}
 	${EndIf}
-	Delete JavaCheck.class
+	Delete JavaCheck.class ; Done with this program, delete it
 	DetailPrint "Detected JVM: version $1" ; Display detected version 
 	# Check this JVM meets minimum version requirement (v1.5.x)
 	${If} $0 == "1"
