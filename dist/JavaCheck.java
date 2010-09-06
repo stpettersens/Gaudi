@@ -3,7 +3,7 @@
 	@author Sam Saint-Pettersen, 2010
 	Released into the public domain
 	
-	Orignally written for use with 
+	Originally written for use with 
 	the NSIS installation script for Gaudi
 	
 	But use as you like. No warranty.
