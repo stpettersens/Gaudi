@@ -14,7 +14,7 @@
 	
 	Usage: java -cp . JavaCheck <minimal version>
 	Output: x.x.x_x (Java version)
-	Exit code: 0 (false) / 1 (true)(Java installed, is desired version or greater)
+	Exit code: 0 (false) / 1 (true)(Java installed, is minimal version or greater)
 */
 import java.util.regex.*;
 
@@ -23,7 +23,7 @@ class JavaCheck {
 		short returned = 0; // Return exit code 0 for false, default assumption
 		String detectedVer = System.getProperty("java.version");
 		System.out.println(detectedVer);
-		// When minimal version argument is provided, return either exit code 1 or 0
+		// When minimal version argument is provided, return either exit code 0 or 1
 		if(args.length == 1) {
 			Pattern p = Pattern.compile("\\d\\.\\d");
 			Matcher m = p.matcher(detectedVer); m.find();
