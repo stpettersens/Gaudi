@@ -66,6 +66,11 @@ VIAddVersionKey LegalCopyright "${COPYRIGHT}"
 InstallDirRegKey HKLM "${REGKEY}" Path
 ShowUninstDetails show
 
+# Detect presence of a suitable JVM environment on system
+
+# Detect if third-party libraries Gaudi requires are
+# present on system and add them to found JVM's CLASSPATH
+
 # Component selection
 InstType /COMPONENTSONLYONCUSTOM
 Section "Gaudi tool" GaudiTool
@@ -75,37 +80,24 @@ Section "Gaudi tool" GaudiTool
     File license.txt
 SectionEnd
 
-Section "Scala library" ScalaLib
+Section "Third-party libraries" TPLibs
     SetOutPath $INSTDIR\lib
     File lib\scala-library.jar
-SectionEnd
-
-Section "JSON.simple lib." JSONLib
-    SetOutPath $INSTDIR\lib
     File lib\json_simple-1.1.jar
-SectionEnd
-
-Section "Apache Commons IO lib." IOLib
-    SetOutPath $INSTDIR\lib
     File lib\commons-io-1.4.jar
 SectionEnd
 
 LangString DESC_GaudiTool ${LANG_ENGLISH} "Gaudi executable (required)."
-LangString DESC_ScalaLib ${LANG_ENGLISH} "Scala language library."
-LangString DESC_JSONLib ${LANG_ENGLISH} "JSON.simple library."
-LangString DESC_IOLib ${LANG_ENGLISH} "Apache Commons IO library."
+LangString DESC_TPLibs ${LANG_ENGLISH} "Third party libraries Gaudi depends on."
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${GaudiTool} $(DESC_GaudiTool)
-  !insertmacro MUI_DESCRIPTION_TEXT ${ScalaLib} $(DESC_ScalaLib)
-  !insertmacro MUI_DESCRIPTION_TEXT ${JSONLib} $(DESC_JSONLib)
-  !insertmacro MUI_DESCRIPTION_TEXT ${IOLib} $(DESC_IOLib)
+  !insertmacro MUI_DESCRIPTION_TEXT ${TPLibs} $(DESC_TPLibs)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 # Installer sections
 Section -Main SEC0000
     SetOverwrite on
     WriteRegStr HKLM "${REGKEY}\Components" Main 1
-    
 SectionEnd
 
 Section -post SEC0001
