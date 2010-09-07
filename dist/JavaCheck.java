@@ -1,20 +1,20 @@
 /*
-	Java version checker
-	@author Sam Saint-Pettersen, 2010
-	Released into the public domain.
+ Java version checker
+ @author Sam Saint-Pettersen, 2010
+ Released into the public domain.
 	
-	Originally written for use with 
-	the NSIS installation script for Gaudi.
+ Originally written for use with 
+ the NSIS installation script for Gaudi.
 	
-	But use as you like. No warranty.
+ But use as you like. No warranty.
 	
-	Usage: java -cp . JavaCheck
-	Output: x.x.x_x (Java version)
-	Exit code: -1 (neither true or false)
+ Usage: java -cp . JavaCheck
+ Output: x.x.x_x (Java version)
+ Exit code: -1 (neither true or false)
 	
-	Usage: java -cp . JavaCheck <minimal version>
-	Output: x.x.x_x (Java version)
-	Exit code: 0 (false) / 1 (true)(Java installed, is minimal version or greater)
+ Usage: java -cp . JavaCheck <minimal version>
+ Output: x.x.x_x (Java version)
+ Exit code: 0 (false) / 1 (true)(Java installed, is minimal version or greater)
 */
 import java.util.regex.*;
 
