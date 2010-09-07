@@ -3,7 +3,6 @@
 #
 # This script uses EnvVarUpdate.nsh from:
 # http://nsis.sourceforge.net/Environmental_Variables:_append,_prepend,_and_remove_entries
-#
 
 Name Gaudi
 
@@ -98,11 +97,11 @@ Function detectJVM
 		DetailPrint "JVM reports unsuitable version (< 1.5)"
 		DetailPrint "Please update it."
 		GoTo downloadJVM
-		badJVM:
+		badJVM: ; Done with JVM check; failed
 		DetailPrint "JVM requirement was not met, so installation was aborted."
 		DetailPrint "Please download and/or install a suitable JVM and run this setup again."
 		Abort
-		goodJVM: 
+		goodJVM: ; Done with JVM check; passed
 	${EndIf}
 FunctionEnd
 

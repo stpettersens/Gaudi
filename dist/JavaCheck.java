@@ -20,15 +20,15 @@ import java.util.regex.*;
 
 class JavaCheck {
 	public static void main(String[] args) {
-		short returned = 0; // Return exit code 0 for false, default assumption
+		byte returned = 0; // Return exit code 0 for false, default assumption
 		String detectedVer = System.getProperty("java.version");
 		System.out.println(detectedVer);
 		// When minimal version argument is provided, return either exit code 0 or 1
 		if(args.length == 1) {
 			Pattern p = Pattern.compile("\\d\\.\\d");
 			Matcher m = p.matcher(detectedVer); m.find();
-			double minimalVersion = Double.valueOf(args[0]).doubleValue();
-			double detec_versionNum = Double.valueOf(m.group(0)).doubleValue();
+			float minimalVersion = Double.valueOf(args[0]).doubleValue();
+			float detec_versionNum = Double.valueOf(m.group(0)).doubleValue();
 			if(detec_versionNum >= minimalVersion) {
 				returned = 1; // Return exit code 1 for true
 			}
