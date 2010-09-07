@@ -1,10 +1,10 @@
 /*
 	Java version checker
 	@author Sam Saint-Pettersen, 2010
-	Released into the public domain
+	Released into the public domain.
 	
 	Originally written for use with 
-	the NSIS installation script for Gaudi
+	the NSIS installation script for Gaudi.
 	
 	But use as you like. No warranty.
 	
