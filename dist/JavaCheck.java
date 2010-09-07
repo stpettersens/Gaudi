@@ -27,8 +27,8 @@ class JavaCheck {
 		if(args.length == 1) {
 			Pattern p = Pattern.compile("\\d\\.\\d");
 			Matcher m = p.matcher(detectedVer); m.find();
-			float minimalVersion = Double.valueOf(args[0]).doubleValue();
-			float detec_versionNum = Double.valueOf(m.group(0)).doubleValue();
+			float minimalVersion = Float.valueOf(args[0]).floatValue();
+			float detec_versionNum = Float.valueOf(m.group(0)).floatValue();
 			if(detec_versionNum >= minimalVersion) {
 				returned = 1; // Return exit code 1 for true
 			}
