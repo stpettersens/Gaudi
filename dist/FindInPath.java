@@ -1,6 +1,6 @@
 /*
-	Find file in path in system variable.
-	@author Sam Saint-Pettersen, 2010.
+	Find file in path in system variable
+	@author Sam Saint-Pettersen, 2010
 	Released into the public domain.
 	
 	Originally written for use with 
