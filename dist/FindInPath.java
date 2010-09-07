@@ -1,16 +1,16 @@
 /*
-	Find file in path in system variable
-	@author Sam Saint-Pettersen, 2010
-	Released into the public domain.
+ Find file in path in system variable
+ @author Sam Saint-Pettersen, 2010
+ Released into the public domain.
 	
-	Originally written for use with 
-	the NSIS installation script for Gaudi.
+ Originally written for use with 
+ the NSIS installation script for Gaudi.
 	
-	But use as you like. No warranty.
+ But use as you like. No warranty.
 	
-	Usage: java -cp . FindInPath <system variable> <file>
-	Output: (Each path to every file found)
-	Exit code: 0 (not found) / 1 (found)
+ Usage: java -cp . FindInPath <system variable> <file>
+ Output: (Each path to every file found)
+ Exit code: 0 (not found) / 1 (found)
 */
 import java.io.File;
 
