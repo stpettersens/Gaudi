@@ -3,9 +3,8 @@
 # using MakeNSIS with NSIS script
 # http://nsis.sourceforge.net
 #
-# Also compile the small Java version check assisting
-# program used by the installer with javac
-# http://java.sun.com
+# Also compile the small supporting applications
+# for the installer. See 'sh/gensapps.sh'.
 
 makensis=makensis # For Windows, use as-is
 
