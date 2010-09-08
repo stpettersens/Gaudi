@@ -6,6 +6,8 @@
 #
 # This script also uses the NSISArray plug-in from:
 # http://nsis.sourceforge.net/Arrays_in_NSIS
+#
+# NB: Convert tabs->spaces if you make alterations to this file!
 
 Name Gaudi
 
@@ -86,127 +88,127 @@ ${ArrayFunc} Push
 ${ArrayFunc} FreeUnusedMem
 
 Section
-	${libs->Init}
-	${libsRedun->Init}
-	${libs->Write} 0 "scala-library.jar"
-	${libs->Write} 1 "json_simple-1.1.jar"
-	${libs->Write} 2 "commons-io-1.4.jar"
-	${libs->FreeUnusedMem}
-	${libsRedun->FreeUnusedMem}
+    ${libs->Init}
+    ${libsRedun->Init}
+    ${libs->Write} 0 "scala-library.jar"
+    ${libs->Write} 1 "json_simple-1.1.jar"
+    ${libs->Write} 2 "commons-io-1.4.jar"
+    ${libs->FreeUnusedMem}
+    ${libsRedun->FreeUnusedMem}
 SectionEnd
 # <END>
 
 # Detect presence of a suitable JVM environment on system
 # That is, that it exists and is at least version 1.5+ capable
 Function detectJVM
-	SetOutPath .
-	File JavaCheck.class ; Extract small Java version checker program
-	; Attempt to execute Java version checker program to get version
-	; Also does 'java' even exist?
-	nsExec::ExecToStack `java -classpath . JavaCheck 1.5` 
-	Pop $0 ; Pop return code from program from stack
-	Pop $1 ; Pop stdout from program from stack
-	${If} $0 == "error" ; Error occurs when a JVM cannot be found...
-		DetailPrint "Fail: No JVM detected!"
-		${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "No JVM was detected. Download one now?" IDYES`
-		downloadJVM:
-		; Go to download site for Java; possibly change to list of Gaudi-compatible JVMs
-		DetailPrint "Opening Java download page in your web browser."
-		ExecShell "open" "http://www.java.com/download" 
-		GoTo badJVM
-		${Else}
-			GoTo badJVM
-		${EndIf}
-	${EndIf}
-	Delete JavaCheck.class ; Done with this program, delete it
-	DetailPrint "Detected JVM: version $1" ; Display detected version 
-	# Check this JVM meets minimum version requirement (v1.5.x)
-	${If} $0 == "1"
-		DetailPrint "Pass: JVM reports suitable version (1.5+)"
-		GoTo goodJVM
-	${ElseIf} $0 == "0"
-		DetailPrint "Fail: JVM reports unsuitable version (< 1.5)"
-		DetailPrint "Please update it."
-		GoTo downloadJVM
-		badJVM: ; Done with JVM check; failed
-		DetailPrint "JVM requirement was not met, so installation was aborted."
-		DetailPrint "Please download and/or install a suitable JVM and run this setup again."
-		Abort
-		goodJVM: ; Done with JVM check; passed
-	${EndIf}
+    SetOutPath .
+    File JavaCheck.class ; Extract small Java version checker program
+    ; Attempt to execute Java version checker program to get version
+    ; Also does 'java' even exist?
+    nsExec::ExecToStack `java -classpath . JavaCheck 1.5` 
+    Pop $0 ; Pop return code from program from stack
+    Pop $1 ; Pop stdout from program from stack
+    ${If} $0 == "error" ; Error occurs when a JVM cannot be found...
+        DetailPrint "Fail: No JVM detected!"
+        ${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "No JVM was detected. Download one now?" IDYES`
+        downloadJVM:
+        ; Go to download site for Java; possibly change to list of Gaudi-compatible JVMs
+        DetailPrint "Opening Java download page in your web browser."
+        ExecShell "open" "http://www.java.com/download" 
+        GoTo badJVM
+        ${Else}
+            GoTo badJVM
+        ${EndIf}
+    ${EndIf}
+    Delete JavaCheck.class ; Done with this program, delete it
+    DetailPrint "Detected JVM: version $1" ; Display detected version 
+    # Check this JVM meets minimum version requirement (v1.5.x)
+    ${If} $0 == "1"
+        DetailPrint "Pass: JVM reports suitable version (1.5+)"
+        GoTo goodJVM
+    ${ElseIf} $0 == "0"
+        DetailPrint "Fail: JVM reports unsuitable version (< 1.5)"
+        DetailPrint "Please update it."
+        GoTo downloadJVM
+        badJVM: ; Done with JVM check; failed
+        DetailPrint "JVM requirement was not met, so installation was aborted."
+        DetailPrint "Please download and/or install a suitable JVM and run this setup again."
+        Abort
+        goodJVM: ; Done with JVM check; passed
+    ${EndIf}
 FunctionEnd
 
 # Detect if third-party libraries Gaudi requires are
 # present on system by looking in the system's CLASSPATH
 Function detectTPLibs
-	File FindInPath.class ; Extract small FindInPath program
-	IntOp $libsFound $libsFound + 0 ; Set libraries found to 0
-	IntOp $indx $indx + 0 ; Set loop index to 0
-	${DoUntil} $indx == 3
-		${libs->Read} $lib $indx ; Read indexed library as current library  to check for
-		; Execute FindInPath program to check for current library in CLASSPATH
-		nsExec::ExecToStack `java -classpath . FindInPath CLASSPATH $lib` 
-		Pop $0 ; Pop return code from program from stack
-		Pop $1 ; Pop stdout from program from stack (unused, but clears the stack)
-		${If} $0 == "1"
-			DetailPrint "Found library: $lib" ; Print that found library
-			IntOp $libsFound $libsFound + 1 ; Increment number of found libraries
-			${libsRedun->Push} $lib ; Add found library to libraries erase after copying
-		${ElseIf} $0 == "0"
-			DetailPrint "Did not find library: $lib" ; Print that did not find library
-		${EndIf}
-		IntOp $indx $indx + 1
-	${Loop}
-	DetailPrint "Found $libsFound of 3 libraries already installed."
-	${If} $libsFound < 3:
-		DetailPrint "Warning: Libraries are missing. This may be a problem if you are not installing them."
-	${EndIf}
-	${libs->Delete} ; Delete first array, done with
-	Delete FindInPath.class ; Done with this program, delete it
+    File FindInPath.class ; Extract small FindInPath program
+    IntOp $libsFound $libsFound + 0 ; Set libraries found to 0
+    IntOp $indx $indx + 0 ; Set loop index to 0
+    ${DoUntil} $indx == 3
+        ${libs->Read} $lib $indx ; Read indexed library as current library  to check for
+        ; Execute FindInPath program to check for current library in CLASSPATH
+        nsExec::ExecToStack `java -classpath . FindInPath CLASSPATH $lib` 
+        Pop $0 ; Pop return code from program from stack
+        Pop $1 ; Pop stdout from program from stack (unused, but clears the stack)
+        ${If} $0 == "1"
+            DetailPrint "Found library: $lib" ; Print that found library
+            IntOp $libsFound $libsFound + 1 ; Increment number of found libraries
+            ${libsRedun->Push} $lib ; Add found library to libraries erase after copying
+        ${ElseIf} $0 == "0"
+            DetailPrint "Did not find library: $lib" ; Print that did not find library
+        ${EndIf}
+        IntOp $indx $indx + 1
+    ${Loop}
+    DetailPrint "Found $libsFound of 3 libraries already installed."
+    ${If} $libsFound < 3:
+        DetailPrint "Warning: Libraries are missing. This may be a problem if you are not installing them."
+    ${EndIf}
+    ${libs->Delete} ; Delete first array, done with
+    Delete FindInPath.class ; Done with this program, delete it
 FunctionEnd
 
 # Remove installed libraries that were found in CLASSPATH before
 # installation and therefore are unneeded
 Function removeDuplicates
-	DetailPrint "Removing any duplicate libraries..."
-	StrCpy $lib "x" ; Make lib variable not blank initally
-	IntOp $indx $indx - 3 ; Reset loop index to 0
-	${DoUntil} $lib == ""
-		${libsRedun->Read} $lib $indx ; Get each duplicate library
-		Delete $INSTDIR\lib\$lib ; Delete each duplicate library from $INSTDIR
-		IntOp $indx $indx + 1 ; Increment index
-	${Loop}
-	${libsRedun->Delete} ; Delete second array, done with
+    DetailPrint "Removing any duplicate libraries..."
+    StrCpy $lib "x" ; Make lib variable not blank initially
+    IntOp $indx $indx - 3 ; Reset loop index to 0
+    ${DoUntil} $lib == ""
+        ${libsRedun->Read} $lib $indx ; Get each duplicate library
+        Delete $INSTDIR\lib\$lib ; Delete each duplicate library from $INSTDIR
+        IntOp $indx $indx + 1 ; Increment index
+    ${Loop}
+    ${libsRedun->Delete} ; Delete second array, done with
 FunctionEnd
 
 # Installer sections
 Section -Main SEC0000
-	Call detectJVM
-	Call detectTPLibs
-	SetOverwrite on
+    Call detectJVM
+    Call detectTPLibs
+    SetOverwrite on
 SectionEnd
 
 # Component selection
 InstType /COMPONENTSONLYONCUSTOM
 Section "Gaudi tool" GaudiTool
     SectionIn 1 RO
-	SetOutPath $INSTDIR
+    SetOutPath $INSTDIR
     File gaudi.exe
     File license.txt
 SectionEnd
 
-# Prompt user if they want newly installed libraries to be  
+# Prompt user if they want the installable libraries to be  
 # available to other JVM-based programs
 Section "Third-party libraries" TPLibs
-	${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Install libraries for all JVM applications?" IDYES`
-		; ...
-	${Else}
-    	SetOutPath $INSTDIR\lib
-	${EndIf}
+    ${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Install libraries for all JVM applications?" IDYES`
+        ; ...
+    ${Else}
+        SetOutPath $INSTDIR\lib
+    ${EndIf}
     File lib\scala-library.jar
-	File lib\json_simple-1.1.jar
-	File lib\commons-io-1.4.jar
-	Call removeDuplicates
+    File lib\json_simple-1.1.jar
+    File lib\commons-io-1.4.jar
+    Call removeDuplicates
 SectionEnd
 
 LangString DESC_GaudiTool ${LANG_ENGLISH} "Gaudi executable (required)."
@@ -253,7 +255,7 @@ done${UNSECTION_ID}:
 Section /o -un.Main UNSEC0000
     Delete $INSTDIR\gaudi.exe
     Delete $INSTDIR\license.txt
-	Delete $INSTDIR\*.log
+    Delete $INSTDIR\*.log ; TODO: Change to point to final log dir when implemented in Gaudi!!!
     Delete $INSTDIR\lib\*
     DeleteRegValue HKLM "${REGKEY}\Components" Main
 SectionEnd
@@ -267,7 +269,7 @@ Section -un.post UNSEC0001
     DeleteRegKey /IfEmpty HKLM "${REGKEY}\Components"
     DeleteRegKey /IfEmpty HKLM "${REGKEY}"
     RmDir $SMPROGRAMS\$StartMenuGroup
-	RmDir $INSTDIR\lib
+    RmDir $INSTDIR\lib
     RmDir $INSTDIR
     ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" $INSTDIR ; Remove from PATH
 SectionEnd
