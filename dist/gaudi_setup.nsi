@@ -47,7 +47,7 @@ Var indx
 ;!insertmacro MUI_PAGE_WELCOME
 ;!insertmacro MUI_PAGE_LICENSE license.txt
 !insertmacro MUI_PAGE_COMPONENTS
-;!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_UNPAGE_CONFIRM
@@ -107,7 +107,7 @@ Function detectJVM
 	Pop $0 ; Pop return code from program from stack
 	Pop $1 ; Pop stdout from program from stack
 	${If} $0 == "error" ; Error occurs when a JVM cannot be found...
-		DetailPrint "No JVM detected!"
+		DetailPrint "Fail: No JVM detected!"
 		${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "No JVM was detected. Download one now?" IDYES`
 		downloadJVM:
 		; Go to download site for Java; possibly change to list of Gaudi-compatible JVMs
@@ -118,14 +118,14 @@ Function detectJVM
 			GoTo badJVM
 		${EndIf}
 	${EndIf}
-	;Delete JavaCheck.class ; Done with this program, delete it
+	Delete JavaCheck.class ; Done with this program, delete it
 	DetailPrint "Detected JVM: version $1" ; Display detected version 
 	# Check this JVM meets minimum version requirement (v1.5.x)
 	${If} $0 == "1"
-		DetailPrint "JVM reports suitable version (1.5+)"
+		DetailPrint "Pass: JVM reports suitable version (1.5+)"
 		GoTo goodJVM
 	${ElseIf} $0 == "0"
-		DetailPrint "JVM reports unsuitable version (< 1.5)"
+		DetailPrint "Fail: JVM reports unsuitable version (< 1.5)"
 		DetailPrint "Please update it."
 		GoTo downloadJVM
 		badJVM: ; Done with JVM check; failed
@@ -148,7 +148,6 @@ Function detectTPLibs
 		nsExec::ExecToStack `java -classpath . FindInPath CLASSPATH $lib` 
 		Pop $0 ; Pop return code from program from stack
 		Pop $1 ; Pop stdout from program from stack (unused, but clears the stack)
-		;Delete FindInPath.class ; Done with this program, delete it
 		${If} $0 == "1"
 			DetailPrint "Found library: $lib" ; Print that found library
 			IntOp $libsFound $libsFound + 1 ; Increment number of found libraries
@@ -158,14 +157,18 @@ Function detectTPLibs
 		${EndIf}
 		IntOp $indx $indx + 1
 	${Loop}
-	DetailPrint "Found $libsFound of 3 libraries."
+	DetailPrint "Found $libsFound of 3 libraries already installed."
+	${If} $libsFound < 3:
+		DetailPrint "Warning: Libraries are missing. This may be a problem if you are not installing them."
+	${EndIf}
 	${libs->Delete} ; Delete first array, done with
+	Delete FindInPath.class ; Done with this program, delete it
 FunctionEnd
 
 # Remove installed libraries that were found in CLASSPATH before
 # installation and therefore are unneeded
 Function removeDuplicates
-	DetailPrint "Removing any duplicate libraries."
+	DetailPrint "Removing any duplicate libraries..."
 	StrCpy $lib "x" ; Make lib variable not blank initally
 	IntOp $indx $indx - 3 ; Reset loop index to 0
 	${DoUntil} $lib == ""
@@ -187,6 +190,7 @@ SectionEnd
 InstType /COMPONENTSONLYONCUSTOM
 Section "Gaudi tool" GaudiTool
     SectionIn 1 RO
+	SetOutPath $INSTDIR
     File gaudi.exe
     File license.txt
 SectionEnd
@@ -266,9 +270,7 @@ Section -un.post UNSEC0001
 	RmDir $INSTDIR\lib
     RmDir $INSTDIR
     ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" $INSTDIR ; Remove from PATH
-	${un.EnvVarUpdate} $0 "CLASSPATH" "R" "HKLM" $INSTDIR\libs ; Remove any libs installed with Gaudi from CP
 SectionEnd
-
 
 # Installer functions
 Function .onInit
