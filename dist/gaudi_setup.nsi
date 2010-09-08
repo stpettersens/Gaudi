@@ -3,6 +3,9 @@
 #
 # This script uses EnvVarUpdate.nsh from:
 # http://nsis.sourceforge.net/Environmental_Variables:_append,_prepend,_and_remove_entries
+#
+# This script also uses the NSISArray plug-in from:
+# http://nsis.sourceforge.net/Arrays_in_NSIS
 
 Name Gaudi
 
@@ -32,10 +35,13 @@ Name Gaudi
 !include LogicLib.nsh
 ; " " Quoted includes do not ship with NSIS by default
 !include "EnvVarUpdate.nsh" 
+!include "NSISArray.nsh"
 
 # Variables
 Var StartMenuGroup
-Var FoundLibs
+Var lib
+Var libsFound
+Var indx
 
 # Installer pages
 ;!insertmacro MUI_PAGE_WELCOME
@@ -67,12 +73,37 @@ VIAddVersionKey LegalCopyright "${COPYRIGHT}"
 InstallDirRegKey HKLM "${REGKEY}" Path
 ShowUninstDetails show
 
+# Create libraries ("libs") arrays and array functions for use later
+# <BEGIN>
+${Array} libs 1 20
+${ArrayFunc} Read
+${ArrayFunc} Write
+${ArrayFunc} FreeUnusedMem
+
+${Array} libsRedun 1 20
+${ArrayFunc} Read
+${ArrayFunc} Push
+${ArrayFunc} FreeUnusedMem
+
+Section
+	${libs->Init}
+	${libsRedun->Init}
+	${libs->Write} 0 "scala-library.jar"
+	${libs->Write} 1 "json_simple-1.1.jar"
+	${libs->Write} 2 "commons-io-1.4.jar"
+	${libs->FreeUnusedMem}
+	${libsRedun->FreeUnusedMem}
+SectionEnd
+# <END>
+
 # Detect presence of a suitable JVM environment on system
 # That is, that it exists and is at least version 1.5+ capable
 Function detectJVM
 	SetOutPath .
 	File JavaCheck.class ; Extract small Java version checker program
-	nsExec::ExecToStack `java -classpath . JavaCheck 1.5` ; Attempt to execute Java version checker program
+	; Attempt to execute Java version checker program to get version
+	; Also does 'java' even exist?
+	nsExec::ExecToStack `java -classpath . JavaCheck 1.5` 
 	Pop $0 ; Pop return code from program from stack
 	Pop $1 ; Pop stdout from program from stack
 	${If} $0 == "error" ; Error occurs when a JVM cannot be found...
@@ -87,13 +118,13 @@ Function detectJVM
 			GoTo badJVM
 		${EndIf}
 	${EndIf}
-	Delete JavaCheck.class ; Done with this program, delete it
+	;Delete JavaCheck.class ; Done with this program, delete it
 	DetailPrint "Detected JVM: version $1" ; Display detected version 
 	# Check this JVM meets minimum version requirement (v1.5.x)
 	${If} $0 == "1"
 		DetailPrint "JVM reports suitable version (1.5+)"
 		GoTo goodJVM
-	${Else}
+	${ElseIf} $0 == "0"
 		DetailPrint "JVM reports unsuitable version (< 1.5)"
 		DetailPrint "Please update it."
 		GoTo downloadJVM
@@ -106,18 +137,49 @@ Function detectJVM
 FunctionEnd
 
 # Detect if third-party libraries Gaudi requires are
-# present on system. If so, add them to found JVM's CLASSPATH
+# present on system by looking in the system's CLASSPATH
 Function detectTPLibs
-	# TODO ...
-	StrCpy $FoundLibs "dummyDir"
-	;${EnvVarUpdate} $0 "CLASSPATH" "A" "HKLM" $FoundLibs ;TODO
+	File FindInPath.class ; Extract small FindInPath program
+	IntOp $libsFound $libsFound + 0 ; Set libraries found to 0
+	IntOp $indx $indx + 0 ; Set loop index to 0
+	${DoUntil} $indx == 3
+		${libs->Read} $lib $indx ; Read indexed library as current library  to check for
+		; Execute FindInPath program to check for current library in CLASSPATH
+		nsExec::ExecToStack `java -classpath . FindInPath CLASSPATH $lib` 
+		Pop $0 ; Pop return code from program from stack
+		Pop $1 ; Pop stdout from program from stack (unused, but clears the stack)
+		;Delete FindInPath.class ; Done with this program, delete it
+		${If} $0 == "1"
+			DetailPrint "Found library: $lib" ; Print that found library
+			IntOp $libsFound $libsFound + 1 ; Increment number of found libraries
+			${libsRedun->Push} $lib ; Add found library to libraries erase after copying
+		${ElseIf} $0 == "0"
+			DetailPrint "Did not find library: $lib" ; Print that did not find library
+		${EndIf}
+		IntOp $indx $indx + 1
+	${Loop}
+	DetailPrint "Found $libsFound of 3 libraries."
+	${libs->Delete} ; Delete first array, done with
 FunctionEnd
 
-# Prompt user if they want installed libraries to be available
-# to other JVM-based programs, when called from detectTBLibs this is done automatically
-Function addLibsToClassPath
+# Remove installed libraries that were found in CLASSPATH before
+# installation and therefore are unneeded
+Function removeDuplicates
+	DetailPrint "Removing any duplicate libraries."
+	StrCpy $lib "dummy"
+	IntOp $indx $indx - 3 ; Reset loop index to 0
+	${DoUntil} $lib == ""
+		${libsRedun->Read} $lib $indx
+		Delete $INSTDIR\lib\$lib
+		IntOp $indx $indx + 1
+	${Loop}
+FunctionEnd
+
+# Prompt user if they want newly installed libraries to be  
+# available to other JVM-based programs
+Function addLibsToClasspath
 	${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Add libraries to CLASSPATH?" IDYES`
-		;${EnvVarUpdate} $0 "CLASSPATH" "A" "HKLM" $INSTDIR\libs ; Add libraries to CLASSPATH
+		${EnvVarUpdate} $0 "CLASSPATH" "A" "HKLM" $INSTDIR\libs ; If Yes, add libraries to CLASSPATH
 	${EndIf}
 FunctionEnd
 
@@ -140,8 +202,10 @@ SectionEnd
 Section "Third-party libraries" TPLibs
     SetOutPath $INSTDIR\lib
     File lib\scala-library.jar
-    File lib\json_simple-1.1.jar
-    File lib\commons-io-1.4.jar
+	File lib\json_simple-1.1.jar
+	File lib\commons-io-1.4.jar
+	Call addLibsToClasspath
+	Call removeDuplicates
 SectionEnd
 
 LangString DESC_GaudiTool ${LANG_ENGLISH} "Gaudi executable (required)."
@@ -206,8 +270,7 @@ Section -un.post UNSEC0001
 	RmDir $INSTDIR\lib
     RmDir $INSTDIR
     ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" $INSTDIR ; Remove from PATH
-	;${un.EnvVarUpdate} $0 "CLASSPATH" "R" "HKLM" $FoundLibs ; Remove any found libs from CLASSPATH (CP)
-	;${un.EnvVarUpdate} $0 "CLASSPATH" "R" "HKLM" $INSTDIR\libs ; Remove any libs installed with Gaudi from CP
+	${un.EnvVarUpdate} $0 "CLASSPATH" "R" "HKLM" $INSTDIR\libs ; Remove any libs installed with Gaudi from CP
 SectionEnd
 
 

@@ -16,10 +16,9 @@ fi
 if [[ -e "dist/gaudi.exe" ]]; then
 	echo "Generating Windows installer.."
 	cd dist
-	javac -deprecation -verbose -classpath . JavaCheck.java
+	javac -deprecation -verbose -classpath . JavaCheck.java FindInPath.java
 	$makensis gaudi_setup.nsi
 	echo "Done."
 else
 	echo "Important! 'Run sh/genexe.sh' first."
 fi
-
