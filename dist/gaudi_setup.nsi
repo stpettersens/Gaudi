@@ -166,21 +166,14 @@ FunctionEnd
 # installation and therefore are unneeded
 Function removeDuplicates
 	DetailPrint "Removing any duplicate libraries."
-	StrCpy $lib "dummy"
+	StrCpy $lib "x" ; Make lib variable not blank initally
 	IntOp $indx $indx - 3 ; Reset loop index to 0
 	${DoUntil} $lib == ""
-		${libsRedun->Read} $lib $indx
-		Delete $INSTDIR\lib\$lib
-		IntOp $indx $indx + 1
+		${libsRedun->Read} $lib $indx ; Get each duplicate library
+		Delete $INSTDIR\lib\$lib ; Delete each duplicate library from $INSTDIR
+		IntOp $indx $indx + 1 ; Increment index
 	${Loop}
-FunctionEnd
-
-# Prompt user if they want newly installed libraries to be  
-# available to other JVM-based programs
-Function addLibsToClasspath
-	${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Add libraries to CLASSPATH?" IDYES`
-		${EnvVarUpdate} $0 "CLASSPATH" "A" "HKLM" $INSTDIR\libs ; If Yes, add libraries to CLASSPATH
-	${EndIf}
+	${libsRedun->Delete} ; Delete second array, done with
 FunctionEnd
 
 # Installer sections
@@ -194,17 +187,21 @@ SectionEnd
 InstType /COMPONENTSONLYONCUSTOM
 Section "Gaudi tool" GaudiTool
     SectionIn 1 RO
-    SetOutPath $INSTDIR
     File gaudi.exe
     File license.txt
 SectionEnd
 
+# Prompt user if they want newly installed libraries to be  
+# available to other JVM-based programs
 Section "Third-party libraries" TPLibs
-    SetOutPath $INSTDIR\lib
+	${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Install libraries for all JVM applications?" IDYES`
+		; ...
+	${Else}
+    	SetOutPath $INSTDIR\lib
+	${EndIf}
     File lib\scala-library.jar
 	File lib\json_simple-1.1.jar
 	File lib\commons-io-1.4.jar
-	Call addLibsToClasspath
 	Call removeDuplicates
 SectionEnd
 
@@ -216,7 +213,6 @@ LangString DESC_TPLibs ${LANG_ENGLISH} "Third party libraries Gaudi depends on."
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 Section -post SEC0001
-	
     WriteRegStr HKLM "${REGKEY}\Components" Main 1
     WriteRegStr HKLM "${REGKEY}" Path $INSTDIR
     SetOutPath $INSTDIR
