@@ -30,15 +30,15 @@ If you are curious, please feel free to look at the [source code](/stpettersens/
 Though, as-is in this repository Gaudi is *not yet ready* for general
 use.
 
-Run Compatibility
+Compatibility
 -----------------
 Gaudi should be compatible with most modern JVMs
 and has been tested with and is known to work 
-with the following (e.g. I ran Gaudi with...):
+with the following:
 
-- [Sun's Java HotSpot/OpenJDK JVM](http://java.sun.com)
+- [Sun's Java HotSpot/OpenJDK JVM](http://java.sun.com)(Ran and compiled sources)
 
-- [Apache Harmony/DRLVM](http://harmony.apache.org)
+- [Apache Harmony/DRLVM](http://harmony.apache.org)(Ran and compiled sources)
 
 - [GNU GIJ (GCJ project)](http://gcc.gnu.org/java)
 
