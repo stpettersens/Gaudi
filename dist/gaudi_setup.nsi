@@ -15,11 +15,12 @@ Name Gaudi
 !define REGKEY "SOFTWARE\$(^Name)"
 !define VERSION 0.1.0.0
 !define COMPANY "Sam Saint-Pettersen"
-!define URL github.com/stpettersens/Gaudi
+!define URL http://github.com/stpettersens/Gaudi
 !define DESC "Gaudi platform agnostic build tool"
 !define COPYRIGHT "(c) 2010 Sam Saint-Pettersen"
 
 # MUI Symbol Definitions
+!define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange.bmp" ; Change later to custom
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\orange-install.ico"
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_LICENSEPAGE_CHECKBOX
@@ -46,12 +47,13 @@ Var libsFound
 Var indx
 
 # Installer pages
-;!insertmacro MUI_PAGE_WELCOME
-;!insertmacro MUI_PAGE_LICENSE license.txt
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_LICENSE license.txt
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
 !insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 
@@ -113,6 +115,7 @@ Function detectJVM
         ${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "No JVM was detected. Download one now?" IDYES`
         downloadJVM:
         ; Go to download site for Java; possibly change to list of Gaudi-compatible JVMs
+        ; With launch4j executable only Oracle/Sun's JVM seems suitable though
         DetailPrint "Opening Java download page in your web browser."
         ExecShell "open" "http://www.java.com/download" 
         GoTo badJVM
@@ -171,7 +174,7 @@ FunctionEnd
 # installation and therefore are unneeded
 Function removeDuplicates
     DetailPrint "Removing any duplicate libraries..."
-    StrCpy $lib "x" ; Make lib variable not blank initially
+    StrCpy $lib "x" ; Make lib variable not blank initially so that loop works
     IntOp $indx $indx - 3 ; Reset loop index to 0
     ${DoUntil} $lib == ""
         ${libsRedun->Read} $lib $indx ; Get each duplicate library
@@ -201,7 +204,14 @@ SectionEnd
 # available to other JVM-based programs
 Section "Third-party libraries" TPLibs
     ${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Install libraries for all JVM applications?" IDYES`
-        ; ...
+        ; Use FindInPath again to find 1st path in CLASSPATH
+        SetOutPath .
+        File FindInPath.class
+        nsExec::ExecToStack `java -classpath . FindInPath CLASSPATH`
+        Pop $0 ; Pop exit code for program from stack (unused)
+        Pop $1 ; Pop stdout for program from stack (should be 1st path)
+        Delete FindInPath.class ; Done with, delete
+        SetOutPath $1 ; Use this path to install the libraries into
     ${Else}
         SetOutPath $INSTDIR\lib
     ${EndIf}

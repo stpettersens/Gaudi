@@ -14,9 +14,10 @@ if [[ `uname` =~ .+n.+x|.+BSD|Darwin ]]; then
 fi
 
 if [[ -e "dist/gaudi.exe" ]]; then
+	./sh/gensapps.sh
+	sleep 1
 	echo "Generating Windows installer.."
 	cd dist
-	javac -deprecation -verbose -classpath . JavaCheck.java FindInPath.java
 	$makensis gaudi_setup.nsi
 	echo "Done."
 else
