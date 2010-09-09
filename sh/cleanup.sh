@@ -2,7 +2,7 @@
 # Clean-up files built for Gaudi
 
 files=( 
-	dist/*.log dist/*.exe dist/*.jar bin/org bin/*.jar 
+	dist/*.log dist/*.exe dist/*.jar dist/lib bin/org bin/*.jar
 )
 
 echo "Cleaning up..."
