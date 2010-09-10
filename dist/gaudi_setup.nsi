@@ -36,6 +36,7 @@ Name Gaudi
 !include Sections.nsh
 !include MUI2.nsh
 !include LogicLib.nsh
+!include StrFunc.nsh
 ; " " Quoted includes do not ship with NSIS by default
 !include "EnvVarUpdate.nsh" 
 !include "NSISArray.nsh"
@@ -102,6 +103,8 @@ SectionEnd
 
 # Detect presence of a suitable JVM environment on system
 # That is, that it exists and is at least version 1.5+ capable
+# Also check that is the de-facto Oracle Corp./Sun Microsystems' java
+# as that is all that Launch4j seems to support
 Function detectJVM
     SetOutPath .
     File JavaCheck.class ; Extract small Java version checker program
@@ -114,8 +117,7 @@ Function detectJVM
         DetailPrint "Fail: No JVM detected!"
         ${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "No JVM was detected. Download one now?" IDYES`
         downloadJVM:
-        ; Go to download site for Java; possibly change to list of Gaudi-compatible JVMs
-        ; With launch4j executable only Oracle/Sun's JVM seems suitable though
+        ; Go to download site for Oracle Corp./Sun Microsystems' Java
         DetailPrint "Opening Java download page in your web browser."
         ExecShell "open" "http://www.java.com/download" 
         GoTo badJVM
@@ -123,22 +125,39 @@ Function detectJVM
             GoTo badJVM
         ${EndIf}
     ${EndIf}
-    Delete JavaCheck.class ; Done with this program, delete it
     DetailPrint "Detected JVM: version $1" ; Display detected version 
-    # Check this JVM meets minimum version requirement (v1.5.x)
+    # Check this JVM meets minimum version requirement (1.5.x)
     ${If} $0 == "1"
         DetailPrint "Pass: JVM reports suitable version (1.5+)"
-        GoTo goodJVM
     ${ElseIf} $0 == "0"
         DetailPrint "Fail: JVM reports unsuitable version (< 1.5)"
         DetailPrint "Please update it."
         GoTo downloadJVM
-        badJVM: ; Done with JVM check; failed
+        badJVM: ; Done with JVM checks; failed
+        DetailPrint "-----------------------------------------------------------------------------------------"
         DetailPrint "JVM requirement was not met, so installation was aborted."
-        DetailPrint "Please download and/or install a suitable JVM and run this setup again."
+        DetailPrint "Please download and/or install the de-facto JVM and run this setup again."
+        DetailPrint "-----------------------------------------------------------------------------------------"
+        ;Delete JavaCheck.class ; Done with the checker program, delete it
         Abort
-        goodJVM: ; Done with JVM check; passed
     ${EndIf}
+    ; Vendor check, needs to be de-facto JVM (i.e. HotSpotTM)
+    nsExec::ExecToStack `java -classpath . JavaCheck`
+    Pop $0 ; Pop exit code (unused) from program from stack
+    Pop $1 ; Pop stdout from program from stack
+    StrCpy $R9 "Sun Microsystems Inc."
+    DetailPrint $1
+    DetailPrint $R9
+    ${StrStr} // TODO!
+    StrCmp "Sun" "Sun" goodJVM badVendor
+    badVendor:
+    DetailPrint "Fail: JVM vendor is $1, unsupported."
+    DetailPrint "Unfortunately, for the Windows executable version of Gaudi,"
+    DetailPrint "only the Sun Microsystems Inc. vended JVM will work."
+    GoTo badJVM
+    goodJVM:
+    DetailPrint "Pass: JVM vendor is $1"
+    ;Delete JavaCheck.class ; Done with the checker program, delete it
 FunctionEnd
 
 # Detect if third-party libraries Gaudi requires are
@@ -167,7 +186,7 @@ Function detectTPLibs
         DetailPrint "Warning: Libraries are missing. This may be a problem if you are not installing them."
     ${EndIf}
     ${libs->Delete} ; Delete first array, done with
-    Delete FindInPath.class ; Done with this program, delete it
+    ;Delete FindInPath.class ; Done with this program, delete it
 FunctionEnd
 
 # Remove installed libraries that were found in CLASSPATH before

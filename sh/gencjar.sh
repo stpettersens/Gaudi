@@ -1,6 +1,6 @@
 #!/bin/bash
 # Generate Gaudi all-in-one JAR
-# using One-JAR bootstrap jar
+# using One-JAR bootstrapper
 # http://one-jar.sourceforge.net
 
 wcard=* # Initially use Windows, "*"
@@ -30,13 +30,13 @@ if [[ -e "bin/"$appJar ]]; then
 	echo "" >> boot-manifest.mf
 	mkdir main
 	cd ..
-	cp bin/$appJar cjar/main
+	cp bin/$appJar cjar/main/$appJar
 
 	echo "Packaging..."
 	cd cjar
-	jar cfvm $appJar boot-manifest.mf $wcard
+	jar cfvm c$appJar boot-manifest.mf $wcard
 	cd ..
-	mv cjar/$appJar dist/$appJar
+	mv cjar/c$appJar dist/$appJar
 	rm -f -r cjar
 	echo "Done."
 else

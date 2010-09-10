@@ -9,7 +9,7 @@
  But use as you like. No warranty.
 	
  Usage: java -cp . JavaCheck
- Output: x.x.x_x (Java version)
+ Output: Java vendor (e.g. Sun Microsystems Inc.)
  Exit code: -1 (neither true or false)
 	
  Usage: java -cp . JavaCheck <minimal version>
@@ -20,11 +20,13 @@ import java.util.regex.*;
 
 class JavaCheck {
 	public static void main(String[] args) {
-		byte returned = 0; // Return exit code 0 for false, default assumption
+		byte returned = -1; // Return exit code -1 for neither true or false; default assumption
 		String detectedVer = System.getProperty("java.version");
-		System.out.println(detectedVer);
+		String vendor = System.getProperty("java.vendor");
+		
 		// When minimal version argument is provided, return either exit code 0 or 1
 		if(args.length == 1) {
+			System.out.println(detectedVer);
 			Pattern p = Pattern.compile("\\d\\.\\d");
 			Matcher m = p.matcher(detectedVer); m.find();
 			float minimalVersion = Float.valueOf(args[0]).floatValue();
@@ -32,10 +34,10 @@ class JavaCheck {
 			if(detec_versionNum >= minimalVersion) {
 				returned = 1; // Return exit code 1 for true
 			}
-			System.exit(returned);
+			else returned = 0; // Return exit code 0 for false
 		}
-		// Otherwise, just display detected version 
-		// and return exit code -1 for neither true or false
-		else System.exit(-1);
+		else System.out.println(vendor);
+		
+		System.exit(returned);
 	}
 }
