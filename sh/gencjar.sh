@@ -34,9 +34,9 @@ if [[ -e "bin/"$appJar ]]; then
 
 	echo "Packaging..."
 	cd cjar
-	jar cfvm c$appJar boot-manifest.mf $wcard
+	jar cfvm $appJar boot-manifest.mf $wcard
 	cd ..
-	mv cjar/c$appJar dist/$appJar
+	mv cjar/$appJar dist/$appJar
 	rm -f -r cjar
 	echo "Done."
 else

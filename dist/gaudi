@@ -3,7 +3,8 @@
 
 jar=Gaudi.jar
 if [[ -n $JAVA_HOME ]]; then 
-	$JAVA_HOME/java -jar $jar $@
+	$JAVA_HOME/java -jar $jar "$@"
 else
-	java -jar $jar $@
+	java -jar $jar "$@"
 fi
+
