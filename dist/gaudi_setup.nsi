@@ -48,13 +48,12 @@ Var libsFound
 Var indx
 
 # Installer pages
-!insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE license.txt
+;!insertmacro MUI_PAGE_WELCOME
+;!insertmacro MUI_PAGE_LICENSE license.txt
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
 !insertmacro MUI_PAGE_INSTFILES
-!insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 
@@ -125,7 +124,7 @@ Function detectJVM
             GoTo badJVM
         ${EndIf}
     ${EndIf}
-    DetailPrint "Detected JVM: version $1" ; Display detected version 
+    DetailPrint "Detected JVM version: $1" ; Display detected version 
     # Check this JVM meets minimum version requirement (1.5.x)
     ${If} $0 == "1"
         DetailPrint "Pass: JVM reports suitable version (1.5+)"
@@ -138,7 +137,7 @@ Function detectJVM
         DetailPrint "JVM requirement was not met, so installation was aborted."
         DetailPrint "Please download and/or install the de-facto JVM and run this setup again."
         DetailPrint "-----------------------------------------------------------------------------------------"
-        ;Delete JavaCheck.class ; Done with the checker program, delete it
+        Delete JavaCheck.class ; Done with the checker program, delete it
         Abort
     ${EndIf}
     ; Vendor check, needs to be de-facto JVM (i.e. HotSpotTM)
@@ -146,18 +145,17 @@ Function detectJVM
     Pop $0 ; Pop exit code (unused) from program from stack
     Pop $1 ; Pop stdout from program from stack
     StrCpy $R9 "Sun Microsystems Inc."
-    DetailPrint $1
-    DetailPrint $R9
-    ${StrStr} // TODO!
-    StrCmp "Sun" "Sun" goodJVM badVendor
-    badVendor:
+    DetailPrint "Detected JVM vendor: $1"
+    StrCmp $1 $R9 goodJVM
     DetailPrint "Fail: JVM vendor is $1, unsupported."
+    DetailPrint "-----------------------------------------------------------------------------------------"
     DetailPrint "Unfortunately, for the Windows executable version of Gaudi,"
     DetailPrint "only the Sun Microsystems Inc. vended JVM will work."
+    DetailPrint "-----------------------------------------------------------------------------------------"
     GoTo badJVM
     goodJVM:
-    DetailPrint "Pass: JVM vendor is $1"
-    ;Delete JavaCheck.class ; Done with the checker program, delete it
+    DetailPrint "Pass: JVM reports suitable vendor (Sun Microsystems Inc.)"
+    Delete JavaCheck.class ; Done with the checker program, delete it
 FunctionEnd
 
 # Detect if third-party libraries Gaudi requires are
@@ -177,7 +175,7 @@ Function detectTPLibs
             IntOp $libsFound $libsFound + 1 ; Increment number of found libraries
             ${libsRedun->Push} $lib ; Add found library to libraries erase after copying
         ${ElseIf} $0 == "0"
-            DetailPrint "Did not find library: $lib" ; Print that did not find library
+            DetailPrint "Did not find library: $lib" ; Otherwise, print that did not find library
         ${EndIf}
         IntOp $indx $indx + 1
     ${Loop}
@@ -186,7 +184,7 @@ Function detectTPLibs
         DetailPrint "Warning: Libraries are missing. This may be a problem if you are not installing them."
     ${EndIf}
     ${libs->Delete} ; Delete first array, done with
-    ;Delete FindInPath.class ; Done with this program, delete it
+    Delete FindInPath.class ; Done with this program, delete it
 FunctionEnd
 
 # Remove installed libraries that were found in CLASSPATH before
@@ -233,11 +231,14 @@ Section "Third-party libraries" TPLibs
         SetOutPath $1 ; Use this path to install the libraries into
     ${Else}
         SetOutPath $INSTDIR\lib
+        StrCpy $R8 "true"
     ${EndIf}
     File lib\scala-library.jar
     File lib\json_simple-1.1.jar
     File lib\commons-io-1.4.jar
+    StrCmpS $R8 "true" 0 skip
     Call removeDuplicates
+    skip:
 SectionEnd
 
 LangString DESC_GaudiTool ${LANG_ENGLISH} "Gaudi executable (required)."

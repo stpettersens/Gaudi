@@ -14,9 +14,7 @@ if [[ `uname` =~ .+n.+x|.+BSD|Darwin ]]; then
 fi
 
 if [[ -e "bin/"$appJar ]]; then
-	echo "**************************"
-	echo "Generating all-in-one JAR."
-	echo "**************************"
+	echo "Generating all-in-one JAR for Gaudi."
 	echo "Structuring files for packaging..."
 	mkdir cjar
 	cp -r lib cjar

@@ -9,10 +9,13 @@
 	"build": [
 
 		{ "exec": "g++ hw.cpp -o hw" }
+		{ "append": "output.log>>Built executable." }
 	]
 	
 	"clean": [
 
-		{ "rmve": "hw" } 
+		{ "erase": "hw" } 
+		{ "erase": "output.log" }
 	]
 }
+

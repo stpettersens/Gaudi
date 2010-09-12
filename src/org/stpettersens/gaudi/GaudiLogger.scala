@@ -23,23 +23,25 @@ import java.io.{PrintWriter,FileOutputStream,IOException}
 
 object GaudiLogger {
 	
-	val logFile: String = "gaudiDebug.log"
+	val logFile: String = "gaudi.log"
 	val timestamp: DateFormat = new SimpleDateFormat("[MM-dd-yyyy HH:mm:ss]")
 
-	def dump(message: String): Unit = {
-		var out: PrintWriter = null
-		try {
-			out = new PrintWriter(new FileOutputStream(logFile, true))
-			out.println(timestamp.format(new Date()))
-			out.println(message)
-		}
-		catch {
-			case ioe: IOException => {
-				println(String.format("[Logging error: %s]", ioe.getMessage))
+	def dump(logging: Boolean, message: String): Unit = {
+		if(logging) {
+			var out: PrintWriter = null
+			try {
+				out = new PrintWriter(new FileOutputStream(logFile, true))
+				out.println(timestamp.format(new Date()))
+				out.println(message)
 			}
-		}
-		finally {
-			out.close()
+			catch {
+				case ioe: IOException => {
+					println(String.format("[Logging error: %s]", ioe.getMessage))
+				}
+			}
+			finally {
+				out.close()
+			}
 		}
 	}
 }

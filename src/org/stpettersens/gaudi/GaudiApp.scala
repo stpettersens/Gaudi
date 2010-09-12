@@ -30,6 +30,7 @@ object GaudiApp {
   //--------------------------------------------------------
   var buildFile: String = "build.json" // Default build file
   var beVerbose: Boolean = true // Gaudi is verbose by default
+  var logging: Boolean = false // Logging is disabled by default
 	  
   def main(args: Array[String]): Unit = {
 	  var fSwitch: Boolean = false
@@ -47,8 +48,9 @@ object GaudiApp {
 	 	  for(arg <- args) {
 	 	 	  arg match {
 	 	 	 	  case "-i" => displayUsage(0)
-	 	 	 	  case "-v" => displayVersion() 	 
-	 	 	 	  case "-g" => generateNativeFile()
+	 	 	 	  case "-v" => displayVersion()
+	 	 	 	  case "-l" => logging = true
+	 	 	 	  case "-n" => generateNativeFile()
 	 	 	 	  case "-m" => generateMakefile()
 	 	 	 	  case "-q" => beVerbose = false
 	 	 	 	  case "-f" => fSwitch = true
@@ -66,14 +68,14 @@ object GaudiApp {
   }
   // Just peform a stdin command; really just for testing implemented commands.
   // E.g. argument ":move a->b"
-  def runCommand(cmd: String, param: String): Unit = {
+  private def runCommand(cmd: String, param: String): Unit = {
 	  // Create a new builder and feed it a dummy JSONObject
-	  val builder = new GaudiBuilder(new JSONObject, beVerbose)
+	  val builder = new GaudiBuilder(new JSONObject, beVerbose, logging)
 	  builder.doCommand(cmd, param)
 	  System.exit(0)
   }
   // Load and delegate parse and execution of build file
-  def loadBuild(action: String): Unit = {
+  private def loadBuild(action: String): Unit = {
 	  var buildConf: String = ""
 	  try {
 	 	  for(line <- Source.fromFile(buildFile).getLines()) {
@@ -90,7 +92,7 @@ object GaudiApp {
 	  finally {   
 	 	  // Delegate to the foreman and builder
 	 	  val foreman = new GaudiForeman(buildConf)
-	 	  val builder = new GaudiBuilder(foreman.getPreamble, beVerbose)
+	 	  val builder = new GaudiBuilder(foreman.getPreamble, beVerbose, logging)
 	 	  if(beVerbose) {
 	 	 	  println(String.format("[ %s => %s ]", foreman.getTarget, action))
 	 	  }	  
@@ -98,42 +100,43 @@ object GaudiApp {
 	  }
   }
   // Generate a Gaudi build file (build.json)
-  def generateNativeFile(): Unit = {
+  private def generateNativeFile(): Unit = {
 	  // TODO
   }
   // Generate a Make compatible Makefile
-  def generateMakefile(): Unit = {
+  private def generateMakefile(): Unit = {
 	  // TODO
   }
   // Display an error
   def displayError(ex: Exception): Unit = {
 	  println(String.format("\nError with: %s.", ex.getMessage))
-	  GaudiLogger.dump(ex.getMessage)
+	  GaudiLogger.dump(logging, ex.getMessage)
 	  displayUsage(1)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
 	  println(String.format("\nError with: %s.", ex))
-	  GaudiLogger.dump(ex)
+	  GaudiLogger.dump(logging, ex)
 	  displayUsage(1)
   }
   // Display version information and exit
-  def displayVersion(): Unit = {
-	  println(String.format("\nGaudi v.%s [%s (%s)]\n", appVersion, env._1, env._2))
+  private def displayVersion(): Unit = {
+	  println(String.format("Gaudi v.%s [%s (%s)]", appVersion, env._1, env._2))
 	  System.exit(0)
   }
   // Display usage information and exit
-  def displayUsage(exitCode: Int): Unit = {
+  private def displayUsage(exitCode: Int): Unit = {
 	  println("\nGaudi platform agnostic build tool")
 	  println("Copyright (c) 2010 Sam Saint-Pettersen")
 	  println("\nReleased under the Apache License v2.")
-	  println("\nUsage: gaudi [-i|-v|-g|-m][-q -f <build file>][\":<operation>\"]")
-	  println("\n-i: Display usage information and quit.")
+	  println("\nUsage: gaudi [-l][-i|-v|-n|-m][-q -f <build file>][\"(:)<operation>\"]")
+	  println("\n-l: Enable logging of certain events.")
+	  println("-i: Display usage information and quit.")
 	  println("-v: Display version information and quit.")
-	  println("-g: Generate native Gaudi build file (build.json).")
+	  println("-n: Generate native Gaudi build file (build.json).")
 	  println("-m: Generate GNU Makefile from build.json.")
 	  println("-q: Mute console output, except for :echo and errors (Quiet mode).")
-	  println("-f: Use <build file> instead of build.json.\n")
+	  println("-f: Use <build file> instead of build.json.")
 	  System.exit(exitCode)
   }
 }

@@ -23,14 +23,14 @@ import org.apache.commons.io.filefilter.WildcardFileFilter
 import scala.util.matching.Regex
 import java.io._
 
-class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
+class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean, logging: Boolean)  {
 	
 	// Substitute variables for values
 	private def substituteVars(action: Array[Object]): Unit = {
 		println(preamble)
 	}
 	// Handle wild cards in parameters such as *.scala, *.cpp,
-	// to compile all Scala or C++ files in the specified dir
+	// for example, to compile all Scala or C++ files in the specified dir
 	private def handleWildcards(param: String): String = {
 		if(param.contains("*")) {
 		    val rawParamPattn: Regex = """[\w\d]*\s*(.*)""".r
@@ -57,13 +57,27 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 	// Print an error related to action or command and exit
 	private def printError(error: String): Unit = {
 		println(String.format("\tAborting: %s.", error))
-		GaudiLogger.dump(error)
-		System.exit(-1)
+		GaudiLogger.dump(logging, error) // Also log it
+		System.exit(1) // Exit application with error code
 	}
 	// Print executed command
 	private def printCommand(command: String, param: String): Unit = {
 		if(beVerbose) {
 			println(String.format("\t:%s %s", command, param))
+		}
+	}
+	// File writing operations
+	private def writeToFile(file: String, message: String, append: Boolean): Unit = {
+		var out: PrintWriter = null
+		try {
+			out = new PrintWriter(new FileOutputStream(file, append))
+			out.println(message)
+		}
+		catch {
+			case ioe: IOException => printError(ioe.getMessage)
+		}
+		finally {
+			out.close()
 		}
 	}
 	// Execute a command in the action
@@ -78,7 +92,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 			case "exec" => {
 				val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
 				// -----------------------------------------------------------------
-				GaudiLogger.dump(String.format("Executed -> %s %s\n" +
+				GaudiLogger.dump(logging, String.format("Executed -> %s %s\n" +
 				"Wildcard matched -> %s", exe._1, exe._2, handleWildcards(exe._2)))
 				// -----------------------------------------------------------------
 				if(exe._1 != null) {
@@ -98,13 +112,25 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean)  {
 			case "echo" => println(String.format("\t# %s", param))
 			case "erase" => new File(wcc_param).delete() // Add support for wildcards
 			case "copy" => {
+				// Explicit the first time about this being a string array
 				val srcDest: Array[String] = param.split("->")
-				copyFile(new File(srcDest(0)), new File(srcDest(1)))
+				copyFile(new File(srcDest(0)), new File(srcDest(1))) // Via Apache Commons IO
 			}
-			case "rcopy" => "Recur. copy" // TODO
+			case "rcopy" => {
+				// Implicit...
+				"Recur. copy" // TODO
+			}
 			case "move" => {
+				// Et cetera...
 				val srcDest = param.split("->") 
-				moveFile(new File(srcDest(0)), new File(srcDest(1)))
+				moveFile(new File(srcDest(0)), new File(srcDest(1))) // Via Apache Commons IO
+			}
+			// Append message to a file
+			// Usage in buildfile: { "append": file>>message" }
+			// Equivalent to *nix's echo "message" >> file
+			case "append" => {
+				val fileMsg = param.split(">>")
+				writeToFile(fileMsg(0), fileMsg(1), true)
 			}
 			case _ => {
 				printError(String.format("%s is an invalid command", command))

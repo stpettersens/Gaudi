@@ -26,7 +26,7 @@ class JavaCheck {
 		
 		// When minimal version argument is provided, return either exit code 0 or 1
 		if(args.length == 1) {
-			System.out.println(detectedVer);
+			System.out.print(detectedVer);
 			Pattern p = Pattern.compile("\\d\\.\\d");
 			Matcher m = p.matcher(detectedVer); m.find();
 			float minimalVersion = Float.valueOf(args[0]).floatValue();
@@ -36,7 +36,7 @@ class JavaCheck {
 			}
 			else returned = 0; // Return exit code 0 for false
 		}
-		else System.out.println(vendor);
+		else System.out.print(vendor);
 		
 		System.exit(returned);
 	}
