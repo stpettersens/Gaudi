@@ -11,12 +11,11 @@ files=(
 )
 
 echo "Cleaning up..."
-for file in ${files[@]}
-	do
-		f=$file
-		if [[ -e $f ]]; then
-			echo Cleaning $f
-			rm -f -r $f
-		fi
-	done
+for file in ${files[@]}; do
+	if [[ -e $file ]]; then
+		echo Cleaning $file
+		rm -f -r $file
+	fi
+done
 echo "Done."
+
