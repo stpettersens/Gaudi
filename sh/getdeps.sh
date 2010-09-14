@@ -6,18 +6,14 @@
 # With no arguments, just gather dependencies needed to build Gaudi,
 # either with rt dependencies or with embedded dependencies
 # if necessary. Will be if Gaudi sources were just downloaded
-
-buildPkgs=( 
-	commons-io-1.4-bin.zip json_simple1.1.jar
-	one-jar-boot-0.97 scala-library.7z
-)
 buildDeps=( 
-	commons-io.1.4.jar json_simple1.1.jar 
-	one-jar-boot-0.97.jar scala-library.jar
+	commons-io-1.4.jar json_simple-1.1.jar 
+	scala-library.jar
 )
-baseURL=( 
-"http://mirrors.ukfast.co.uk/sites/ftp.apache.org///commons/io/binaries/"
-"http://code.google.com/p/json-simple/downloads/detail?name="
+buildURL=(
+ "ftp://mirrors.dedipower.com/ftp.apache.org//commons/io/binaries/"
+ "http://code.google.com/p/json-simple/downloads/detail?name="
+ "null"
 )
 
 function licenseWarn {
@@ -33,20 +29,33 @@ function licenseWarn {
 	fi
 }
 function getBuildDeps {
+	reset
 	i=$((i+0))
-	for pkg in ${buildPkgs[@]}; do
-		if [[ ! -e "lib/${buildDeps[$i]}" ]]; then
-			echo "Downloading $pkg ($i/3 build deps)"
-			cd lib && wget ${baseURL[$i]}$pkg
+	for dep in ${buildDeps[@]}; do
+		if [[ ! -e "lib/$dep" ]]; then
+			echo "Downloading $dep ($((i+1))/3 build deps)"
+			if [[ $dep == "commons-io-1.4.jar" ]]; then
+				dep="commons-io-1.4-bin.zip"
+			fi
+			cd lib && wget ${buildURL[$i]}$dep
+			if [[ $dep == "commons-io-1.4-bin.zip" ]]; then
+				7z x $dep
+				rm -f $dep
+				cd commons-io-1.4 
+				mv commons-io-1.4.jar ..
+				cd ..
+				rm -f -r commons-io-1.4
+			fi
+			if [[ $dep == "scala-library.jar" ]]; then
+				scala_dir=`whereis scala`
+				echo $scala_dir
+			fi
 			echo "Done."
 		else
 			echo "Dep: ${buildDeps[$i]} was found."
 		fi
 		let i++
 	done
-	if [[ $buildPkg[$i] =~ *.[zip|7z] ]]; then
-		cd lib && 7z x ${buildPkg[$i]}
-	fi								
 }
 licenseWarn
 
