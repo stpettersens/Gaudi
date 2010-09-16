@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build Gaudi
+# Build Gaudi on *nix/Cygwin/MSYS
 
 sep=";" # Initially use Windows, ";"
 
@@ -10,7 +10,7 @@ fi
 
 pkg="org/stpettersens/gaudi"
 jarF="Gaudi.jar"
-deps="lib/json_simple-1.1.jar"$sep"lib/commons-io-1.4.jar"
+deps="lib/json_simple-1.1.jar"$sep"lib/commons-io-1.4.jar"$sep"lib/groovy-all-1.7.4.jar"
 
 echo "Compiling Gaudi..."
 scalac -classpath $deps -verbose -deprecation -unchecked -d bin src/$pkg/*.scala
