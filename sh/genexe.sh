@@ -14,12 +14,11 @@ fi
 if [[ -e "bin/Gaudi.jar" ]]; then
 	echo "Generating Windows executable (with deps).."
 	cp -r lib dist
+	cp -r plugins dist
 	cp bin/Gaudi.jar dist
 	$l4j dist/gaudi_exe.xml
-	rm -f dist/Gaudi.jar
 	echo "Done."
 
 else 
 	echo "Important! Run 'sh/build.sh' first."
 fi
-

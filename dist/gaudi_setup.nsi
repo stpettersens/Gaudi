@@ -95,6 +95,7 @@ Section
     ${libs->Write} 0 "scala-library.jar"
     ${libs->Write} 1 "json_simple-1.1.jar"
     ${libs->Write} 2 "commons-io-1.4.jar"
+    ${libs->Write} 3 "groovy-all-1.7.4.jar"
     ${libs->FreeUnusedMem}
     ${libsRedun->FreeUnusedMem}
 SectionEnd
@@ -164,7 +165,7 @@ Function detectTPLibs
     File FindInPath.class ; Extract small FindInPath program
     IntOp $libsFound $libsFound + 0 ; Set libraries found to 0
     IntOp $indx $indx + 0 ; Set loop index to 0
-    ${DoUntil} $indx == 3
+    ${DoUntil} $indx == 4
         ${libs->Read} $lib $indx ; Read indexed library as current library  to check for
         ; Execute FindInPath program to check for current library in CLASSPATH
         nsExec::ExecToStack `java -classpath . FindInPath CLASSPATH $lib` 
@@ -179,8 +180,8 @@ Function detectTPLibs
         ${EndIf}
         IntOp $indx $indx + 1
     ${Loop}
-    DetailPrint "Found $libsFound of 3 libraries already installed."
-    ${If} $libsFound < 3:
+    DetailPrint "Found $libsFound of 4 libraries already installed."
+    ${If} $libsFound < 4:
         DetailPrint "Warning: Libraries are missing. This may be a problem if you are not installing them."
     ${EndIf}
     ${libs->Delete} ; Delete first array, done with
@@ -192,7 +193,7 @@ FunctionEnd
 Function removeDuplicates
     DetailPrint "Removing any duplicate libraries..."
     StrCpy $lib "x" ; Make lib variable not blank initially so that loop works
-    IntOp $indx $indx - 3 ; Reset loop index to 0
+    IntOp $indx $indx - 4 ; Reset loop index to 0
     ${DoUntil} $lib == ""
         ${libsRedun->Read} $lib $indx ; Get each duplicate library
         Delete $INSTDIR\lib\$lib ; Delete each duplicate library from $INSTDIR
@@ -208,26 +209,35 @@ Section -Main SEC0000
     SetOverwrite on
 SectionEnd
 
-# Component selection
+# Component selection:
+# Core program 
 InstType /COMPONENTSONLYONCUSTOM
-Section "Gaudi tool" GaudiTool
+Section "Gaudi" GaudiTool
     SectionIn 1 RO
     SetOutPath $INSTDIR
     File gaudi.exe
     File license.txt
 SectionEnd
 
-# Prompt user if they want the installable libraries to be  
-# available to other JVM-based programs
+# Plug-ins for core program]
+Section "Plug-ins" Plugins
+    SetOutPath $INSTDIR\plugins
+    File plugins\GaudiPlugin.groovy ; TODO: Change to packaged plug-in files
+    File plugins\examplePlugin.groovy ; " " "
+SectionEnd
+
+# Library dependencies for core program
 Section "Third-party libraries" TPLibs
+    ; Prompt user if they want the installable libraries to be  
+    ; available to other JVM-based programs
     ${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Install libraries for all JVM applications?" IDYES`
-        ; Use FindInPath again to find 1st path in CLASSPATH
+        ; Use FindInPath program again to find 1st path in CLASSPATH
         SetOutPath .
         File FindInPath.class
         nsExec::ExecToStack `java -classpath . FindInPath CLASSPATH`
         Pop $0 ; Pop exit code for program from stack (unused)
         Pop $1 ; Pop stdout for program from stack (should be 1st path)
-        Delete FindInPath.class ; Done with, delete
+        Delete FindInPath.class ; Done with FindInPath program, delete it
         SetOutPath $1 ; Use this path to install the libraries into
     ${Else}
         SetOutPath $INSTDIR\lib
@@ -236,15 +246,18 @@ Section "Third-party libraries" TPLibs
     File lib\scala-library.jar
     File lib\json_simple-1.1.jar
     File lib\commons-io-1.4.jar
+    File lib\groovy-all-1.7.4.jar
     StrCmpS $R8 "true" 0 skip
     Call removeDuplicates
     skip:
 SectionEnd
 
 LangString DESC_GaudiTool ${LANG_ENGLISH} "Gaudi executable (required)."
+LangString DESC_Plugins ${LANG_ENGLISH} "Plug-ins for Gaudi (recommended)."
 LangString DESC_TPLibs ${LANG_ENGLISH} "Third party libraries Gaudi depends on."
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${GaudiTool} $(DESC_GaudiTool)
+  !insertmacro MUI_DESCRIPTION_TEXT ${Plugins} $(DESC_Plugins)
   !insertmacro MUI_DESCRIPTION_TEXT ${TPLibs} $(DESC_TPLibs)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
@@ -286,6 +299,7 @@ Section /o -un.Main UNSEC0000
     Delete $INSTDIR\gaudi.exe
     Delete $INSTDIR\license.txt
     Delete $INSTDIR\*.log ; TODO: Change to point to final log dir when implemented in Gaudi!!!
+    Delete $INSTDIR\plugins\* 
     Delete $INSTDIR\lib\*
     DeleteRegValue HKLM "${REGKEY}\Components" Main
 SectionEnd

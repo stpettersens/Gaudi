@@ -3,11 +3,9 @@
 # Also clear up logs (see 'sh/clearlogs.sh')
 
 sh/clearlogs.sh
-sleep 2
-
 files=( 
 	dist/*.log dist/*.exe dist/*.jar dist/lib 
-	bin/org bin/*.jar dist/*.class
+	bin/org bin/*.jar dist/*.class dist/plugins
 )
 
 echo "Cleaning up..."
@@ -18,4 +16,3 @@ for file in ${files[@]}; do
 	fi
 done
 echo "Done."
-

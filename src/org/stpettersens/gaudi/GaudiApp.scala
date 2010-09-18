@@ -33,8 +33,10 @@ object GaudiApp {
   var logging: Boolean = false // Logging is disabled by default
 	  
   def main(args: Array[String]): Unit = {
+      var pSwitch: Boolean = false
 	  var fSwitch: Boolean = false
 	  var action: String = "build"
+	  val pluginPattn: Regex = """(\w+.groovy)""".r
 	  val filePattn: Regex = """(\w+.json)""".r
 	  val actPattn: Regex = """([a-z]+)""".r
 	  val cmdPattn: Regex = """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
@@ -51,10 +53,11 @@ object GaudiApp {
 	 	 	 	  case "-v" => displayVersion()
 	 	 	 	  case "-l" => logging = true
 	 	 	 	  case "-n" => generateNativeFile()
-	 	 	 	  case "-m" => generateMakefile()
+	 	 	 	  case "-p" => pSwitch = true
 	 	 	 	  case "-q" => beVerbose = false
 	 	 	 	  case "-f" => fSwitch = true
-	 	 	 	  case filePattn(f) => if(fSwitch) buildFile = arg
+	 	 	 	  case pluginPattn(p) => doPluginAction(arg)
+	 	 	 	  case filePattn(f) => buildFile = arg
 	 	 	 	  case actPattn(a) => action = a
 	 	 	 	  case cmdPattn(cmd, param) => runCommand(cmd, param)
 	 	 	 	  case _ => {
@@ -103,9 +106,10 @@ object GaudiApp {
   private def generateNativeFile(): Unit = {
 	  // TODO
   }
-  // Generate a Make compatible Makefile
-  private def generateMakefile(): Unit = {
-	  // TODO
+  // Initialize and if successful run a plug-in
+  private def doPluginAction(plugin: String): Unit = {
+      new GaudiPluginLoader(plugin)
+      System.exit(0)
   }
   // Display an error
   def displayError(ex: Exception): Unit = {
