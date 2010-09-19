@@ -33,7 +33,7 @@ If you are curious, please feel free to look at the [source code](/stpettersens/
 Though, as-is in this repository Gaudi is *not yet ready* for general
 use.
 
-Compatibility
+Run Compatibility
 -----------------
 Gaudi should be compatible with most modern JVMs
 and has been tested with and is known to work, at least partially,
@@ -47,7 +47,7 @@ with the following:
 
 - [GNU GIJ (GCJ project)](http://gcc.gnu.org/java)
 
-+ Complete compatibilty thus far.
+# + Complete compatibilty thus far.
 
 Distributions
 -------------
@@ -70,8 +70,8 @@ Gaudi depends on the following third-party JVM libraries:
 
 - [Scala Library](http://www.scala-lang.org)
 
-- [Groovy Language (Embedding library)](http://groovy.codehaus.org/Download) 
-  - for plug-in support, optional -.
+- [Groovy Language (Embedding library)](http://groovy.codehaus.org) 
+  (for plug-in support, optional).
 
 If building Gaudi with Gaudi (as in the case of potential upgrading),
 it supports dependency gathering like Apache Ant does. 

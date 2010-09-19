@@ -15,7 +15,6 @@ deps="lib/json_simple-1.1.jar"$sep"lib/commons-io-1.4.jar"$sep$gDep
 
 echo "Compiling Gaudi..."
 scalac -classpath $deps -verbose -deprecation -unchecked -d bin src/$pkg/*
-sleep 2
 javac -classpath $gDep -verbose -deprecation -d bin src/$pkg/*.java
 
 echo "Packaging Gaudi..."

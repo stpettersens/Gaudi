@@ -43,6 +43,6 @@ public class GaudiPlugin {
 	}
 	// But, run methods should be redefined in derived plug-ins
 	def run() {
-		println String.format("\tNo run code implemented for %s.", name)
+		println "\tNo run code implemented for ${name}."
 	}
 }
