@@ -10,10 +10,15 @@ Apache Commons IO Library
 Copyright 2002-2008 The Apache Software Foundation.
 http://commons.apache.org/io
 
-Scala Library
+Scala Language Library
 Copyright 2002-2010 EPFL, Lausanne, unless otherwise specified. 
 All rights reserved. Licensed under a BSD-style license:
 http://www.scala-lang.org/node/146
+
+Groovy Language Library
+Copyright 2003-2010 The respective authors and developers.
+This product includes software developed by The Groovy community.
+http://groovy.codehaus.org
 
 Gaudi and its dependencies, except the Scala Library, are 
 licensed under the Apache License, Version 2.0 (the "License");
