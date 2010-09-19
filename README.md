@@ -39,13 +39,15 @@ Gaudi should be compatible with most modern JVMs
 and has been tested with and is known to work, at least partially,
 with the following:
 
-- [Sun's Java HotSpot/OpenJDK JVM](http://java.sun.com)
+- [Sun's Java HotSpot JVM](http://java.sun.com) *
+
+- [OpenJDK JVM](http://openjdk.java.net) *
 
 - [Apache Harmony/DRLVM](http://harmony.apache.org)
 
 - [GNU GIJ (GCJ project)](http://gcc.gnu.org/java)
 
-...
+* Complete compatibilty thus far.
 
 Distributions
 -------------
@@ -53,7 +55,7 @@ Gaudi will be available as installable Windows executable
 (courtesy of [NSIS](http://nsis.sourceforge.net) and 
 [Launch4j](http://launch4j.sourceforge.net)) and
 also a an all-in-jar executable JAR (courtesy of [One-JAR](http://one-jar.sourceforge.net)).
-If you want to specify which JVM other than the system default you want to use or
+If you want to specify which JVM other than the system default you want to use or
 are using a system other than Windows, please use the all-in-one JAR version.
 
 For more information, consult the Wiki. (Coming soon).
@@ -67,6 +69,9 @@ Gaudi depends on the following third-party JVM libraries:
 - [Apache Commons IO Library](http://commons.apache.org/io)
 
 - [Scala Library](http://www.scala-lang.org)
+
+- [Groovy Language (Embedding library)](http://groovy.codehaus.org/Download) 
+  - for plug-in support, optional -.
 
 If building Gaudi with Gaudi (as in the case of potential upgrading),
 it supports dependency gathering like Apache Ant does. 
