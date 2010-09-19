@@ -19,6 +19,9 @@ but differs in that:
 - It is *not* tailored to offer advanced features for a particular programming
   language, unlike Ant which is highly specialised for Java development.
 
+Additionally, Gaudi supports additional functionality via plug-ins written 
+in the dynamically typed [Groovy programming language](http://groovy.codehaus.org)
+
 Inspiration
 -----------
 Gaudi's implementation has been inspired by both Ant (command agnosticism) and [GNU Make](http://www.gnu.org/software/make) (task notation).
@@ -33,16 +36,16 @@ use.
 Compatibility
 -----------------
 Gaudi should be compatible with most modern JVMs
-and has been tested with and is known to work 
+and has been tested with and is known to work, at least partially,
 with the following:
 
-- [Sun's Java HotSpot/OpenJDK JVM](http://java.sun.com)*
+- [Sun's Java HotSpot/OpenJDK JVM](http://java.sun.com)
 
-- [Apache Harmony/DRLVM](http://harmony.apache.org)*
+- [Apache Harmony/DRLVM](http://harmony.apache.org)
 
-- [GNU GIJ (GCJ project)](http://gcc.gnu.org/java)+
+- [GNU GIJ (GCJ project)](http://gcc.gnu.org/java)
 
-Key: * Compiles and runs; + Runs successfully
+...
 
 Distributions
 -------------
