@@ -37,7 +37,7 @@ Run Compatibility
 -----------------
 Gaudi should be compatible with most modern JVMs
 and has been tested with and is known to work, at least partially,
-with the following:
+with the following (+ indicates complete compatibility):
 
 - [Sun's Java HotSpot JVM](http://java.sun.com) +
 
@@ -46,8 +46,6 @@ with the following:
 - [Apache Harmony/DRLVM](http://harmony.apache.org)
 
 - [GNU GIJ (GCJ project)](http://gcc.gnu.org/java)
-
-# + Complete compatibilty thus far.
 
 Distributions
 -------------
