@@ -4,7 +4,7 @@ Gaudi
 What is it?
 -----------
 Gaudi is a platform agnostic build tool
-written in Scala which runs on a Java virtual machine (JVM).
+written primarily in Scala which runs on a Java virtual machine (JVM).
 
 As it is a build tool, it is named after an architect, *Antoni Gaudi*;
 the designer of the famous *Sagrada Familia*.
@@ -20,7 +20,7 @@ but differs in that:
   language, unlike Ant which is highly specialised for Java development.
 
 Additionally, Gaudi supports additional functionality via plug-ins written 
-in the dynamically typed [Groovy programming language](http://groovy.codehaus.org)
+in the dynamically typed [Groovy programming language](http://groovy.codehaus.org).
 
 Inspiration
 -----------
