@@ -27,9 +27,9 @@ public class GaudiPluginLoader {
 
 	GaudiPluginLoader(String plugin) throws Exception {
 		
-		// TODO: Implement API for Gaudi commands
-		// New object/class -> GaudiCommand()
-		// ...
+		// TODO: Implement object for Gaudi commands
+		// Temporary test...
+		GaudiBuilder b = new GaudiBuilder(null, false); // Will work?
 	
 		GroovyClassLoader loader = new GroovyClassLoader();
 		Class baseClass = loader.parseClass(new File("GaudiPlugin.groovy")); // !!!
