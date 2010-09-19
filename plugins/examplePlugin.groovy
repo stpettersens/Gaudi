@@ -12,6 +12,6 @@ public class examplePlugin extends GaudiPlugin {
 		initable = true
 	}
 	def run() {
-		println "\tHello from Simple plug-in."
+		println "\tHello from ${name}."
 	}
 }
