@@ -39,15 +39,15 @@ Gaudi should be compatible with most modern JVMs
 and has been tested with and is known to work, at least partially,
 with the following:
 
-- [Sun's Java HotSpot JVM](http://java.sun.com) *
+- [Sun's Java HotSpot JVM](http://java.sun.com) +
 
-- [OpenJDK JVM](http://openjdk.java.net) *
+- [OpenJDK JVM](http://openjdk.java.net) +
 
 - [Apache Harmony/DRLVM](http://harmony.apache.org)
 
 - [GNU GIJ (GCJ project)](http://gcc.gnu.org/java)
 
-* Complete compatibilty thus far.
++ Complete compatibilty thus far.
 
 Distributions
 -------------
