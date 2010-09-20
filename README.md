@@ -62,13 +62,13 @@ Dependencies
 ------------
 Gaudi depends on the following third-party JVM libraries:
 
-- [JSON.simple](http://code.google.com/p/json-simple)
+- [JSON.simple](http://code.google.com/p/json-simple) (*json_simple-1.1.jar*)
 
-- [Apache Commons IO Library](http://commons.apache.org/io)
+- [Apache Commons IO Library](http://commons.apache.org/io) (*commons-io-1.4.jar*)
 
-- [Scala Library](http://www.scala-lang.org)
+- [Scala Library](http://www.scala-lang.org) (*scala-library.jar 2.8final*)
 
-- [Groovy Library](http://groovy.codehaus.org) (*groovy-all-1.7.4*) 
+- [Groovy Library](http://groovy.codehaus.org) (*groovy-all-1.7.4.jar*) (for plug-in support).
 
 If building Gaudi with Gaudi (as in the case of potential upgrading),
 it supports dependency gathering like Apache Ant does. 
