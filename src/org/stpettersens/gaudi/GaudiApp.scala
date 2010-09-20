@@ -56,8 +56,12 @@ object GaudiApp {
 	 	 	 	  case "-p" => pSwitch = true
 	 	 	 	  case "-q" => beVerbose = false
 	 	 	 	  case "-f" => fSwitch = true
-	 	 	 	  case pluginPattn(p) => doPluginAction(arg)
-	 	 	 	  case filePattn(f) => buildFile = arg
+	 	 	 	  case pluginPattn(p) => {
+	 	 	 	 	  if(pSwitch) doPluginAction(arg)
+	 	 	 	  }
+	 	 	 	  case filePattn(f) => {
+	 	 	 	 	  if(fSwitch) buildFile = arg
+	 	 	 	  }
 	 	 	 	  case actPattn(a) => action = a
 	 	 	 	  case cmdPattn(cmd, param) => runCommand(cmd, param)
 	 	 	 	  case _ => {
@@ -133,12 +137,13 @@ object GaudiApp {
 	  println("\nGaudi platform agnostic build tool")
 	  println("Copyright (c) 2010 Sam Saint-Pettersen")
 	  println("\nReleased under the Apache License v2.")
-	  println("\nUsage: gaudi [-l][-i|-v|-n|-m][-q -f <build file>][\"(:)<operation>\"]")
+	  println("\nUsage: gaudi [-l][-i|-v|-n|-m][-q][-p <plug-in>]")
+	  println("\t[-f <build file>][\"<:command>\"|<action>]")
 	  println("\n-l: Enable logging of certain events.")
 	  println("-i: Display usage information and quit.")
 	  println("-v: Display version information and quit.")
 	  println("-n: Generate native Gaudi build file (build.json).")
-	  println("-m: Generate GNU Makefile from build.json.")
+	  println("-p: Invoke <plug-in> action.")
 	  println("-q: Mute console output, except for :echo and errors (Quiet mode).")
 	  println("-f: Use <build file> instead of build.json.")
 	  System.exit(exitCode)

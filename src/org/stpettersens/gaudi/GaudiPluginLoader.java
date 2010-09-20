@@ -21,11 +21,12 @@ For dependencies, please see LICENSE file.
 package org.stpettersens.gaudi;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
-import scala.*;
+//import scala.*;
 import java.io.*;
 
 public class GaudiPluginLoader {
 
+	@SuppressWarnings("unchecked")
 	GaudiPluginLoader(String plugin) throws Exception {
 	
 		// TODO: Implement plug-in access to internal commands
