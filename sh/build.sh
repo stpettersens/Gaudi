@@ -11,11 +11,14 @@ fi
 pkg="org/stpettersens/gaudi"
 jarF="Gaudi.jar"
 gDep="lib/groovy-all-1.7.4.jar"
+scalaLib="lib/scala-library.jar"
 deps="lib/json_simple-1.1.jar"$sep"lib/commons-io-1.4.jar"$sep$gDep
 
 echo "Compiling Gaudi..."
+scalac src/$pkg/GaudiCommand.scala src/$pkg/GaudiBuiltin.java -verbose -deprecation -d bin 
+javac -classpath "."$sep$gDep$sep$scalaLib -verbose -deprecation -d bin \
+src/$pkg/GaudiPluginLoader.java src/$pkg/GaudiBuiltin.java
 scalac -classpath $deps -verbose -deprecation -unchecked -d bin src/$pkg/*
-javac -classpath $gDep -verbose -deprecation -d bin src/$pkg/*.java
 
 echo "Packaging Gaudi..."
 cp Manifest.mf bin

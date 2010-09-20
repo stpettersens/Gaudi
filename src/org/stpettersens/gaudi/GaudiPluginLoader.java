@@ -21,18 +21,19 @@ For dependencies, please see LICENSE file.
 package org.stpettersens.gaudi;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
+import scala.*;
 import java.io.*;
 
 public class GaudiPluginLoader {
 
 	GaudiPluginLoader(String plugin) throws Exception {
-		
-		// TODO: Implement object for Gaudi commands
-		// Temporary test...
-		GaudiBuilder b = new GaudiBuilder(null, false); // Will work?
 	
+		// TODO: Implement plug-in access to internal commands
+		GaudiCommand cmd = new GaudiCommand();
+		cmd.execute("Interoperable with Scala from Java!");
+		
 		GroovyClassLoader loader = new GroovyClassLoader();
-		Class baseClass = loader.parseClass(new File("GaudiPlugin.groovy")); // !!!
+		loader.parseClass(new File("GaudiPlugin.groovy")); // !!!
 		Class pluginClass = loader.parseClass(new File(plugin));
 	
 		// Cast plugin class to plugin groovy object
