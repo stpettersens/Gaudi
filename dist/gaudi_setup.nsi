@@ -223,7 +223,7 @@ SectionEnd
 Section "Plug-ins" Plugins
     SetOutPath $INSTDIR\plugins
     File plugins\GaudiPlugin.groovy ; TODO: Change to packaged plug-in files
-    File plugins\examplePlugin.groovy ; " " "
+    File plugins\ExamplePlugin.groovy ; " " "
 SectionEnd
 
 # Library dependencies for core program
@@ -314,6 +314,7 @@ Section -un.post UNSEC0001
     DeleteRegKey /IfEmpty HKLM "${REGKEY}"
     RmDir $SMPROGRAMS\$StartMenuGroup
     RmDir $INSTDIR\lib
+    RmDir $INSTDIR\plugins
     RmDir $INSTDIR
     ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" $INSTDIR ; Remove from PATH
 SectionEnd
