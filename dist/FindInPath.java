@@ -32,14 +32,14 @@ class FindInPath {
 		
 		// With 2 arguments; for each path in system variable, try to find file
 		if(args.length == 2) {
-    		for(int i = 0; i < paths.length; i++) {
-    			if(new File(paths[i]+"\\"+args[1]).exists()) {
-    				System.out.println(paths[i]);
-    				returned = 1; // Return exit code 1 for file found
-    				break;
-    			}
-    		}
-    	}
+			for(int i = 0; i < paths.length; i++) {
+				if(new File(paths[i]+"\\"+args[1]).exists()) {
+					System.out.println(paths[i]);
+					returned = 1; // Return exit code 1 for file found
+					break;
+				}
+			}
+		}
 		System.exit(returned);
 	}
 }
