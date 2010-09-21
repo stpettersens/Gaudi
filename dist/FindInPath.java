@@ -1,6 +1,4 @@
-
-<!-- saved from url=(0068)http://github.com/stpettersens/Gaudi/raw/master/dist/FindInPath.java -->
-<html><body><pre style="word-wrap: break-word; white-space: pre-wrap;">/*
+/*
  Find file in path in system variable
  @author Sam Saint-Pettersen, 2010
  Released into the public domain.
@@ -10,11 +8,11 @@
 	
  But use as you like. No warranty.
 	
- Usage: java -cp . FindInPath &lt;system variable&gt; &lt;file&gt;
+ Usage: java -cp . FindInPath <system variable> <file>
  Output: (Each path to every file found)
  Exit code: 0 (not found) / 1 (found)
  
- Usage: java -cp . FindInPath &lt;system variable&gt;
+ Usage: java -cp . FindInPath <system variable>
  Output: (1st path in system variable)
  Exit code: -1
 */
@@ -34,7 +32,7 @@ class FindInPath {
 		
 		// With 2 arguments; for each path in system variable, try to find file
 		if(args.length == 2) {
-    		for(int i = 0; i &lt; paths.length; i++) {
+    		for(int i = 0; i < paths.length; i++) {
     			if(new File(paths[i]+"\\"+args[1]).exists()) {
     				System.out.println(paths[i]);
     				returned = 1; // Return exit code 1 for file found
@@ -45,4 +43,3 @@ class FindInPath {
 		System.exit(returned);
 	}
 }
-</pre></body></html>
