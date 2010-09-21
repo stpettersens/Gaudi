@@ -31,6 +31,9 @@ object GaudiApp {
   var buildFile: String = "build.json" // Default build file
   var beVerbose: Boolean = true // Gaudi is verbose by default
   var logging: Boolean = false // Logging is disabled by default
+  
+  // Define global logging object
+  val logger = new GaudiLogger()
 	  
   def main(args: Array[String]): Unit = {
       var pSwitch: Boolean = false
@@ -112,19 +115,19 @@ object GaudiApp {
   }
   // Initialize and if successful run a plug-in
   private def doPluginAction(plugin: String): Unit = {
-      new GaudiPluginLoader(plugin)
+      new GaudiPluginLoader(plugin, logging)
       System.exit(0)
   }
   // Display an error
   def displayError(ex: Exception): Unit = {
 	  println(String.format("\nError with: %s.", ex.getMessage))
-	  GaudiLogger.dump(logging, ex.getMessage)
+	  logger.dump(logging, ex.getMessage)
 	  displayUsage(1)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
 	  println(String.format("\nError with: %s.", ex))
-	  GaudiLogger.dump(logging, ex)
+	  logger.dump(logging, ex)
 	  displayUsage(1)
   }
   // Display version information and exit

@@ -24,13 +24,15 @@ import groovy.lang.GroovyObject;
 import java.io.*;
 
 public class GaudiPluginLoader {
+	
+	// Define global logger object
+	GaudiLogger logger = new GaudiLogger(); // Move t/f to constructor
 
 	@SuppressWarnings("unchecked")
-	GaudiPluginLoader(String plugin) throws Exception {
+	GaudiPluginLoader(String plugin, boolean logging) throws Exception {
 	
 		// TODO: Implement plug-in access to internal commands
-		GaudiCommand cmd = new GaudiCommand();
-		cmd.execute("Interoperable with Scala from Java!");
+		// ...
 		
 		GroovyClassLoader loader = new GroovyClassLoader();
 		loader.parseClass(new File("GaudiPlugin.groovy")); // !!!
@@ -39,19 +41,23 @@ public class GaudiPluginLoader {
 		// Cast plugin class to plugin groovy object
 		GroovyObject pluginObj = (GroovyObject) pluginClass.newInstance();
 		Object init = pluginObj.invokeMethod("initialize", null);
-		Object name = pluginObj.invokeMethod("getNameAction", null);
+		Object name = pluginObj.invokeMethod("getName", null);
+		Object action = pluginObj.invokeMethod("getAction", null);
 		Boolean bInit = (Boolean) init; // Cast init to boolean *object*
 		String sName = (String) name; // Cast name to string
+		String sAction = (String) action; // Cast action to string
 		
 		if(bInit) {
 			// On successful initialization, display feedback and run the plug-in
 			System.out.println("Initialized plug-in.");
-			System.out.println(String.format("[ %s => %s ]", sName, sName));
+			System.out.println(String.format("[ %s => %s ]", sName, sAction));
 			pluginObj.invokeMethod("run", null);
+			logger.dump(logging, String.format("Initialized plug-in -> %s.", sName));
 		}
 		else {
 			// Otherwise, display the standard did not load feedback.
 			System.out.println("Error with: Plug-in (Failed to load).");
+			logger.dump(logging, "Failed to load plug-in.");
 		}
 	}
 }

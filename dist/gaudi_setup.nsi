@@ -1,4 +1,6 @@
-# Gaudi installation script (NSIS) for Windows
+
+<!-- saved from url=(0068)http://github.com/stpettersens/Gaudi/raw/master/dist/gaudi_setup.nsi -->
+<html><body><pre style="word-wrap: break-word; white-space: pre-wrap;"># Gaudi installation script (NSIS) for Windows
 # Auto-generated in part by EclipseNSIS Script Wizard
 #
 # This script uses EnvVarUpdate.nsh from:
@@ -7,7 +9,7 @@
 # This script also uses the NSISArray plug-in from:
 # http://nsis.sourceforge.net/Arrays_in_NSIS
 #
-# NB: Convert tabs->spaces if you make alterations to this file!
+# NB: Convert tabs-&gt;spaces if you make alterations to this file!
 
 Name Gaudi
 
@@ -78,7 +80,7 @@ InstallDirRegKey HKLM "${REGKEY}" Path
 ShowUninstDetails show
 
 # Create libraries ("libs") arrays and array functions for use later
-# <BEGIN>
+# &lt;BEGIN&gt;
 ${Array} libs 1 20
 ${ArrayFunc} Read
 ${ArrayFunc} Write
@@ -90,16 +92,16 @@ ${ArrayFunc} Push
 ${ArrayFunc} FreeUnusedMem
 
 Section
-    ${libs->Init}
-    ${libsRedun->Init}
-    ${libs->Write} 0 "scala-library.jar"
-    ${libs->Write} 1 "json_simple-1.1.jar"
-    ${libs->Write} 2 "commons-io-1.4.jar"
-    ${libs->Write} 3 "groovy-all-1.7.4.jar"
-    ${libs->FreeUnusedMem}
-    ${libsRedun->FreeUnusedMem}
+    ${libs-&gt;Init}
+    ${libsRedun-&gt;Init}
+    ${libs-&gt;Write} 0 "scala-library.jar"
+    ${libs-&gt;Write} 1 "json_simple-1.1.jar"
+    ${libs-&gt;Write} 2 "commons-io-1.4.jar"
+    ${libs-&gt;Write} 3 "groovy-all-1.7.4.jar"
+    ${libs-&gt;FreeUnusedMem}
+    ${libsRedun-&gt;FreeUnusedMem}
 SectionEnd
-# <END>
+# &lt;END&gt;
 
 # Detect presence of a suitable JVM environment on system
 # That is, that it exists and is at least version 1.5+ capable
@@ -130,7 +132,7 @@ Function detectJVM
     ${If} $0 == "1"
         DetailPrint "Pass: JVM reports suitable version (1.5+)"
     ${ElseIf} $0 == "0"
-        DetailPrint "Fail: JVM reports unsuitable version (< 1.5)"
+        DetailPrint "Fail: JVM reports unsuitable version (&lt; 1.5)"
         DetailPrint "Please update it."
         GoTo downloadJVM
         badJVM: ; Done with JVM checks; failed
@@ -166,7 +168,7 @@ Function detectTPLibs
     IntOp $libsFound $libsFound + 0 ; Set libraries found to 0
     IntOp $indx $indx + 0 ; Set loop index to 0
     ${DoUntil} $indx == 4
-        ${libs->Read} $lib $indx ; Read indexed library as current library  to check for
+        ${libs-&gt;Read} $lib $indx ; Read indexed library as current library  to check for
         ; Execute FindInPath program to check for current library in CLASSPATH
         nsExec::ExecToStack `java -classpath . FindInPath CLASSPATH $lib` 
         Pop $0 ; Pop return code from program from stack
@@ -174,17 +176,17 @@ Function detectTPLibs
         ${If} $0 == "1"
             DetailPrint "Found library: $lib" ; Print that found library
             IntOp $libsFound $libsFound + 1 ; Increment number of found libraries
-            ${libsRedun->Push} $lib ; Add found library to libraries erase after copying
+            ${libsRedun-&gt;Push} $lib ; Add found library to libraries erase after copying
         ${ElseIf} $0 == "0"
             DetailPrint "Did not find library: $lib" ; Otherwise, print that did not find library
         ${EndIf}
         IntOp $indx $indx + 1
     ${Loop}
     DetailPrint "Found $libsFound of 4 libraries already installed."
-    ${If} $libsFound < 4:
+    ${If} $libsFound &lt; 4:
         DetailPrint "Warning: Libraries are missing. This may be a problem if you are not installing them."
     ${EndIf}
-    ${libs->Delete} ; Delete first array, done with
+    ${libs-&gt;Delete} ; Delete first array, done with
     Delete FindInPath.class ; Done with this program, delete it
 FunctionEnd
 
@@ -195,11 +197,11 @@ Function removeDuplicates
     StrCpy $lib "x" ; Make lib variable not blank initially so that loop works
     IntOp $indx $indx - 4 ; Reset loop index to 0
     ${DoUntil} $lib == ""
-        ${libsRedun->Read} $lib $indx ; Get each duplicate library
+        ${libsRedun-&gt;Read} $lib $indx ; Get each duplicate library
         Delete $INSTDIR\lib\$lib ; Delete each duplicate library from $INSTDIR
         IntOp $indx $indx + 1 ; Increment index
     ${Loop}
-    ${libsRedun->Delete} ; Delete second array, done with
+    ${libsRedun-&gt;Delete} ; Delete second array, done with
 FunctionEnd
 
 # Installer sections
@@ -330,3 +332,4 @@ Function un.onInit
     !insertmacro SELECT_UNSECTION Main ${UNSEC0000}
 FunctionEnd
 
+</pre></body></html>

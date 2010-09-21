@@ -1,4 +1,6 @@
-/*
+
+<!-- saved from url=(0067)http://github.com/stpettersens/Gaudi/raw/master/dist/JavaCheck.java -->
+<html><body><pre style="word-wrap: break-word; white-space: pre-wrap;">/*
  Java version checker
  @author Sam Saint-Pettersen, 2010
  Released into the public domain.
@@ -12,7 +14,7 @@
  Output: Java vendor (e.g. Sun Microsystems Inc.)
  Exit code: -1 (neither true or false)
 	
- Usage: java -cp . JavaCheck <minimal version>
+ Usage: java -cp . JavaCheck &lt;minimal version&gt;
  Output: x.x.x_x (Java version)
  Exit code: 0 (false) / 1 (true)(Java installed, is minimal version or greater)
 */
@@ -31,7 +33,7 @@ class JavaCheck {
 			Matcher m = p.matcher(detectedVer); m.find();
 			float minimalVersion = Float.valueOf(args[0]).floatValue();
 			float detec_versionNum = Float.valueOf(m.group(0)).floatValue();
-			if(detec_versionNum >= minimalVersion) {
+			if(detec_versionNum &gt;= minimalVersion) {
 				returned = 1; // Return exit code 1 for true
 			}
 			else returned = 0; // Return exit code 0 for false
@@ -41,3 +43,4 @@ class JavaCheck {
 		System.exit(returned);
 	}
 }
+</pre></body></html>

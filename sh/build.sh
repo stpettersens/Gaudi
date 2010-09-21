@@ -15,9 +15,10 @@ scalaLib="lib/scala-library.jar"
 deps="lib/json_simple-1.1.jar"$sep"lib/commons-io-1.4.jar"$sep$gDep
 
 echo "Compiling Gaudi..."
-scalac src/$pkg/GaudiCommand.scala src/$pkg/GaudiBuiltin.java -verbose -deprecation -d bin 
+scalac src/$pkg/GaudiCommand.scala src/$pkg/GaudiBuiltin.java -verbose -deprecation -d bin
+scalac src/$pkg/GaudiLogger.scala src/$pkg/GaudiLogging.java -verbose -deprecation -d bin
 javac -classpath "."$sep$gDep$sep$scalaLib -verbose -deprecation -d bin \
-src/$pkg/GaudiPluginLoader.java src/$pkg/GaudiBuiltin.java
+src/$pkg/*.java
 scalac -classpath $deps -verbose -deprecation -unchecked -d bin src/$pkg/*
 
 echo "Packaging Gaudi..."

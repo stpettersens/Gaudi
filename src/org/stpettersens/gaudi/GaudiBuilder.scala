@@ -25,6 +25,9 @@ import java.io._
 
 class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean, logging: Boolean)  {
 	
+	// Define global logger object
+	val logger = new GaudiLogger()
+	
 	// Substitute variables for values
 	private def substituteVars(action: Array[Object]): Unit = {
 		println(preamble)
@@ -57,7 +60,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean, logging: Boolean)  
 	// Print an error related to action or command and exit
 	private def printError(error: String): Unit = {
 		println(String.format("\tAborting: %s.", error))
-		GaudiLogger.dump(logging, error) // Also log it
+		logger.dump(logging, error) // Also log it
 		System.exit(1) // Exit application with error code
 	}
 	// Print executed command
@@ -92,7 +95,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean, logging: Boolean)  
 			case "exec" => {
 				val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
 				// -----------------------------------------------------------------
-				GaudiLogger.dump(logging, String.format("Executed -> %s %s\n" +
+				logger.dump(logging, String.format("Executed -> %s %s\n" +
 				"Wildcard matched -> %s", exe._1, exe._2, handleWildcards(exe._2)))
 				// -----------------------------------------------------------------
 				if(exe._1 != null) {

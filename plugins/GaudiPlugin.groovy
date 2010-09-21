@@ -25,10 +25,12 @@ public class GaudiPlugin {
 	def version // String: Version of plug-in 
 	def author // String: Author of plug-in
 	def url // String: URL for plug-in website or associated online documentation
-	def initable // Boolean: Init[ializ]able? Base class should be false, derived plug-ins true
+	def initable // Boolean: Init[ializ]able? 
+	// Base class should be false, derived plug-ins true
 	GaudiPlugin() {
 		name = "Gaudi plug-in"
-		version = "0.0"
+		action = "Plug-in action"
+		version = "1.0"
 		author = "A.B Somebody"
 		url = "http://www.a.url.xyz"
 		initable = false
@@ -37,9 +39,13 @@ public class GaudiPlugin {
 	final def initialize() {
 		return initable
 	}
-	// Method to return plug-in name and its action need not to be redefined either
-	final def getNameAction() {
+	// Non-redefinable method to return plug-in name
+	final def getName() {
 		return name
+	}
+	// Non-redefinable method to return plug-in action
+	final def getAction() {
+		return action
 	}
 	// But, run methods should be redefined in derived plug-ins
 	def run() {
