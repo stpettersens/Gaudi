@@ -7,6 +7,3 @@
 .scala_dependencies
 .settings
 .metadata
-dist/lib/
-dist/plugins/
-cjar

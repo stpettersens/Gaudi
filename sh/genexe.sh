@@ -13,10 +13,7 @@ fi
 
 if [[ -e "bin/Gaudi.jar" ]]; then
 	echo "Generating Windows executable (with deps).."
-	cp -r lib dist
-	cp -r plugins dist
-	cp bin/Gaudi.jar dist
-	$l4j dist/gaudi_exe.xml
+	$l4j gaudi_exe.xml
 	echo "Done."
 
 else 
