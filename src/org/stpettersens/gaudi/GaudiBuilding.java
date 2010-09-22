@@ -16,10 +16,12 @@ limitations under the License.
 
 For dependencies, please see LICENSE file.
 */
-package org.stpettersens.gaudi
+package org.stpettersens.gaudi;
 
-class GaudiCommand extends GaudiBuiltin {
-	def execute(cmd: String): Unit = {
-		println(cmd)
-	}
+// NOTE: Interface for interoperability between GaudiPluginLoader
+// written in Java and GaudiBuilder written in Scala.
+// This is so that Gaudi plug-ins may invoke Gaudi commands
+// as a typical build file can.
+public interface GaudiBuilding {
+	public void doCommand(String command, String param);
 }

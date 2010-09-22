@@ -18,8 +18,9 @@ For dependencies, please see LICENSE file.
 */
 package org.stpettersens.gaudi;
 
-//NOTE: Interface for interoperability between GaudiPluginLoader
-//written in Java and GaudiLogger written in Scala
+// NOTE: Interface for interoperability between GaudiPluginLoader
+// written in Java and GaudiLogger written in Scala.
+// This is so loading plug-ins can be logged via the GaudiLogger class.
 public interface GaudiLogging {
-	public boolean dump(boolean logging, String message);
+	public void dump(String message);
 }

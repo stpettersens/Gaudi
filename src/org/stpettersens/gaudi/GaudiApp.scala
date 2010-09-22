@@ -31,9 +31,7 @@ object GaudiApp {
   var buildFile: String = "build.json" // Default build file
   var beVerbose: Boolean = true // Gaudi is verbose by default
   var logging: Boolean = false // Logging is disabled by default
-  
-  // Define global logging object
-  val logger = new GaudiLogger()
+  var logger: GaudiLogger = null
 	  
   def main(args: Array[String]): Unit = {
       var pSwitch: Boolean = false
@@ -72,6 +70,7 @@ object GaudiApp {
 	 	 	 	  }
 	 	 	  }
 	 	  }
+	 	  logger = new GaudiLogger(logging)
 	 	  loadBuild(action)
 	  }
 	  else displayError("Arguments (requires 0-6 arguments)")
@@ -121,13 +120,13 @@ object GaudiApp {
   // Display an error
   def displayError(ex: Exception): Unit = {
 	  println(String.format("\nError with: %s.", ex.getMessage))
-	  logger.dump(logging, ex.getMessage)
+	  logger.dump(ex.getMessage)
 	  displayUsage(1)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
 	  println(String.format("\nError with: %s.", ex))
-	  logger.dump(logging, ex)
+	  logger.dump(ex)
 	  displayUsage(1)
   }
   // Display version information and exit

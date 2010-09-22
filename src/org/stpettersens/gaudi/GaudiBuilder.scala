@@ -23,10 +23,11 @@ import org.apache.commons.io.filefilter.WildcardFileFilter
 import scala.util.matching.Regex
 import java.io._
 
-class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean, logging: Boolean)  {
+class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean, logging: Boolean) 
+extends GaudiBuilding {
 	
 	// Define global logger object
-	val logger = new GaudiLogger()
+	val logger = new GaudiLogger(logging)
 	
 	// Substitute variables for values
 	private def substituteVars(action: Array[Object]): Unit = {
@@ -60,7 +61,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean, logging: Boolean)  
 	// Print an error related to action or command and exit
 	private def printError(error: String): Unit = {
 		println(String.format("\tAborting: %s.", error))
-		logger.dump(logging, error) // Also log it
+		logger.dump(error) // Also log it
 		System.exit(1) // Exit application with error code
 	}
 	// Print executed command
@@ -95,7 +96,7 @@ class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean, logging: Boolean)  
 			case "exec" => {
 				val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
 				// -----------------------------------------------------------------
-				logger.dump(logging, String.format("Executed -> %s %s\n" +
+				logger.dump(String.format("Executed -> %s %s\n" +
 				"Wildcard matched -> %s", exe._1, exe._2, handleWildcards(exe._2)))
 				// -----------------------------------------------------------------
 				if(exe._1 != null) {

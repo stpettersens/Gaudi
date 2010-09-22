@@ -16,20 +16,18 @@ limitations under the License.
 
 For dependencies, please see LICENSE file.
 */
-// NOTE: The GaudiPluginLoader implementation code is written in 
-// Java rather than Scala for compatibility reasons.(Specifically casting issues).
 package org.stpettersens.gaudi;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import java.io.*;
 
+// NOTE: The GaudiPluginLoader implementation code is written in 
+// Java rather than Scala for compatibility reasons.(Specifically casting issues).
 public class GaudiPluginLoader {
-	
-	// Define global logger object
-	GaudiLogger logger = new GaudiLogger(); // Move t/f to constructor
 
 	@SuppressWarnings("unchecked")
 	GaudiPluginLoader(String plugin, boolean logging) throws Exception {
+		GaudiLogger logger = new GaudiLogger(logging);
 	
 		// TODO: Implement plug-in access to internal commands
 		// ...
@@ -52,12 +50,12 @@ public class GaudiPluginLoader {
 			System.out.println("Initialized plug-in.");
 			System.out.println(String.format("[ %s => %s ]", sName, sAction));
 			pluginObj.invokeMethod("run", null);
-			logger.dump(logging, String.format("Initialized plug-in -> %s.", sName));
+			logger.dump(String.format("Initialized plug-in -> %s.", sName));
 		}
 		else {
 			// Otherwise, display the standard did not load feedback.
 			System.out.println("Error with: Plug-in (Failed to load).");
-			logger.dump(logging, "Failed to load plug-in.");
+			logger.dump("Failed to load plug-in.");
 		}
 	}
 }

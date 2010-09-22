@@ -21,12 +21,12 @@ import java.util.Date
 import java.text.{DateFormat,SimpleDateFormat}
 import java.io.{PrintWriter,FileOutputStream,IOException}
 
-class GaudiLogger extends GaudiLogging {
+class GaudiLogger(logging: Boolean) extends GaudiLogging {
 	
 	val logFile: String = "gaudi.log"
 	val timestamp: DateFormat = new SimpleDateFormat("[MM-dd-yyyy HH:mm:ss]")
 
-	def dump(logging: Boolean, message: String): Boolean = {
+	def dump(message: String): Unit = {
 		if(logging) {
 			var out: PrintWriter = null
 			try {
@@ -43,6 +43,5 @@ class GaudiLogger extends GaudiLogging {
 				out.close()
 			}
 		}
-		logging
 	}
 }

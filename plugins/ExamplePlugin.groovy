@@ -12,6 +12,9 @@ public class examplePlugin extends GaudiPlugin {
 		initable = true
 	}
 	def run() {
+		// Raw print line
 		println "\tHello from ${name}."
+		// Invoke via g object and :echo command
+		g.doCommand(":echo Hello again.")
 	}
 }

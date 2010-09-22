@@ -26,6 +26,7 @@ public class GaudiPlugin {
 	def author // String: Author of plug-in
 	def url // String: URL for plug-in website or associated online documentation
 	def initable // Boolean: Init[ializ]able? 
+	def g // GaudiBuilder: Plug-in interaction object
 	// Base class should be false, derived plug-ins true
 	GaudiPlugin() {
 		name = "Gaudi plug-in"
@@ -37,6 +38,9 @@ public class GaudiPlugin {
 	}
 	// Initalize methods do *not* need to be redefined in derived plug-ins
 	final def initialize() {
+		// Define a 'g' object (GaudiBuilder),
+		// so that plug-ins can invoke actions and commands
+		g = new GaudiBuilder(null, true, true)
 		return initable
 	}
 	// Non-redefinable method to return plug-in name

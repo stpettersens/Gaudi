@@ -4,15 +4,15 @@
 
 sh/clearlogs.sh
 files=( 
-	dist/*.log dist/*.exe dist/*.jar
-	bin/*.jar dist/*.class
+	*.exe *.jar bin/org
+	bin/*.jar *.class
 )
 
 echo "Cleaning up..."
 for file in ${files[@]}; do
 	if [[ -e $file ]]; then
 		echo Cleaning $file
-		rm -f $file
+		rm -r -f $file
 	fi
 done
 echo "Done."
