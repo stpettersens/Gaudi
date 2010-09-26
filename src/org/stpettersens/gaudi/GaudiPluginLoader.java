@@ -17,8 +17,8 @@ limitations under the License.
 For dependencies, please see LICENSE file.
 */
 package org.stpettersens.gaudi;
+//import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyObject;
 import java.io.*;
 
 // NOTE: The GaudiPluginLoader implementation code is written in 
@@ -31,7 +31,7 @@ public class GaudiPluginLoader {
 		GroovyClassLoader gcl = new GroovyClassLoader();
 		Class pluginClass = gcl.parseClass(new File(plugin));
 		Object aPlugin = pluginClass.newInstance();
-		GaudiPluginInterface gPlugin = (GaudiPluginInterface) aPlugin;
+		GaudiPlugin gPlugin = (GaudiPlugin) aPlugin;
 		Object init = gPlugin.initialize();
 		Boolean bInit = (Boolean) init; // Cast init value to Boolean *object*
 		

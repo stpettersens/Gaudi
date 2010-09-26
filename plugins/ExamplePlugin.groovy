@@ -1,18 +1,18 @@
 /*
 	Example plugin for Gaudi build tool
+	@author Sam-Saint-Pettersen
+	@usage Plug-in for Gaudi demonstration
 */
-import org.stpettersens.gaudi.GaudiPlugin
-public class ExamplePlugin extends GaudiPlugin {
+import org.stpettersens.gaudi.GaudiPluginBase
+public class ExamplePlugin extends GaudiPluginBase {
 
-	ExamplePlugin() {
-		/*name = "Example plug-in"
-		action = "Display message"
-		version = "0.1"
-		author = "Sam Saint-Pettersen"
-		url = "http://github.com/stpettersens/Gaudi"*/
-		initable = true
+	def pName = "Example plug-in"
+
+	public boolean initialize() { // TEMPORARY, USE BINDING FOR INITABLE VARIABLE
+		return true
 	}
+	
 	public void run() {
-		println "Hello from ${name}"
+		println "Hello from ${pName}"
 	}
 }

@@ -19,29 +19,29 @@ For dependencies, please see LICENSE file.
 package org.stpettersens.gaudi
 
 // The Gaudi plug-in base class for derived Groovy-based plug-ins
-class GaudiPlugin extends GaudiPluginInterface {
+class GaudiPluginBase extends GaudiPlugin {
 
-	var name: String = "Gaudi plug-in"; // Plug-in name
-	var action: String  = "Plug-in action"; // Plug-in action
-	var version: String = "1.0"; // Plug-in version 
-	var author: String = "A.B Somebody"; // Plug-in author
-	var url: String = "http://www.a.url.xyz"; // Plug-in URL
-	var initable: Boolean = false; // Init[ializ]able?, should be true only for derived
+	var pName = "Unspecified plug-in" // Plug-in name
+	var pAction = "Unspecified action" // Plug-in action
+	var pVersion = "Unspecifed version" // Plug-in version 
+	var pAuthor = "Unspecified author " // Plug-in author
+	var pUrl = "Unspecified url" // Plug-in URL
+	var initable = false // Init[ializ]able?, should be true only for derived
 	
-	// Initalize methods do *not* need to be redefined in derived plug-ins
+	// Initalize method does *not* need to be redefined in derived plug-ins
 	def initialize(): Boolean = {
 		initable
 	}
 	// Non-redefinable method to return plug-in name
 	def getName(): String = {
-		name
+		pName
 	}
 	// Non-redefinable method to return plug-in action
 	def getAction(): String = {
-		action
+		pAction
 	}
 	// But, run methods should be redefined in derived plug-ins
 	def run(): Unit = {
-		println(String.format("\tNo run code implemented for %s.", name))
+		println(String.format("\tNo run code implemented for %s.", pName))
 	}
 }

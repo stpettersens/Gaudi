@@ -20,11 +20,7 @@ package org.stpettersens.gaudi;
 
 // NOTE: Interface for interoperability between GaudiPluginBase
 // written in Scala and derived plugins written in Groovy.
-public interface GaudiPluginInterface {
-	// Properties...
-	public boolean initable = false;
-	
-	// Methods...
+public interface GaudiPlugin {
 	public boolean initialize();
 	public String getName();
 	public String getAction();
