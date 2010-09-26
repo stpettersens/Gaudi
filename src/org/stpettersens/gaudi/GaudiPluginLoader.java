@@ -32,7 +32,7 @@ public class GaudiPluginLoader {
 		Class pluginClass = gcl.parseClass(new File(plugin));
 		Object aPlugin = pluginClass.newInstance();
 		GaudiPlugin gPlugin = (GaudiPlugin) aPlugin;
-		Object init = gPlugin.initialize();
+		Object init = gPlugin.initialize("", "", "", "", "", true);
 		Boolean bInit = (Boolean) init; // Cast init value to Boolean *object*
 		
 		if(bInit) {
