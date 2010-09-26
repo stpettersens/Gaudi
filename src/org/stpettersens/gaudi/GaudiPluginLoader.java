@@ -27,35 +27,29 @@ public class GaudiPluginLoader {
 
 	@SuppressWarnings("unchecked")
 	GaudiPluginLoader(String plugin, boolean logging) throws Exception {
-		GaudiLogger logger = new GaudiLogger(logging);
-	
-		// TODO: Implement plug-in access to internal commands
-		// ...
-		
-		GroovyClassLoader loader = new GroovyClassLoader();
-		loader.parseClass(new File("GaudiPlugin.groovy")); // !!!
-		Class pluginClass = loader.parseClass(new File(plugin));
-	
-		// Cast plugin class to plugin groovy object
-		GroovyObject pluginObj = (GroovyObject) pluginClass.newInstance();
-		Object init = pluginObj.invokeMethod("initialize", null);
-		Object name = pluginObj.invokeMethod("getName", null);
-		Object action = pluginObj.invokeMethod("getAction", null);
-		Boolean bInit = (Boolean) init; // Cast init to boolean *object*
-		String sName = (String) name; // Cast name to string
-		String sAction = (String) action; // Cast action to string
+		//GaudiLogger logger = new GaudiLogger(logging);
+		GroovyClassLoader gcl = new GroovyClassLoader();
+		Class pluginClass = gcl.parseClass(new File(plugin));
+		Object aPlugin = pluginClass.newInstance();
+		GaudiPluginInterface gPlugin = (GaudiPluginInterface) aPlugin;
+		Object init = gPlugin.initialize();
+		Boolean bInit = (Boolean) init; // Cast init value to Boolean *object*
 		
 		if(bInit) {
 			// On successful initialization, display feedback and run the plug-in
+			Object name = gPlugin.getName();
+			Object action = gPlugin.getAction();
+			String sName = (String) name; // Cast name to string
+			String sAction = (String) action; // Cast action to string
 			System.out.println("Initialized plug-in.");
 			System.out.println(String.format("[ %s => %s ]", sName, sAction));
-			pluginObj.invokeMethod("run", null);
-			logger.dump(String.format("Initialized plug-in -> %s.", sName));
+			gPlugin.run();
+			//logger.dump(String.format("Initialized plug-in -> %s.", sName));
 		}
 		else {
 			// Otherwise, display the standard did not load feedback.
 			System.out.println("Error with: Plug-in (Failed to load).");
-			logger.dump("Failed to load plug-in.");
+			//logger.dump("Failed to load plug-in.");
 		}
 	}
 }

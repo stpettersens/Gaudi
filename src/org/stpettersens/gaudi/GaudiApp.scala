@@ -87,7 +87,7 @@ object GaudiApp {
   private def loadBuild(action: String): Unit = {
 	  var buildConf: String = ""
 	  try {
-	 	  for(line <- Source.fromFile(buildFile).getLines()) {
+		  for(line <- Source.fromFile(buildFile).getLines()) {
 	 	 	  buildConf += line
 	 	  }
 	 	  // Shrink string, by replacing tabs with spaces;
@@ -140,7 +140,7 @@ object GaudiApp {
 	  println("Copyright (c) 2010 Sam Saint-Pettersen")
 	  println("\nReleased under the Apache License v2.")
 	  println("\nUsage: gaudi [-l][-i|-v|-n|-m][-q][-p <plug-in>]")
-	  println("\t[-f <build file>][\"<:command>\"|<action>]")
+	  println("\t[-f <build file>][<action>|\"<:command>\"]")
 	  println("\n-l: Enable logging of certain events.")
 	  println("-i: Display usage information and quit.")
 	  println("-v: Display version information and quit.")
