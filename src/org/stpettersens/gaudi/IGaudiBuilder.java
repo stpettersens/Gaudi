@@ -22,6 +22,6 @@ package org.stpettersens.gaudi;
 // written in Java and GaudiBuilder written in Scala.
 // This is so that Gaudi plug-ins may invoke Gaudi commands
 // as a typical build file can.
-public interface GaudiBuilding {
+public interface IGaudiBuilder {
 	public void doCommand(String command, String param);
 }

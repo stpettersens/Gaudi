@@ -24,7 +24,7 @@ import scala.util.matching.Regex
 import java.io._
 
 class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean, logging: Boolean) 
-extends GaudiBuilding {
+extends IGaudiBuilder {
 	
 	// Define global logger object
 	val logger = new GaudiLogger(logging)
