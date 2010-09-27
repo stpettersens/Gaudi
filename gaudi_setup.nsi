@@ -222,8 +222,8 @@ SectionEnd
 # Plug-ins for core program]
 Section "Plug-ins" Plugins
     SetOutPath $INSTDIR\plugins
-    File plugins\GaudiPlugin.groovy ; TODO: Change to packaged plug-in files
-    File plugins\ExamplePlugin.groovy ; " " "
+    ; TODO: Change to packaged plug-in files:
+    File plugins\ExamplePlugin.groovy 
 SectionEnd
 
 # Library dependencies for core program

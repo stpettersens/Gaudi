@@ -1,7 +1,7 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>console</headerType>
-  <jar>Gaudi.jar</jar>
+  <jar>bin/Gaudi.jar</jar>
   <outfile>gaudi.exe</outfile>
   <errTitle>gaudi.exe</errTitle>
   <cmdLine></cmdLine>
