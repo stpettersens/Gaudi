@@ -3,16 +3,18 @@
 	@author Sam-Saint-Pettersen
 	@usage Plug-in for Gaudi demonstration
 */
-import org.stpettersens.gaudi.GaudiPluginBase
-public class ExamplePlugin extends GaudiPluginBase {
-		
-	def name = "Example plug-in"
-	def version = "1.0"
-	def author = "Sam Saint-Pettersen"
-	def url = "http://github.com/stpettersens/Gaudi"
-	def initable = true
+import org.stpettersens.gaudi.GaudiPlugin
+public class ExamplePlugin extends GaudiPlugin {
 	
+	ExamplePlugin() {
+		pName = "Example plug-in"
+		pAction = "Display message"
+		pVersion = "1.0"
+		pAuthor = "Sam Saint-Pettersen"
+		pUrl = "http://github.com/stpettersens/Gaudi"
+		pInitable = true
+	}
 	public void run() {
-		println "Hello from ${name}"
+		println "Hello from ${pName}"
 	}
 }

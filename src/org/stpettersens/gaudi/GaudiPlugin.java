@@ -18,12 +18,30 @@ For dependencies, please see LICENSE file.
 */
 package org.stpettersens.gaudi;
 
-// NOTE: Interface for interoperability between GaudiPluginBase
-// written in Scala and derived plugins written in Groovy.
-public interface GaudiPlugin {
-	public boolean initialize(String name, String action, 
-	String version, String author, String url, boolean initable);
-	public String getName();
-	public String getAction();
-	public void run();
+// The Gaudi plug-in base class for derived Groovy-based plug-ins
+public class GaudiPlugin implements IGaudiPlugin {
+
+	public static String pName = "Unspecified plug-in"; // Plug-in name
+	public static String pAction = "Unspecifed action"; // Plug-in action
+	public static String pVersion = "Unspecified version"; // Plug-in version 
+	public static String pAuthor = "Unspecified author"; // Plug-in author
+	public static String pUrl = "Unspecified URL"; // Plug-in URL
+	public static boolean pInitable = false;
+	
+	// Initalize method does *not* need to be redefined in derived plug-ins
+	public boolean initialize() {
+		return pInitable;
+	} 
+	// Non-redefinable method to return plug-in name
+	public String getName() {
+		return pName;
+	}
+	// Non-redefinable method to return plug-in action
+	public String getAction() {
+		return pAction;
+	}
+	// But, run methods should be redefined in derived plug-ins
+	public void run() {
+		System.out.println(String.format("\tNo run code implemented for %s.", pName));
+	}
 }

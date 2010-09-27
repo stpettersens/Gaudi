@@ -17,7 +17,6 @@ limitations under the License.
 For dependencies, please see LICENSE file.
 */
 package org.stpettersens.gaudi;
-//import groovy.lang.Binding;
 import groovy.lang.GroovyClassLoader;
 import java.io.*;
 
@@ -31,8 +30,8 @@ public class GaudiPluginLoader {
 		GroovyClassLoader gcl = new GroovyClassLoader();
 		Class pluginClass = gcl.parseClass(new File(plugin));
 		Object aPlugin = pluginClass.newInstance();
-		GaudiPlugin gPlugin = (GaudiPlugin) aPlugin;
-		Object init = gPlugin.initialize("", "", "", "", "", true);
+		IGaudiPlugin gPlugin = (IGaudiPlugin) aPlugin;
+		Object init = gPlugin.initialize();
 		Boolean bInit = (Boolean) init; // Cast init value to Boolean *object*
 		
 		if(bInit) {
@@ -41,7 +40,7 @@ public class GaudiPluginLoader {
 			Object action = gPlugin.getAction();
 			String sName = (String) name; // Cast name to string
 			String sAction = (String) action; // Cast action to string
-			System.out.println("Initialized plug-in.");
+			System.out.println("Initialized plug-in.\n");
 			System.out.println(String.format("[ %s => %s ]", sName, sAction));
 			gPlugin.run();
 			//logger.dump(String.format("Initialized plug-in -> %s.", sName));

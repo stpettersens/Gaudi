@@ -21,7 +21,7 @@ import java.util.Date
 import java.text.{DateFormat,SimpleDateFormat}
 import java.io.{PrintWriter,FileOutputStream,IOException}
 
-class GaudiLogger(logging: Boolean) extends GaudiLogging {
+class GaudiLogger(logging: Boolean) extends IGaudiLogger {
 	
 	val logFile: String = "gaudi.log"
 	val timestamp: DateFormat = new SimpleDateFormat("[MM-dd-yyyy HH:mm:ss]")
