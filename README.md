@@ -35,7 +35,7 @@ use.
 
 Run Compatibility
 -----------------
-Gaudi should be overall, mostly compatible with most modern JVMs
+Gaudi overall should be mostly compatible with most modern JVMs
 and has been tested with and is known to work with the following:
 
 - [Sun's Java HotSpot JVM](http://java.sun.com)

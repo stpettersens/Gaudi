@@ -40,6 +40,7 @@ class GaudiForeman(buildConf: String) {
 			case ex: Exception => {
 				GaudiApp.displayError("Instructions (Badly formatted JSON)")
 			}
+			// TODO: PREVENT NULL POINTER EXCEPTIONS FROM OCCURING
 		}
 		JSONValue.parse(shardStr)
 	}

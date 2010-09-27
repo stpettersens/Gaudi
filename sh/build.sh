@@ -18,7 +18,7 @@ deps="."$sep$jsonLib$sep$ioLib$sep$groovyLib
 scSwitches="-verbose -deprecation -unchecked -d bin"
 
 echo "Compiling Gaudi..."
-scalac src/$pkg/GaudiLogger.scala src/$pkg/GaudiLogging.java $scSwitches
+scalac src/$pkg/GaudiLogger.scala src/$pkg/IGaudiLogger.java $scSwitches
 scalac src/$pkg/*.scala src/$pkg/*.java $scSwitches
 javac -classpath $deps -verbose -deprecation -d bin src/$pkg/*.java
 scalac -classpath $deps src/$pkg/*.scala src/$pkg/*.java $scSwitches
