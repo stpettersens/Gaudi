@@ -21,27 +21,27 @@ package org.stpettersens.gaudi;
 // The Gaudi plug-in base class for derived Groovy-based plug-ins
 public class GaudiPlugin implements IGaudiPlugin {
 
-	public static String pName = "Unspecified plug-in"; // Plug-in name
-	public static String pAction = "Unspecifed action"; // Plug-in action
-	public static String pVersion = "Unspecified version"; // Plug-in version 
-	public static String pAuthor = "Unspecified author"; // Plug-in author
-	public static String pUrl = "Unspecified URL"; // Plug-in URL
-	public static boolean pInitable = false;
+	public static String Name = "Unspecified plug-in"; // Plug-in name
+	public static String Action = "Unspecifed action"; // Plug-in action
+	public static String Version = "Unspecified version"; // Plug-in version 
+	public static String Author = "Unspecified author"; // Plug-in author
+	public static String Url = "Unspecified URL"; // Plug-in URL
+	public static boolean Initable = false;
 	
 	// Initalize method does *not* need to be redefined in derived plug-ins
 	public boolean initialize() {
-		return pInitable;
+		return Initable;
 	} 
 	// Non-redefinable method to return plug-in name
 	public String getName() {
-		return pName;
+		return Name;
 	}
 	// Non-redefinable method to return plug-in action
 	public String getAction() {
-		return pAction;
+		return Action;
 	}
 	// But, run methods should be redefined in derived plug-ins
 	public void run() {
-		System.out.println(String.format("\tNo run code implemented for %s.", pName));
+		System.out.println(String.format("\tNo run code implemented for %s.", Name));
 	}
 }

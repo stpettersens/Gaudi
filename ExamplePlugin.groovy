@@ -7,12 +7,12 @@ import org.stpettersens.gaudi.GaudiPlugin
 public class ExamplePlugin extends GaudiPlugin {
 	
 	ExamplePlugin() {
-		pName = "Example plug-in"
-		pAction = "Display message"
-		pVersion = "1.0"
-		pAuthor = "Sam Saint-Pettersen"
-		pUrl = "http://github.com/stpettersens/Gaudi"
-		pInitable = true
+		Name = "Example plug-in"
+		Action = "Display message"
+		Version = "1.0"
+		Author = "Sam Saint-Pettersen"
+		Url = "http://github.com/stpettersens/Gaudi"
+		Initable = true
 	}
 	public void run() {
 		println "Hello from ${pName}"
