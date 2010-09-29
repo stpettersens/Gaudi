@@ -24,14 +24,14 @@ import org.json.simple.{JSONObject,JSONArray}
 
 object GaudiApp {
 	
-  //--------------------------------------------------------
+  //-------------------------------------------------------------
   val appVersion: String = "0.1"
   val env: (String, String) = GaudiHabitat.getEnvAndOS()
-  //--------------------------------------------------------
+  //-------------------------------------------------------------
   var buildFile: String = "build.json" // Default build file
   var beVerbose: Boolean = true // Gaudi is verbose by default
   var logging: Boolean = false // Logging is disabled by default
-  var logger: GaudiLogger = null
+  val logger = new GaudiLogger(logging)
 	  
   def main(args: Array[String]): Unit = {
       var pSwitch: Boolean = false
@@ -40,7 +40,8 @@ object GaudiApp {
 	  val pluginPattn: Regex = """(\w+.groovy)""".r
 	  val filePattn: Regex = """(\w+.json)""".r
 	  val actPattn: Regex = """([a-z]+)""".r
-	  val cmdPattn: Regex = """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
+	  val cmdPattn: Regex 
+	  = """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
 	  
 	  /* Default behavior is to build project following
 	  build file in the current directory */
@@ -70,7 +71,6 @@ object GaudiApp {
 	 	 	 	  }
 	 	 	  }
 	 	  }
-	 	  logger = new GaudiLogger(logging)
 	 	  loadBuild(action)
 	  }
 	  else displayError("Arguments (requires 0-6 arguments)")
@@ -94,7 +94,7 @@ object GaudiApp {
 	 	  // Gaudi build files should be written using tabs
 	 	  buildConf = buildConf.replaceAll("\t","")
 	  }
-	  catch { // Catch I/O & general exceptions
+	  catch { // Catch I/O and general exceptions
 	 	  case ioe: IOException => displayError(ioe)
 	 	  case e: Exception => displayError(e)
 	  }

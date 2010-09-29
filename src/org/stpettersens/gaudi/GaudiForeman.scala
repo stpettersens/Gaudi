@@ -31,7 +31,7 @@ class GaudiForeman(buildConf: String) {
 	}
 	// Get sub-object 'shard' from build JSON object 
 	private def getShard(objectName: String): Object = {
-		var shardStr = ""
+		var shardStr: String = "n"
 		try {
 			val objPattn = new Regex(objectName)
 			shardStr = JSONValue.toJSONString(buildJson.get(objectName))

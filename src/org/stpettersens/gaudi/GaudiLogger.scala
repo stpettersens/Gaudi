@@ -25,7 +25,7 @@ class GaudiLogger(logging: Boolean) extends IGaudiLogger {
 	
 	val logFile: String = "gaudi.log"
 	val timestamp: DateFormat = new SimpleDateFormat("[MM-dd-yyyy HH:mm:ss]")
-
+	
 	def dump(message: String): Unit = {
 		if(logging) {
 			var out: PrintWriter = null
