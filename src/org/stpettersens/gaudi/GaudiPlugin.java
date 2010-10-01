@@ -27,6 +27,7 @@ public class GaudiPlugin implements IGaudiPlugin {
 	public static String Author = "Unspecified author"; // Plug-in author
 	public static String Url = "Unspecified URL"; // Plug-in URL
 	public static boolean Initable = false;
+	public GaudiBuilder builder = new GaudiBuilder(null, true, true);
 	
 	// Initalize method does *not* need to be redefined in derived plug-ins
 	public boolean initialize() {
@@ -43,5 +44,9 @@ public class GaudiPlugin implements IGaudiPlugin {
 	// But, run methods should be redefined in derived plug-ins
 	public void run() {
 		System.out.println(String.format("\tNo run code implemented for %s.", Name));
+	}
+	// Execute a Gaudi command
+	public void doCommand(String command, String param) {
+		builder.doCommand(command, param);
 	}
 }

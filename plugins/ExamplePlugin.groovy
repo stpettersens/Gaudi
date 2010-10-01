@@ -15,6 +15,6 @@ public class ExamplePlugin extends GaudiPlugin {
 		Initable = true
 	}
 	public void run() {
-		println "Hello from ${Name}"
+		doCommand("echo", "Hello from ${Name}")
 	}
 }

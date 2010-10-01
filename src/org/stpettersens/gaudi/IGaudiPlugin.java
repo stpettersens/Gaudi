@@ -25,4 +25,5 @@ public interface IGaudiPlugin {
 	public String getName();
 	public String getAction();
 	public void run();
+	public void doCommand(String command, String param);
 }
