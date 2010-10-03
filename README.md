@@ -20,7 +20,7 @@ but differs in that:
   language, unlike Ant which is highly specialised for Java development.
 
 Additionally, Gaudi supports additional functionality via plug-ins written 
-in the dynamically typed [Groovy programming language](http://groovy.codehaus.org).
+in the [Groovy programming language](http://groovy.codehaus.org).
 
 Inspiration
 -----------
