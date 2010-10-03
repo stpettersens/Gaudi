@@ -1,0 +1,6 @@
+src/org/stpettersens/gaudi/GaudiHabitat.scala
+src/org/stpettersens/gaudi/IGaudiBuilder.java
+src/org/stpettersens/gaudi/GaudiBuilder.scala
+src/org/stpettersens/gaudi/IGaudiLogger.java
+src/org/stpettersens/gaudi/GaudiLogger.scala
+
