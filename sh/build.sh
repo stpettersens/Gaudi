@@ -18,7 +18,7 @@ deps="."$sep$scalaLib$sep$jsonLib$sep$ioLib$sep$groovyLib
 switches="-verbose -deprecation -d bin"
 
 echo "Compiling Gaudi..."
-scalac -classpath $deps $switches src/$pkg/*
+scalac -classpath $deps $switches @sources
 javac -classpath $deps $switches src/$pkg/*.java
 
 echo "Packaging Gaudi..."
@@ -28,3 +28,4 @@ jar cfvm $jarF Manifest.mf *
 rm Manifest.mf
 cd ..
 echo "Done."
+
