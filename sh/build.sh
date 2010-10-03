@@ -18,8 +18,9 @@ deps="."$sep$scalaLib$sep$jsonLib$sep$ioLib$sep$groovyLib
 switches="-verbose -deprecation -d bin"
 
 echo "Compiling Gaudi..."
-# CIRCULAR DEPS PROBLEM TO FIX
-exit #
+#javac $switches src/$pkg/I*.java
+scalac -classpath $deps $switches src/$pkg/*
+javac -classpath $deps $switches src/$pkg/*.java
 
 echo "Packaging Gaudi..."
 cp Manifest.mf bin
