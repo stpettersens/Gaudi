@@ -55,7 +55,9 @@ object GaudiApp {
 	 	 	 	  case "-v" => displayVersion()
 	 	 	 	  case "-l" => logging = true
 	 	 	 	  case "-n" => generateNativeFile()
-	 	 	 	  case "-p" => pSwitch = true
+	 	 	 	  case "-p" => {
+	 	 	 	 	  if(GaudiPluginSupport.Enabled) pSwitch = true
+	 	 	 	  }
 	 	 	 	  case "-q" => beVerbose = false
 	 	 	 	  case "-f" => fSwitch = true
 	 	 	 	  case pluginPattn(p) => {
@@ -78,8 +80,8 @@ object GaudiApp {
   // Just peform a stdin command; really just for testing implemented commands.
   // E.g. argument ":move a->b"
   private def runCommand(cmd: String, param: String): Unit = {
-	  // Create a new builder and feed it a dummy JSONObject
-	  val builder = new GaudiBuilder(new JSONObject, beVerbose, logging)
+	  // Create a new builder to run a command
+	  val builder = new GaudiBuilder(null, beVerbose, logging)
 	  builder.doCommand(cmd, param)
 	  System.exit(0)
   }
@@ -114,8 +116,8 @@ object GaudiApp {
   }
   // Initialize and if successful run a plug-in
   private def doPluginAction(plugin: String): Unit = {
-      new GaudiPluginLoader(plugin, logging)
-      System.exit(0)
+	  new GaudiPluginLoader(plugin, logging)
+	  System.exit(0)
   }
   // Display an error
   def displayError(ex: Exception): Unit = {
@@ -132,6 +134,8 @@ object GaudiApp {
   // Display version information and exit
   private def displayVersion(): Unit = {
 	  println(String.format("Gaudi v.%s [%s (%s)]", appVersion, env._1, env._2))
+	  if(GaudiPluginSupport.Enabled) println("Plug-in support.")
+	  else println("No plug-in support (-noplugins).")
 	  System.exit(0)
   }
   // Display usage information and exit
@@ -139,13 +143,14 @@ object GaudiApp {
 	  println("\nGaudi platform agnostic build tool")
 	  println("Copyright (c) 2010 Sam Saint-Pettersen")
 	  println("\nReleased under the Apache License v2.")
-	  println("\nUsage: gaudi [-l][-i|-v|-n|-m][-q][-p <plug-in>]")
+	  println("\nUsage: gaudi [-l][-i|-v|-n|-m][-q]")
+	  if(GaudiPluginSupport.Enabled) println("[-p <plug-in>]")
 	  println("\t[-f <build file>][<action>|\"<:command>\"]")
 	  println("\n-l: Enable logging of certain events.")
 	  println("-i: Display usage information and quit.")
 	  println("-v: Display version information and quit.")
 	  println("-n: Generate native Gaudi build file (build.json).")
-	  println("-p: Invoke <plug-in> action.")
+	  if(GaudiPluginSupport.Enabled) println("-p: Invoke <plug-in> action.")
 	  println("-q: Mute console output, except for :echo and errors (Quiet mode).")
 	  println("-f: Use <build file> instead of build.json.")
 	  System.exit(exitCode)

@@ -1,0 +1,6 @@
+src/org/stpettersens/gaudi/GaudiHabitat.scala
+src/org/stpettersens/gaudi/GaudiBuilder.scala
+src/org/stpettersens/gaudi/GaudiLogger.scala
+src/org/stpettersens/gaudi/GaudiForeman.scala
+src/org/stpettersens/gaudi/dummyGaudiPluginLoader.scala
+src/org/stpettersens/gaudi/GaudiApp.scala

@@ -8,4 +8,3 @@ src/org/stpettersens/gaudi/GaudiLogger.scala
 src/org/stpettersens/gaudi/GaudiForeman.scala
 src/org/stpettersens/gaudi/GaudiPluginLoader.java
 src/org/stpettersens/gaudi/GaudiApp.scala
-
