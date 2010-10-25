@@ -17,7 +17,6 @@ if [[ -e "gaudi.exe" ]]; then
 	./sh/gensapps.sh
 	sleep 1
 	echo "Generating Windows installer.."
-	cd dist
 	$makensis gaudi_setup.nsi
 	echo "Done."
 else

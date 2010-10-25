@@ -25,6 +25,6 @@ object GaudiPluginSupport {
 	// seem to support embedded Groovy as used by the
 	// plug-in system properly.
 	// Gaudi can be built without plug-ins to allow
-	// it to work with other JVMS such as Apache Harmony or GNU GIJ.
+	// it to work with other JVMs such as Apache Harmony or GNU GIJ.
 	final val Enabled: Boolean = true
 }

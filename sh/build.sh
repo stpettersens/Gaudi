@@ -10,7 +10,7 @@ fi
 
 pkg="org/stpettersens/gaudi"
 jarF="Gaudi.jar"
-groovyLib="lib/groovy-all-1.7.4.jar"
+groovyLib="lib/groovy-all-1.7.5.jar"
 scalaLib="lib/scala-library.jar"
 jsonLib="lib/json_simple-1.1.jar"
 ioLib="lib/commons-io-1.4.jar"
