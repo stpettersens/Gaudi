@@ -38,7 +38,7 @@ object GaudiApp {
 	  var fSwitch: Boolean = false
 	  var action: String = "build"
 	  val pluginPattn: Regex = """(\w+.groovy)""".r
-	  val filePattn: Regex = """(\w+.json)""".r
+	  val filePattn: Regex = """(\w+.json)""".r  // NEED TO CHANGE WHAT CONSTITUTES a file pattern, e.g. a full path should be allowed
 	  val actPattn: Regex = """([a-z]+)""".r
 	  val cmdPattn: Regex 
 	  = """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
