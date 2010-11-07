@@ -11,9 +11,9 @@ if [[ `uname` =~ .+n.+x|.+BSD|Darwin ]]; then
 	l4j=launch4j
 fi
 
-if [[ -e "bin/Gaudi.jar" ]]; then
+if [[ -e "dist/Gaudi.jar" ]]; then
 	echo "Generating Windows executable (with deps).."
-	$l4j gaudi_exe.xml
+	$l4j dist/gaudi_exe.xml
 	echo "Done."
 
 else 

@@ -6,5 +6,6 @@
 # 2) FindInPath - to find a file in a system variable and its path
 
 echo "Compiling supporting programs for installer..."
+cd dist
 javac -deprecation -verbose -classpath . JavaCheck.java FindInPath.java
 echo "Done"

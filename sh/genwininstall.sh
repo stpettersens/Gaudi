@@ -13,11 +13,11 @@ if [[ `uname` =~ .+n.+x|.+BSD|Darwin ]]; then
 	makensis="wine $makensis"
 fi
 
-if [[ -e "gaudi.exe" ]]; then
+if [[ -e "dist/gaudi.exe" ]]; then
 	./sh/gensapps.sh
 	sleep 1
 	echo "Generating Windows installer.."
-	$makensis gaudi_setup.nsi
+	$makensis dist/gaudi_setup.nsi
 	echo "Done."
 else
 	echo "Important! 'Run sh/genexe.sh' first."
