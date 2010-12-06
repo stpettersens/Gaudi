@@ -94,7 +94,7 @@ Section
     ${libsRedun->Init}
     ${libs->Write} 0 "scala-library.jar"
     ${libs->Write} 1 "json_simple-1.1.jar"
-    ${libs->Write} 2 "commons-io-1.4.jar"
+    ${libs->Write} 2 "commons-io-2.0.jar"
     ${libs->Write} 3 "groovy-all-1.7.5.jar"
     ${libs->FreeUnusedMem}
     ${libsRedun->FreeUnusedMem}
@@ -245,7 +245,7 @@ Section "Third-party libraries" TPLibs
     ${EndIf}
     File lib\scala-library.jar
     File lib\json_simple-1.1.jar
-    File lib\commons-io-1.4.jar
+    File lib\commons-io-2.0.jar
     File lib\groovy-all-1.7.5.jar
     StrCmpS $R8 "true" 0 skip
     Call removeDuplicates
