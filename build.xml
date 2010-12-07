@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Apache Ant buildfile to build Gaudi based on the example from:
+http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
+-->
+<project name="Gaudi" default="compile" basedir=".">
+	<description>Gaudi buildfile for Ant</description>
+	
+	<!-- Targets -->
+	<target name="clean" depends="init" description="Clean up any built files">
+		<delete dir="${build.dir}" includeemptydirs="true" quiet="false"/>
+	</target>
+	
+	<target name="init">
+		<property environment="env"/>
+		
+		<!-- Check for required tools --> 
+		<fail message="Missing SCALA_HOME variable in OS environment">
+			<condition><isset property="${env.SCALA_HOME}"/></condition>
+		</fail>
+		<fail message="Missing JAVA_HOME variable in OS environment">
+			<condition><isset property="${env.JAVA_HOME}"/></condition>
+		</fail>
+		
+		<!-- Variables for paths and files -->
+		<property name="src.dir" location="${basedir}/src"/>
+		<property name="lib.dir" location="${basedir}/lib"/>
+		<property name="build.dir" location="${basedir}/antbuild"/>
+		<property name="scala-library.jar" location="${env.SCALA_HOME}/lib/scala-library.jar"/>
+		<property name="scala-compiler.jar" location="${env.SCALA_HOME}/lib/scala-compiler.jar"/>
+		
+		<path id="project.classpath">
+			<pathelement location="${scala-library.jar}"/>
+		</path>
+		
+		
+		<!-- Load Scala's Ant tasks -->
+		<taskdef resource="scala/tools/ant/antlib.xml">
+			<classpath>
+				<pathelement location="${scala-compiler.jar}"/>
+				<pathelement location="${scala-library.jar}"/>
+			</classpath>
+		</taskdef>
+		
+		<!-- Print where this project will get Scala and Java from -->
+		<echo message="Init project"/>
+		<echo message=" with scala.dir = ${env.SCALA_HOME}"/>
+		<echo message=" with java.dir = ${env.JAVA_HOME}"/>
+	</target>
+	
+	<target name="compile" depends="init" unless="build.uptodate">
+		<mkdir dir="${build.dir}"/>
+		<scalac srcdir="${src.dir}" destdir="${build.dir}"/>
+	</target>
+</project>
