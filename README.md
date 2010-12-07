@@ -63,9 +63,9 @@ Gaudi depends on the following third-party JVM libraries:
 
 - [JSON.simple](http://code.google.com/p/json-simple) (*json_simple-1.1.jar*)
 
-- [Apache Commons IO Library](http://commons.apache.org/io) (*commons-io-1.4.jar*)
+- [Apache Commons IO Library](http://commons.apache.org/io) (*commons-io-2.0.jar*)
 
-- [Scala Library](http://www.scala-lang.org) (*scala-library.jar 2.8final*)
+- [Scala Library](http://www.scala-lang.org) (*scala-library.jar 2.8.1final*)
 
 - [Groovy Library](http://groovy.codehaus.org) (*groovy-all-1.7.5.jar*) (for plug-in support).
 
