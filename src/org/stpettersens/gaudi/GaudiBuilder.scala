@@ -66,7 +66,7 @@ extends IGaudiBuilder {
 	}
 	// Print executed command
 	private def printCommand(command: String, param: String): Unit = {
-		if(beVerbose) {
+		if(beVerbose && command != "echo") {
 			println(String.format("\t:%s %s", command, param))
 		}
 	}
