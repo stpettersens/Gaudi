@@ -13,12 +13,12 @@ jarF="Gaudi.jar"
 groovyLib="lib/groovy-all-1.7.5.jar"
 scalaLib="lib/scala-library.jar"
 jsonLib="lib/json_simple-1.1.jar"
-ioLib="lib/commons-io-1.4.jar"
+ioLib="lib/commons-io-2.0.jar"
 deps="."$sep$scalaLib$sep$jsonLib$sep$ioLib$sep$groovyLib
 switches="-verbose -deprecation -d bin"
 
 echo "Compiling Gaudi..."
-scalac -classpath $deps $switches @sources
+scalac -classpath $deps $switches src/$pkg/*
 javac -classpath $deps $switches src/$pkg/*.java
 
 echo "Packaging Gaudi..."

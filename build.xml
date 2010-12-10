@@ -86,7 +86,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 	 	<touch file="${build.dir}/build.done"/><!-- Mark build as up-to-date -->
 	</target>
 	
-	<target name="cpackage" description="Create self-contained Jar" depends="package">
+	<target name="cjar" description="Create self-contained Jar" depends="package">
 		<echo message="Packaging Gaudi (self-contained Jar)..."/>
 		<fail unless="env.ONEJAR_TOOL" message="Missing ONEJAR_TOOL variable in OS environment"/>
 		<!-- Load One Jar task -->

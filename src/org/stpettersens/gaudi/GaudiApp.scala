@@ -30,7 +30,7 @@ object GaudiApp {
   //-------------------------------------------------------------
   var buildFile: String = "build.json" // Default build file
   var beVerbose: Boolean = true // Gaudi is verbose by default
-  var logging: Boolean = false // Logging is disabled by default
+  var logging: Boolean = false // Logging is disabled by default [EXCEPT IN TEST BUILD]
   val logger = new GaudiLogger(logging)
 	  
   def main(args: Array[String]): Unit = {
