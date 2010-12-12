@@ -1,0 +1,17 @@
+{
+	"preamble": {
+
+	},
+
+	"build" [
+
+		{ "echo": "Run Notepad..." },
+		{ "scalac": "file" }
+	]
+
+	"clean" [
+	
+		{ "echo": "Removing classes..." }
+		
+	]
+}

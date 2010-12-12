@@ -84,6 +84,20 @@ extends IGaudiBuilder {
 			out.close()
 		}
 	}
+	// Execute an external program or process
+	private def execExtern(param: String): Unit = {
+		val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
+		// -----------------------------------------------------------------
+		logger.dump(String.format("Executed -> %s %s\n" +
+		"Wildcard matched -> %s", exe._1, exe._2, handleWildcards(exe._2)))
+		// -----------------------------------------------------------------
+		if(exe._1 != null) {
+			var p: Process = Runtime.getRuntime().exec(String.format("%s %s", exe._1, handleWildcards(exe._2)))
+			val reader = new BufferedReader(new InputStreamReader(p.getErrorStream()))
+			var line: String = reader.readLine()
+			if(line != null) println(String.format("\t~ %s", line))
+		}
+	}
 	// Execute a command in the action
 	def doCommand(command: String, param: String): Unit = {
 		// Handle any potential wildcards in parameters
@@ -94,17 +108,7 @@ extends IGaudiBuilder {
 		if(command != "echo") printCommand(command, param)
 		command match {
 			case "exec" => {
-				val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
-				// -----------------------------------------------------------------
-				logger.dump(String.format("Executed -> %s %s\n" +
-				"Wildcard matched -> %s", exe._1, exe._2, handleWildcards(exe._2)))
-				// -----------------------------------------------------------------
-				if(exe._1 != null) {
-					var p: Process = Runtime.getRuntime().exec(String.format("%s %s", exe._1, handleWildcards(exe._2)))
-					val reader = new BufferedReader(new InputStreamReader(p.getErrorStream()))
-					var line: String = reader.readLine()
-					if(line != null) println(String.format("\t~ %s", line))
-				}
+				execExtern(param)
 			}
 			case "mkdir" => {
 				val aDir: Boolean = new File(param).mkdir()
@@ -136,7 +140,24 @@ extends IGaudiBuilder {
 				val fileMsg = param.split(">>")
 				writeToFile(fileMsg(0), fileMsg(1), true)
 			}
+			// Invoke Scala compiler (scalac)
+			case "scalac" => {
+				execExtern(String.format("scalac %s", param))
+			}
+			// Invoke JDK jar tool to pack a jar
+			case "jar" => {
+				var jarSrcs = param.split("<<")
+				execExtern(
+				String.format("jar cfm %s Manifest.mf %s", jarSrcs(0), jarSrcs(1))
+				)
+			}
+			// Invoke JDK jar tool to unpack a jar
+			case "unjar" => {
+				var jar = param
+				execExtern(String.format("jar xf %s", jar))
+			}
 			case _ => {
+				// Implement extendable commands
 				printError(String.format("%s is an invalid command", command))
 			}
 		}

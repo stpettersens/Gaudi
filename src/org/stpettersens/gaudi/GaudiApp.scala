@@ -54,7 +54,7 @@ object GaudiApp {
 	 	 	 	  case "-i" => displayUsage(0)
 	 	 	 	  case "-v" => displayVersion()
 	 	 	 	  case "-l" => logging = true
-	 	 	 	  case "-n" => generateNativeFile()
+	 	 	 	  case "-n" => generateBuildFile()
 	 	 	 	  case "-p" => {
 	 	 	 	 	  if(GaudiPluginSupport.Enabled) pSwitch = true
 	 	 	 	  }
@@ -111,7 +111,7 @@ object GaudiApp {
 	  }
   }
   // Generate a Gaudi build file (build.json)
-  private def generateNativeFile(): Unit = {
+  private def generateBuildFile(): Unit = {
 	  // TODO
   }
   // Initialize and if successful run a plug-in
