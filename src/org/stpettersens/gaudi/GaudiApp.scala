@@ -36,6 +36,7 @@ object GaudiApp {
   def main(args: Array[String]): Unit = {
       var pSwitch: Boolean = false
 	  var fSwitch: Boolean = false
+	  var sSwitch: Boolean = false
 	  var action: String = "build"
 	  val pluginPattn: Regex = """([\w\:\\//]+.groovy)""".r
 	  val filePattn: Regex = """([\w\:\\//]+.json)""".r
@@ -54,6 +55,7 @@ object GaudiApp {
 	 	 	 	  case "-i" => displayUsage(0)
 	 	 	 	  case "-v" => displayVersion()
 	 	 	 	  case "-l" => logging = true
+	 	 	 	  case "-s" => sSwitch = true
 	 	 	 	  case "-n" => generateBuildFile()
 	 	 	 	  case "-p" => {
 	 	 	 	 	  if(GaudiPluginSupport.Enabled) pSwitch = true
@@ -72,6 +74,9 @@ object GaudiApp {
 	 	 	 	 	  displayError(String.format("Argument (%s is invalid)", arg)) 	 	  
 	 	 	 	  }
 	 	 	  }
+	 	  }
+	 	  if(sSwitch) {
+	 		  val messenger = new GaudiMessenger()
 	 	  }
 	 	  loadBuild(action)
 	  }
@@ -143,9 +148,10 @@ object GaudiApp {
 	  println("\nGaudi platform agnostic build tool")
 	  println("Copyright (c) 2010 Sam Saint-Pettersen")
 	  println("\nReleased under the Apache License v2.")
-	  println("\nUsage: gaudi [-l][-i|-v|-n|-m][-q]")
+	  println("\nUsage: gaudi [-s <port>][-l][-i|-v|-n|-m][-q]")
 	  println("[-p <plug-in>][-f <build file>][<action>|\"<:command>\"]")
-	  println("\n-l: Enable logging of certain events.")
+	  println("\n-s: Enable listen on socket (Default: TCP/3082).")
+	  println("-l: Enable logging of certain events.")
 	  println("-i: Display usage information and quit.")
 	  println("-v: Display version information and quit.")
 	  println("-n: Generate native Gaudi build file (build.json).")
