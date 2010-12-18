@@ -20,7 +20,10 @@ package org.stpettersens.gaudi
 import java.net._
 import java.io._
 
-class GaudiMessenger {
+class GaudiMessenger(logging: Boolean) {
+	
+	// Define global logger object
+	val logger = new GaudiLogger(logging)
 	
 	var port: Int = 3082
 	var serverSocket: ServerSocket = null
@@ -38,7 +41,7 @@ class GaudiMessenger {
 	}	
 	
 	private def listen() : Unit = {
-		println("Client connected.")
+		logger.dump("Client connected.")
 	}
 	
 	private def reply() : Unit = {

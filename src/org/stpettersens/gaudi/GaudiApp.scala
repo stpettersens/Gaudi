@@ -30,7 +30,7 @@ object GaudiApp {
   //-------------------------------------------------------------
   var buildFile: String = "build.json" // Default build file
   var beVerbose: Boolean = true // Gaudi is verbose by default
-  var logging: Boolean = false // Logging is disabled by default [EXCEPT IN TEST BUILD]
+  var logging: Boolean = false // Logging is disabled by default
   val logger = new GaudiLogger(logging)
 	  
   def main(args: Array[String]): Unit = {
@@ -41,8 +41,10 @@ object GaudiApp {
 	  val pluginPattn: Regex = """([\w\:\\//]+.groovy)""".r
 	  val filePattn: Regex = """([\w\:\\//]+.json)""".r
 	  val actPattn: Regex = """([a-z]+)""".r
-	  val cmdPattn: Regex 
-	  = """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
+	  val cmdPattn: Regex = """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
+	  
+	  var cmd: String = null
+	  var param: String = null
 	  
 	  /* Default behavior is to build project following
 	  build file in the current directory */
@@ -69,16 +71,22 @@ object GaudiApp {
 	 	 	 	 	  if(fSwitch) buildFile = arg
 	 	 	 	  }
 	 	 	 	  case actPattn(a) => action = a
-	 	 	 	  case cmdPattn(cmd, param) => runCommand(cmd, param)
+	 	 	 	  case cmdPattn(c, p) => {
+	 	 	 	 	  cmd = c
+	 	 	 	 	  param = p
+	 	 	 	  }
 	 	 	 	  case _ => {
 	 	 	 	 	  displayError(String.format("Argument (%s is invalid)", arg)) 	 	  
 	 	 	 	  }
 	 	 	  }
 	 	  }
 	 	  if(sSwitch) {
-	 		  val messenger = new GaudiMessenger()
+	 		  val messenger = new GaudiMessenger(logging)
 	 	  }
-	 	  loadBuild(action)
+	 	  if(cmd != null) {
+	 	 	  runCommand(cmd, param)
+	 	  }
+	 	  else loadBuild(action)
 	  }
 	  else displayError("Arguments (requires 0-6 arguments)")
   }

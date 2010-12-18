@@ -38,10 +38,10 @@ extends IGaudiBuilder {
 	private def handleWildcards(param: String): String = {
 		if(param.contains("*")) {
 		    val rawParamPattn: Regex = """[\w\d]*\s*(.*)""".r
-		    val rawParamPattn(raw_param) = param
+		    var rawParamPattn(raw_param) = param
 			var dir = new File(".")
 			val filePattn: Regex = """\*([\.\w\d]+)""".r
-			val filePattn(ext) = raw_param
+			var filePattn(ext) = raw_param
 			val filter: FileFilter = new WildcardFileFilter("*" + ext)
 			var newParam: String = ""
 			val files: Array[File] = dir.listFiles(filter)
