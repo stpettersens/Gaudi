@@ -23,11 +23,18 @@ import org.apache.commons.io.filefilter.WildcardFileFilter
 import scala.util.matching.Regex
 import java.io._
 
-class GaudiBuilder(preamble: JSONObject, beVerbose: Boolean, logging: Boolean) 
-extends IGaudiBuilder {
+class GaudiBuilder(preamble: JSONObject, sSwitch: Boolean, 
+beVerbose: Boolean, logging: Boolean) extends IGaudiBuilder {
 	
 	// Define global logger object
 	val logger = new GaudiLogger(logging)
+	
+	// Define global messenger object
+	var messenger = new GaudiMessenger(logging)
+	
+	if(sSwitch) {
+		messenger.start()
+	}
 	
 	// Substitute variables for values
 	private def substituteVars(action: Array[Object]): Unit = {

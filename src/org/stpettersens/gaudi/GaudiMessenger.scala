@@ -40,9 +40,7 @@ class GaudiMessenger(logging: Boolean) {
 			clientSocket = serverSocket.accept()
 			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream))
 			out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream))
-			logger.dump("Client connected.")
-			out.println(String.format("Connected to Gaudi tool via TCP/%s", port.toString))
-			out.flush()
+			report(String.format("Connected to Gaudi tool via TCP/%s", port.toString))		
 		}
 		catch {
 			case ioe: IOException => GaudiApp.displayError(ioe)
@@ -52,6 +50,7 @@ class GaudiMessenger(logging: Boolean) {
 	def report(message: String): Unit = {
 		if(running) {
 			out.println(message)
+			out.flush()
 			logger.dump(message)
 		}
 	}

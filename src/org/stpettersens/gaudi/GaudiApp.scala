@@ -33,11 +33,11 @@ object GaudiApp {
   var logging: Boolean = false // Logging is disabled by default
   val logger = new GaudiLogger(logging)
   var messenger = new GaudiMessenger(logging)
+  var sSwitch: Boolean = false
 	  
   def main(args: Array[String]): Unit = {
       var pSwitch: Boolean = false
 	  var fSwitch: Boolean = false
-	  var sSwitch: Boolean = false
 	  var action: String = "build"
 	  val pluginPattn: Regex = """([\w\:\\//]+.groovy)""".r
 	  val filePattn: Regex = """([\w\:\\//]+.json)""".r
@@ -95,7 +95,7 @@ object GaudiApp {
   // E.g. argument ":move a->b"
   private def runCommand(cmd: String, param: String): Unit = {
 	  // Create a new builder to run a command
-	  val builder = new GaudiBuilder(null, beVerbose, logging)
+	  val builder = new GaudiBuilder(null, sSwitch, beVerbose, logging)
 	  builder.doCommand(cmd, param)
 	  System.exit(0)
   }
@@ -117,7 +117,7 @@ object GaudiApp {
 	  finally {   
 	 	  // Delegate to the foreman and builder
 	 	  val foreman = new GaudiForeman(buildConf)
-	 	  val builder = new GaudiBuilder(foreman.getPreamble, beVerbose, logging)
+	 	  val builder = new GaudiBuilder(foreman.getPreamble, sSwitch, beVerbose, logging)
 	 	  if(beVerbose) {
 	 	 	  println(String.format("[ %s => %s ]", foreman.getTarget, action))
 	 	  }	  
