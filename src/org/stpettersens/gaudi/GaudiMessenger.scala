@@ -28,24 +28,38 @@ class GaudiMessenger(logging: Boolean) {
 	var port: Int = 3082
 	var serverSocket: ServerSocket = null
 	var clientSocket: Socket = null
+	var out: PrintWriter = null
+	var in: BufferedReader = null
+	var running: Boolean = false
 	
-	try {
-		serverSocket = new ServerSocket(port)
-		clientSocket = serverSocket.accept()
-		listen()
-	}
-	catch {
-		case ioe: IOException => {
-			GaudiApp.displayError(ioe.getMessage)
+	// Start the server process
+	def start(): Unit = {
+		try {
+			running = true
+			serverSocket = new ServerSocket(port)
+			clientSocket = serverSocket.accept()
+			in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream))
+			out = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream))
+			logger.dump("Client connected.")
+			out.println(String.format("Connected to Gaudi tool via TCP/%s", port.toString))
+			out.flush()
 		}
-	}	
-	
-	private def listen() : Unit = {
-		logger.dump("Client connected.")
+		catch {
+			case ioe: IOException => GaudiApp.displayError(ioe)
+		}
 	}
-	
-	private def reply() : Unit = {
-		
-
+	// Public method to return a message relating to a process to client program
+	def report(message: String): Unit = {
+		if(running) {
+			out.println(message)
+			logger.dump(message)
+		}
+	}
+	// Public method to end the connection between server and client
+	def end(): Unit = {
+		if(running) {
+			clientSocket.close()
+			logger.dump("Closed connection")
+		}
 	}
 }

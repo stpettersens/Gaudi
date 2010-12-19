@@ -32,6 +32,7 @@ object GaudiApp {
   var beVerbose: Boolean = true // Gaudi is verbose by default
   var logging: Boolean = false // Logging is disabled by default
   val logger = new GaudiLogger(logging)
+  var messenger = new GaudiMessenger(logging)
 	  
   def main(args: Array[String]): Unit = {
       var pSwitch: Boolean = false
@@ -81,7 +82,7 @@ object GaudiApp {
 	 	 	  }
 	 	  }
 	 	  if(sSwitch) {
-	 		  val messenger = new GaudiMessenger(logging)
+	 	 	  messenger.start()
 	 	  }
 	 	  if(cmd != null) {
 	 	 	  runCommand(cmd, param)
@@ -121,6 +122,7 @@ object GaudiApp {
 	 	 	  println(String.format("[ %s => %s ]", foreman.getTarget, action))
 	 	  }	  
 	 	  builder.doAction(foreman.getAction(action))
+	 	  messenger.end()
 	  }
   }
   // Generate a Gaudi build file (build.json)
@@ -136,13 +138,13 @@ object GaudiApp {
   def displayError(ex: Exception): Unit = {
 	  println(String.format("\nError with: %s.", ex.getMessage))
 	  logger.dump(ex.getMessage)
-	  displayUsage(1)
+	  displayUsage(-1)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
 	  println(String.format("\nError with: %s.", ex))
 	  logger.dump(ex)
-	  displayUsage(1)
+	  displayUsage(-1)
   }
   // Display version information and exit
   private def displayVersion(): Unit = {
