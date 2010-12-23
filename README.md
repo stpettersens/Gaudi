@@ -51,7 +51,7 @@ Distributions
 Gaudi will be available as installable Windows executable
 (courtesy of [NSIS](http://nsis.sourceforge.net) and 
 [Launch4j](http://launch4j.sourceforge.net)) and
-also a an all-in-jar executable JAR (courtesy of [One-JAR](http://one-jar.sourceforge.net)).
+also as an all-in-jar executable JAR (courtesy of [One-JAR](http://one-jar.sourceforge.net)).
 If you want to specify which JVM other than the system default you want to use or
 are using a system other than Windows, please use the all-in-one JAR version.
 
@@ -86,11 +86,10 @@ included within the distributed JAR.
 Usage
 -----
 For instructions on how to use Gaudi, please run Gaudi itself with the information (`-i`) switch,
-like so (assuming in system PATH):
+like so (assuming Gaudi is in your system's PATH variable):
 >`sam@ubuntu:~$ gaudi -i`
 
 For more in-depth explanation of usage, please refer to the Wiki. (Coming later).
 
 __DISCLAIMER: GAUDI IS A WORK-IN-PROGRESS.
 ANYTHING IN THIS README IS NOT FINAL, UNTIL FIRST RELEASE.__
-
