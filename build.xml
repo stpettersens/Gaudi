@@ -32,9 +32,9 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<property name="dist.dir" location="${basedir}/dist/"/>
 		<property name="scala-library" location="${env.SCALA_HOME}/lib/scala-library.jar"/>
 		<property name="scala-compiler" location="${env.SCALA_HOME}/lib/scala-compiler.jar"/>
-		<property name="commons-io" location="${lib.dir}/commons-io-2.0.jar"/>
+		<property name="commons-io" location="${lib.dir}/commons-io-2.0.1.jar"/>
 		<property name="json-simple" location="${lib.dir}/json_simple-1.1.jar"/>
-		<property name="groovy-lib" location="${lib.dir}/groovy-all-1.7.5.jar"/>
+		<property name="groovy-lib" location="${lib.dir}/groovy-all-1.7.6.jar"/>
 		<property name="target.abs" value="Gaudi"/>
 		<property name="target.mf" location="${basedir}/Manifest.mf"/>
 		<property name="target.jar" location="${basedir}/${target.abs}.jar"/>
