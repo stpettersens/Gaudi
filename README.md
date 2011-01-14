@@ -4,7 +4,7 @@ Gaudi
 What is it?
 -----------
 Gaudi is a platform agnostic build tool
-written primarily in Scala (along with some Java and Groovy) which runs on a Java virtual machine (JVM).
+written primarily in Scala (along with some Java) which runs on a Java virtual machine (JVM).
 
 As it is a build tool, it is named after an architect, *Antoni Gaudi*;
 the designer of the famous *Sagrada Familia*.
@@ -20,7 +20,7 @@ but differs in that:
   language, unlike Ant which is highly specialised for Java development.
 
 Additionally, Gaudi supports additional functionality via plug-ins written 
-in the [Groovy programming language](http://groovy.codehaus.org).
+in the [Groovy](http://groovy.codehaus.org) or [Jython](http://www.jython.org) programming languages.
 
 Inspiration
 -----------
@@ -42,9 +42,9 @@ and has been tested with and is known to work with the following:
 
 - [OpenJDK JVM](http://openjdk.java.net)
 
-- [Apache Harmony/DRLVM](http://harmony.apache.org) (*No plug-in support*)
+- [Apache Harmony/DRLVM](http://harmony.apache.org)
 
-- [GNU GIJ (GCJ project)](http://gcc.gnu.org/java) (*No plug-in support*)
+- [GNU GIJ (GCJ project)](http://gcc.gnu.org/java)
 
 Distributions
 -------------
@@ -67,7 +67,9 @@ Gaudi depends on the following third-party JVM libraries:
 
 - [Scala Library](http://www.scala-lang.org) (*scala-library.jar 2.8.1final*)
 
-- [Groovy Library](http://groovy.codehaus.org) (*groovy-all-1.7.5.jar*) (for plug-in support).
+- [Groovy Library](http://groovy.codehaus.org) (*groovy-all-1.7.5.jar*) (for plug-in support, only compatible with OpenJVM and HotSpot).
+
+- [Jython Library](http://www.jython.org) (*jython.jar*) (for plug-in support, better suppported on other JVMs).
 
 If building Gaudi with Gaudi (as in the case of potential upgrading),
 it supports dependency gathering like Apache Ant does. 

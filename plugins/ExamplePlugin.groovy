@@ -2,8 +2,10 @@
 	Example plugin for Gaudi build tool
 	@author Sam-Saint-Pettersen
 	@usage Plug-in for Gaudi demonstration
+	@lang Groovy
 */
 import org.stpettersens.gaudi.GaudiPlugin
+
 public class ExamplePlugin extends GaudiPlugin {
 	
 	ExamplePlugin() {

@@ -1,6 +1,6 @@
 /*
 Gaudi platform agnostic build tool
-Copyright 2010 Sam Saint-Pettersen.
+Copyright 2010-2011 Sam Saint-Pettersen.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@ For dependencies, please see LICENSE file.
 */
 package org.stpettersens.gaudi;
 
-// NOTE: Interface for interoperability between GaudiPluginBase
-// written in Java and derived plugins written in Groovy.
+// NOTE: Interface for interoperability between GaudiPlugin
+// written in Java and derived plugins written in Groovy or Jython.
 public interface IGaudiPlugin {
 	public boolean initialize();
 	public String getName();

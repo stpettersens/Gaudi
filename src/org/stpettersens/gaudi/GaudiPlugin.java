@@ -1,6 +1,6 @@
 /*
 Gaudi platform agnostic build tool
-Copyright 2010 Sam Saint-Pettersen.
+Copyright 2010-2011 Sam Saint-Pettersen.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -27,18 +27,18 @@ public class GaudiPlugin implements IGaudiPlugin {
 	public static String Author = "Unspecified author"; // Plug-in author
 	public static String Url = "Unspecified URL"; // Plug-in URL
 	public static boolean Initable = false;
-	//public GaudiBuilder builder = new GaudiBuilder(null, true, true);
+	public GaudiBuilder builder = new GaudiBuilder(null, false, true, false);
 	
 	// Initalize method does *not* need to be redefined in derived plug-ins
-	public boolean initialize() {
+	public final boolean initialize() {
 		return Initable;
 	} 
 	// Non-redefinable method to return plug-in name
-	public String getName() {
+	public final String getName() {
 		return Name;
 	}
 	// Non-redefinable method to return plug-in action
-	public String getAction() {
+	public final String getAction() {
 		return Action;
 	}
 	// But, run methods should be redefined in derived plug-ins
@@ -47,6 +47,6 @@ public class GaudiPlugin implements IGaudiPlugin {
 	}
 	// Execute a Gaudi command
 	public void doCommand(String command, String param) {
-		//builder.doCommand(command, param);
+		builder.doCommand(command, param);
 	}
 }

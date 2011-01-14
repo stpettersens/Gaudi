@@ -1,6 +1,6 @@
 /*
- Find file in path in system variable
- @author Sam Saint-Pettersen, 2010
+ Find a value in a system variable
+ @author Sam Saint-Pettersen, 2010-2011
  Released into the public domain.
 	
  Originally written for use with 
@@ -8,17 +8,17 @@
 	
  But use as you like. No warranty.
 	
- Usage: java -cp . FindInPath <system variable> <file>
+ Usage: java -cp . FindInVar <system variable> <file>
  Output: (Each path to every file found)
  Exit code: 0 (not found) / 1 (found)
  
- Usage: java -cp . FindInPath <system variable>
+ Usage: java -cp . FindInVar <system variable>
  Output: (1st path in system variable)
  Exit code: -1
 */
 import java.io.File;
 
-class FindInPath {
+class FindInVar {
 	public static void main(String[] args) {
 		byte returned = 0; // Return exit code 0 for file not found, default assumption
 		String systemVar = System.getenv(args[0]);

@@ -1,6 +1,6 @@
 /*
 Gaudi platform agnostic build tool
-Copyright 2010 Sam Saint-Pettersen.
+Copyright 2010-2011 Sam Saint-Pettersen.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,13 +20,15 @@ package org.stpettersens.gaudi;
 import groovy.lang.GroovyClassLoader;
 import java.io.*;
 
-// NOTE: The GaudiPluginLoader implementation code is written in 
+// NOTE: The GaudiGroovyPlugin implementation code is written in 
 // Java rather than Scala for compatibility reasons.(Specifically casting issues).
-public class GaudiPluginLoader {
+public class GaudiGroovyPlugin {
 
 	@SuppressWarnings("unchecked")
-	GaudiPluginLoader(String plugin, boolean logging) throws Exception {
-		//GaudiLogger logger = new GaudiLogger(logging);
+	GaudiGroovyPlugin(String plugin, boolean logging) throws Exception {
+		
+		GaudiLogger logger = new GaudiLogger(logging);
+		
 		GroovyClassLoader gcl = new GroovyClassLoader();
 		Class pluginClass = gcl.parseClass(new File(plugin));
 		Object aPlugin = pluginClass.newInstance();
@@ -36,19 +38,18 @@ public class GaudiPluginLoader {
 		
 		if(bInit) {
 			// On successful initialization, display feedback and run the plug-in
-			Object name = gPlugin.getName();
-			Object action = gPlugin.getAction();
-			String sName = (String) name; // Cast name to string
-			String sAction = (String) action; // Cast action to string
-			System.out.println("Initialized plug-in.\n");
-			System.out.println(String.format("[ %s => %s ]", sName, sAction));
+			String name = gPlugin.getName().toString();
+			String action = gPlugin.getAction().toString();
+			System.out.println("Initialized Groovy-based plug-in.\n");
+			logger.dump(String.format("Initialized Groovy-based plug-in -> %s.", name));
+			System.out.println(String.format("[ %s => %s ]", name, action));
 			gPlugin.run();
-			//logger.dump(String.format("Initialized plug-in -> %s.", sName));
+			
 		}
 		else {
-			// Otherwise, display the standard did not load feedback.
-			System.out.println("Error with: Plug-in (Failed to load).");
-			//logger.dump("Failed to load plug-in.");
+			// Otherwise, display the standard did not load feedback
+			System.out.println("Error with: Groovy-based Plug-in (Failed to load).");
+			logger.dump("Failed to load plug-in.");
 		}
 	}
 }

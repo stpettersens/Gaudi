@@ -39,7 +39,7 @@ object GaudiApp {
       var pSwitch: Boolean = false
 	  var fSwitch: Boolean = false
 	  var action: String = "build"
-	  val pluginPattn: Regex = """([\w\:\\//]+.groovy)""".r
+	  val pluginPattn: Regex = """([\w\:\\//]+.py)""".r
 	  val filePattn: Regex = """([\w\:\\//]+.json)""".r
 	  val actPattn: Regex = """([a-z]+)""".r
 	  val cmdPattn: Regex = """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
@@ -131,20 +131,21 @@ object GaudiApp {
   }
   // Initialize and if successful run a plug-in
   private def doPluginAction(plugin: String): Unit = {
-	  new GaudiPluginLoader(plugin, logging)
+	  //new GaudiPluginLoader(plugin, logging)
+	  new GaudiJythonPlugin(plugin, logging)
 	  System.exit(0)
   }
   // Display an error
   def displayError(ex: Exception): Unit = {
 	  println(String.format("\nError with: %s.", ex.getMessage))
 	  logger.dump(ex.getMessage)
-	  displayUsage(-1)
+	  displayUsage(-2)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
 	  println(String.format("\nError with: %s.", ex))
 	  logger.dump(ex)
-	  displayUsage(-1)
+	  displayUsage(-2)
   }
   // Display version information and exit
   private def displayVersion(): Unit = {
