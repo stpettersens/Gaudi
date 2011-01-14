@@ -5,7 +5,6 @@
 	@lang Groovy
 */
 import org.stpettersens.gaudi.GaudiPlugin
-
 public class ExamplePlugin extends GaudiPlugin {
 	
 	ExamplePlugin() {

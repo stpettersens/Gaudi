@@ -2,7 +2,7 @@
 #	Example plugin for Gaudi build tool
 #	@author Sam-Saint-Pettersen
 #	@usage Plug-in for Gaudi demonstration
-#   @lang Jython
+#	@lang Jython
 #
 from org.stpettersens.gaudi import GaudiPlugin
 class ExamplePlugin(GaudiPlugin):

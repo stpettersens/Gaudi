@@ -65,11 +65,11 @@ Gaudi depends on the following third-party JVM libraries:
 
 - [Apache Commons IO Library](http://commons.apache.org/io) (*commons-io-2.0.jar*)
 
-- [Scala Library](http://www.scala-lang.org) (*scala-library.jar 2.8.1final*)
+- [Scala Library](http://www.scala-lang.org) (*scala-library.jar* 2.8.1final)
 
 - [Groovy Library](http://groovy.codehaus.org) (*groovy-all-1.7.5.jar*) (for plug-in support, only compatible with OpenJVM and HotSpot).
 
-- [Jython Library](http://www.jython.org) (*jython.jar*) (for plug-in support, better suppported on other JVMs).
+- [Jython Library](http://www.jython.org) (*jython.jar* 2.5.1) (for plug-in support, better suppported on other JVMs).
 
 If building Gaudi with Gaudi (as in the case of potential upgrading),
 it supports dependency gathering like Apache Ant does. 
