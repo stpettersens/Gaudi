@@ -1,4 +1,4 @@
 #!/bin/bash
 # Run Gaudi on *nix systems
 
-java -jar Gaudi.jar "$@"
+java -jar Gaudi.jar $@
