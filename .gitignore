@@ -1,4 +1,6 @@
 bin
+cachedir
+ant_build
 *.jar
 *.class
 *.exe
