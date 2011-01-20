@@ -17,14 +17,23 @@ limitations under the License.
 For dependencies, please see LICENSE file.
 */
 package org.stpettersens.gaudi
+import java.io._
+import java.util.zip._
 
-object GaudiPluginSupport {
-	// Code to enable or disable plug-in support.
-	// This is here because only the de-facto JVMs:
-	// Sun HotSpot JVM and OpenJDK JVM
-	// seem to support embedded Groovy as used by the
-	// plug-in system properly.
-	// Gaudi can be built without plug-ins to allow
-	// it to work with other JVMs such as Apache Harmony or GNU GIJ.
-	final val Enabled: Boolean = true
+class GaudiPacker(archFile: String) {
+	
+	val bufSize: Int = 1024 // Size of buffer
+	val buffer: Array[Byte] = new Array(bufSize) // Define the buffer
+	var entries: Enumeration = null
+	
+	// Extract a zip file
+	def extrZipFile(): Unit = {
+		try {
+			val zipFile = new ZipFile(archFile)
+			println(zipFile.entries)
+		}
+		catch {
+			case ioe: IOException => GaudiApp.displayError(ioe)
+		}
+	}
 }

@@ -1,6 +1,6 @@
 /*
 Gaudi platform agnostic build tool
-Copyright 2010 Sam Saint-Pettersen.
+Copyright 2010-2011 Sam Saint-Pettersen.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -23,9 +23,10 @@ import java.io.{PrintWriter,FileOutputStream,IOException}
 
 class GaudiLogger(logging: Boolean) extends IGaudiLogger {
 	
-	val logFile: String = "gaudi.log"
-	val timestamp: DateFormat = new SimpleDateFormat("[MM-dd-yyyy HH:mm:ss]")
+	val logFile: String = "gaudi.log" // Name for log file
+	val timestamp: DateFormat = new SimpleDateFormat("[MM-dd-yyyy HH:mm:ss]") // Format of timestamp
 	
+	// Public method to dump program feedback to the log file
 	def dump(message: String): Unit = {
 		if(logging) {
 			var out: PrintWriter = null

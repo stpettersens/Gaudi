@@ -29,27 +29,33 @@ public class GaudiGroovyPlugin {
 		
 		GaudiLogger logger = new GaudiLogger(logging);
 		
-		GroovyClassLoader gcl = new GroovyClassLoader();
-		Class pluginClass = gcl.parseClass(new File(plugin));
-		Object aPlugin = pluginClass.newInstance();
-		IGaudiPlugin gPlugin = (IGaudiPlugin) aPlugin;
-		Object init = gPlugin.initialize();
-		Boolean bInit = (Boolean) init; // Cast init value to Boolean *object*
+		try {
+			GroovyClassLoader gcl = new GroovyClassLoader();
+			Class pluginClass = gcl.parseClass(new File(plugin));
+			Object aPlugin = pluginClass.newInstance();
+			IGaudiPlugin gPlugin = (IGaudiPlugin) aPlugin;
+			Object init = gPlugin.initialize();
+			Boolean bInit = (Boolean) init; // Cast init value to Boolean *object*
 		
-		if(bInit) {
-			// On successful initialization, display feedback and run the plug-in
-			String name = gPlugin.getName().toString();
-			String action = gPlugin.getAction().toString();
-			System.out.println("Initialized Groovy-based plug-in.\n");
-			logger.dump(String.format("Initialized Groovy-based plug-in -> %s.", name));
-			System.out.println(String.format("[ %s => %s ]", name, action));
-			gPlugin.run();
+			if(bInit) {
+				// On successful initialization, display feedback and run the plug-in
+				String name = gPlugin.getName().toString();
+				String action = gPlugin.getAction().toString();
+				System.out.println("Initialized Groovy-based plug-in.\n");
+				logger.dump(String.format("Initialized Groovy-based plug-in -> %s.", name));
+				System.out.println(String.format("[ %s => %s ]", name, action));
+				gPlugin.run();
 			
+			}
+			else {
+				// Otherwise, display the standard did not load feedback
+				System.out.println("Error with: Groovy-based Plug-in (Failed to load).");
+				logger.dump("Failed to load plug-in.");
+			}
 		}
-		else {
-			// Otherwise, display the standard did not load feedback
-			System.out.println("Error with: Groovy-based Plug-in (Failed to load).");
-			logger.dump("Failed to load plug-in.");
+		catch(Exception e) {
+			System.out.println("\n\tError in plug-in code:\n\t\t" + e);
+			logger.dump("Error in plug-in code.");
 		}
 	}
 }

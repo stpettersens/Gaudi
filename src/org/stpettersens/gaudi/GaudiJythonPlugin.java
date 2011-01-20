@@ -21,7 +21,7 @@ import org.python.core.*;
 import org.python.util.*;
 
 //NOTE: The GaudiJythonPlugin implementation code is written in 
-//Java rather than Scala for consitency with GaudiGroovyPlugin.
+//Java rather than Scala for consistency with GaudiGroovyPlugin.
 public class GaudiJythonPlugin {
 	
 	GaudiJythonPlugin(String plugin, boolean logging) {

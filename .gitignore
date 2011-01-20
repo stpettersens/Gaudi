@@ -6,6 +6,7 @@ ant_build
 *.exe
 *.log
 .project
+.pydevproject
 .classpath
 .scala_dependencies
 .settings

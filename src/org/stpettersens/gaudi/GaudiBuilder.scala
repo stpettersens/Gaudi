@@ -1,6 +1,6 @@
 /*
 Gaudi platform agnostic build tool
-Copyright 2010 Sam Saint-Pettersen.
+Copyright 2010-2011 Sam Saint-Pettersen.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -102,7 +102,11 @@ beVerbose: Boolean, logging: Boolean) extends IGaudiBuilder {
 			var p: Process = Runtime.getRuntime().exec(String.format("%s %s", exe._1, handleWildcards(exe._2)))
 			val reader = new BufferedReader(new InputStreamReader(p.getErrorStream()))
 			var line: String = reader.readLine()
-			if(line != null) println(String.format("\t~ %s", line))
+			if(line != null) {
+				val msg = String.format("\t~ %s", line)
+				println(msg)
+				messenger.report(msg)
+			}
 		}
 	}
 	// Execute a command in the action

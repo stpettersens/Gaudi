@@ -18,13 +18,9 @@ For dependencies, please see LICENSE file.
 */
 package org.stpettersens.gaudi
 
-object GaudiPluginSupport {
-	// Code to enable or disable plug-in support.
-	// This is here because only the de-facto JVMs:
-	// Sun HotSpot JVM and OpenJDK JVM
-	// seem to support embedded Groovy as used by the
-	// plug-in system properly.
-	// Gaudi can be built without plug-ins to allow
-	// it to work with other JVMs such as Apache Harmony or GNU GIJ.
-	final val Enabled: Boolean = true
+class GaudiPluginLoader(plugin: String, logging: Boolean) {
+
+	// First of all, extract the plugin archive (Zip File)
+	val packer = new GaudiPacker(plugin)
+	packer.extrZipFile()
 }

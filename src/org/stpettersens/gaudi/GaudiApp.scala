@@ -1,6 +1,6 @@
 /*
 Gaudi platform agnostic build tool
-Copyright 2010 Sam Saint-Pettersen.
+Copyright 2010-2011 Sam Saint-Pettersen.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ object GaudiApp {
       var pSwitch: Boolean = false
 	  var fSwitch: Boolean = false
 	  var action: String = "build"
-	  val pluginPattn: Regex = """([\w\:\\//]+.py)""".r
+	  val pluginPattn: Regex = """([\w\:\\//]+.gpod)""".r
 	  val filePattn: Regex = """([\w\:\\//]+.json)""".r
 	  val actPattn: Regex = """([a-z]+)""".r
 	  val cmdPattn: Regex = """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
@@ -131,8 +131,7 @@ object GaudiApp {
   }
   // Initialize and if successful run a plug-in
   private def doPluginAction(plugin: String): Unit = {
-	  //new GaudiPluginLoader(plugin, logging)
-	  new GaudiJythonPlugin(plugin, logging)
+	  new GaudiPluginLoader(plugin, logging)
 	  System.exit(0)
   }
   // Display an error
