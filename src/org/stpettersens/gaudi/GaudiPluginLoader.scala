@@ -17,10 +17,24 @@ limitations under the License.
 For dependencies, please see LICENSE file.
 */
 package org.stpettersens.gaudi
+import java.io.File;
+import scala.util.matching.Regex
 
 class GaudiPluginLoader(plugin: String, logging: Boolean) {
 
-	// First of all, extract the plugin archive (Zip File)
+	// First of all, extract plugin code from the plugin archive (Zip File)
 	val unpacker = new GaudiPacker(plugin, logging)
-	unpacker.extrZipFile()
+	val codeFile = unpacker.extrZipFile()
+	
+	// Second step is to load pass the code onto the right script handler by
+	// file extension - *.groovy is Groovy code; *.py is Jython code.
+	val langPattnGvy: Regex = """([\w\:\\//]+.groovy)""".r
+	val langPattnJyt: Regex = """([\w\:\\//]+.py)""".r
+	
+	codeFile match {
+		case langPattnGvy(x) => new GaudiGroovyPlugin(codeFile, logging)
+		case langPattnJyt(x) => new GaudiJythonPlugin(codeFile, logging)
+	}
+	// Delete extracted code file when finshed with
+	new File(codeFile).delete
 }

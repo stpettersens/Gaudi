@@ -49,21 +49,24 @@ public class GaudiPacker {
 	}
 	
 	// Extract a zip archive
-	public void extrZipFile() {
+	public String extrZipFile() {
 		try {
 			zipFile = new ZipFile(archive);
 			entries = zipFile.entries();
+			ZipEntry entry = null;
 			
 			while(entries.hasMoreElements()) {
-				ZipEntry entry = (ZipEntry) entries.nextElement();
+				entry = (ZipEntry) entries.nextElement();
 				logger.dump(String.format("Extracted file <%s>/%s", archive, entry.getName()));
 				copyStream(zipFile.getInputStream(entry), new BufferedOutputStream
 				(new FileOutputStream(entry.getName())));
 			}
 			zipFile.close();
+			return entry.getName();
 		}
 		catch(IOException e) {
 			GaudiApp.displayError(e);
 		}
+		return null;
 	}
 }
