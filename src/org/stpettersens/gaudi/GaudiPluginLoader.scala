@@ -21,6 +21,6 @@ package org.stpettersens.gaudi
 class GaudiPluginLoader(plugin: String, logging: Boolean) {
 
 	// First of all, extract the plugin archive (Zip File)
-	val packer = new GaudiPacker(plugin)
-	packer.extrZipFile()
+	val unpacker = new GaudiPacker(plugin, logging)
+	unpacker.extrZipFile()
 }
