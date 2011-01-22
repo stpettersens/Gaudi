@@ -1,8 +1,8 @@
 Gaudi
 =====
 
-What is it?
------------
+Overview
+--------
 Gaudi is a platform agnostic build tool
 written primarily in Scala (along with some Java) which runs on a Java virtual machine (JVM).
 
@@ -22,9 +22,8 @@ but differs in that:
 Additionally, Gaudi supports additional functionality via plug-ins written 
 in the [Groovy](http://groovy.codehaus.org) or [Jython](http://www.jython.org) programming languages.
 
-Inspiration
------------
-Gaudi's implementation has been inspired by both Ant (command agnosticism) and [GNU Make](http://www.gnu.org/software/make) (task notation).
+Gaudi's implementation has been inspired by
+both Ant (command agnosticism) and [GNU Make](http://www.gnu.org/software/make) (task notation).
 
 Status
 ------
@@ -42,9 +41,11 @@ and has been tested with and is known to work with the following:
 
 - [OpenJDK JVM](http://openjdk.java.net)
 
-- [Apache Harmony/DRLVM](http://harmony.apache.org)
+- [Apache Harmony/"DRLVM"](http://harmony.apache.org)
 
 - [GNU GIJ (GCJ project)](http://gcc.gnu.org/java)
+
+- [IKVM.NET](http://www.ikvm.net)
 
 Distributions
 -------------
@@ -65,11 +66,11 @@ Gaudi depends on the following third-party JVM libraries:
 
 - [Apache Commons IO Library](http://commons.apache.org/io) (*commons-io-2.0.jar*)
 
-- [Scala Library](http://www.scala-lang.org) (*scala-library.jar* 2.8.1final)
+- [Scala library](http://www.scala-lang.org) (*scala-library.jar* 2.8.1final)
 
-- [Groovy Library](http://groovy.codehaus.org) (*groovy-all-1.7.5.jar*) (for plug-in support, only compatible with OpenJVM and HotSpot).
+- [Groovy library](http://groovy.codehaus.org) (*groovy-all-1.7.5.jar*) (for plug-in support; works on HotSpot, OpenJDK, IKVM.NET).
 
-- [Jython Library](http://www.jython.org) (*jython.jar* 2.5.1) (for plug-in support, better suppported on other JVMs).
+- [Jython (minimal core library)](http://www.jython.org) (*jython.jar* 2.5.1) (for plug-in support; better supported across JVMs).
 
 If building Gaudi with Gaudi (as in the case of potential upgrading),
 it supports dependency gathering like Apache Ant does. 
@@ -77,8 +78,8 @@ Dependencies will be checked automatically before building the project,
 but you will be prompted to download any, unless the `-a` switch is provided.
 
 License
-------------
-Gaudi and its dependencies, [except the Scala Library](http://www.scala-lang.org/node/146), are licensed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+-------
+Gaudi and its dependencies, except the [Scala Library](http://www.scala-lang.org/node/146) and [Jython](http://www.jython.org/license.html), are licensed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 For the summary of the license, please see the [LICENSE](http://github.com/stpettersens/Gaudi/blob/master/LICENSE) file.
 
 The distributable all-in-one JAR is additionally licensed in part under
@@ -88,8 +89,8 @@ included within the distributed JAR.
 Usage
 -----
 For instructions on how to use Gaudi, please run Gaudi itself with the information (`-i`) switch,
-like so (assuming Gaudi is in your system's PATH variable):
->`sam@ubuntu:~$ gaudi -i`
+like so (assuming Gaudi is in your system's PATH variable and where *$* indicates a command prompt):
+>`$ gaudi -i` (>`$ java -jar Gaudi.jar -i`)
 
 For more in-depth explanation of usage, please refer to the Wiki. (Coming later).
 
