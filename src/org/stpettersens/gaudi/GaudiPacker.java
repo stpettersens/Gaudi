@@ -21,8 +21,10 @@ import java.io.*;
 import java.util.Enumeration;
 import java.util.zip.*;
 
-/* Written in Java for compatibility */
-// Based on code at http://www.devx.com/getHelpOn/10MinuteSolution/20447 
+/* Written in Java for compatibility.
+Zip extraction method is based on code at 
+http://www.devx.com/getHelpOn/10MinuteSolution/20447 
+*/
 @SuppressWarnings("unchecked")
 public class GaudiPacker {
 	
