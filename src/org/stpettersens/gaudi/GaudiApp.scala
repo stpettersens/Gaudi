@@ -26,6 +26,7 @@ object GaudiApp {
 	
   //-------------------------------------------------------------
   val appVersion: String = "0.1"
+  val errCode: Int = -2;
   val env: (String, String) = GaudiHabitat.getEnvAndOS()
   //-------------------------------------------------------------
   var buildFile: String = "build.json" // Default build file
@@ -129,7 +130,7 @@ object GaudiApp {
   private def generateBuildFile(): Unit = {
 	  // TODO
   }
-  // Initialize and if successful run a plug-in
+  // Handle a plug-in
   private def doPluginAction(plugin: String): Unit = {
 	  new GaudiPluginLoader(plugin, logging)
 	  System.exit(0)
@@ -138,13 +139,13 @@ object GaudiApp {
   def displayError(ex: Exception): Unit = {
 	  println(String.format("\nError with: %s.", ex.getMessage))
 	  logger.dump(ex.getMessage)
-	  displayUsage(-2)
+	  displayUsage(errCode)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
 	  println(String.format("\nError with: %s.", ex))
 	  logger.dump(ex)
-	  displayUsage(-2)
+	  displayUsage(errCode)
   }
   // Display version information and exit
   private def displayVersion(): Unit = {
@@ -156,7 +157,7 @@ object GaudiApp {
   // Display usage information and exit
   private def displayUsage(exitCode: Int): Unit = {
 	  println("\nGaudi platform agnostic build tool")
-	  println("Copyright (c) 2010 Sam Saint-Pettersen")
+	  println("Copyright (c) 2010-2011 Sam Saint-Pettersen")
 	  println("\nReleased under the Apache License v2.")
 	  println("\nUsage: gaudi [-s <port>][-l][-i|-v|-n|-m][-q]")
 	  println("[-p <plug-in>][-f <build file>][<action>|\"<:command>\"]")
