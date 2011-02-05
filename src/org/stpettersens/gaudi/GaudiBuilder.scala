@@ -69,7 +69,7 @@ beVerbose: Boolean, logging: Boolean) extends IGaudiBuilder {
 	private def printError(error: String): Unit = {
 		println(String.format("\tAborting: %s.", error))
 		logger.dump(error) // Also log it
-		System.exit(1) // Exit application with error code
+		System.exit(-2) // Exit application with error code
 	}
 	// Print executed command
 	private def printCommand(command: String, param: String): Unit = {
@@ -116,7 +116,7 @@ beVerbose: Boolean, logging: Boolean) extends IGaudiBuilder {
 	    val wcc_param: String = handleWildcards(param)
 
 		// Do not print "echo" commands, but do print others
-		if(command != "echo") printCommand(command, param)
+		printCommand(command, param)
 		command match {
 			case "exec" => {
 				execExtern(param)
