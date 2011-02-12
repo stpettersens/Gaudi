@@ -1,0 +1,90 @@
+body 
+{
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size: 10pt;
+}
+div#navigation 
+{
+	position: absolute;
+	top: 10px;
+	padding: 10x;
+}
+div#logo
+{
+	position: absolute;
+	top: 120px;
+	
+}
+a {
+	text-decoration: none;
+	color: #080808;
+}
+a.navi {
+	font-size: 12pt;
+	padding: 2px;
+	
+}
+a.inline {
+	text-decoration: underline;
+	color: #666666;
+}
+a.navi:hover {
+	background-color: #B8B8B8; 
+}
+img#photo
+{
+	position: absoute;
+	top: 200px;
+	border: 1px solid #989898;
+}
+img#forkMe 
+{
+	position: absolute; 
+	top: 0; 
+	right: 0; 
+	border: 0;
+}
+div#description 
+{
+	position: absolute;
+	padding: 2%;
+	margin: 2%;
+	top: 70px;
+	left: 30%;
+	text-align: left;
+	width: 430px;
+	background-color: #FFFFCC;
+	border: 1px solid #FFCC99;
+}
+div#features
+{
+	position: absolute;
+	padding: 2%;
+	margin: 2%;
+	top: 380px;
+	left: 30%;
+	text-align: left;
+	width: 430px;
+	background-color: #99CC99;
+	border: 1px solid #669966;
+}
+div#footer
+{
+	position: absolute;
+	padding: 2%;
+	margin: 2%;
+	top: 800px;
+	left: 30%;
+	text-align: left;
+	width: 60%;
+	color: #505050;
+}
+li
+{
+	padding: 4px;
+}
+acronym
+{
+	text-decoration: none;
+	border-bottom: 1px dotted #000000;
+}
