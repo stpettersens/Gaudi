@@ -7,34 +7,37 @@ div#navigation
 {
 	position: absolute;
 	top: 10px;
-	padding: 10x;
+	padding: 2px;
+	margin: 4px;
 }
 div#logo
 {
 	position: absolute;
 	top: 120px;
-	
 }
-a {
-	text-decoration: none;
+a 
+{
+	text-decoration: underline;
 	color: #080808;
 }
-a.navi {
+a.navi 
+{
 	font-size: 12pt;
 	padding: 2px;
 	
 }
-a.inline {
-	text-decoration: underline;
-	color: #666666;
+a.inline 
+{
+	color: #484848;
 }
-a.navi:hover {
-	background-color: #B8B8B8; 
+a:hover 
+{
+	text-decoration: none;
 }
 img#photo
 {
-	position: absoute;
 	top: 200px;
+	margin: 4px;
 	border: 1px solid #989898;
 }
 img#forkMe 
@@ -62,15 +65,29 @@ div#features
 	padding: 2%;
 	margin: 2%;
 	top: 380px;
-	left: 30%;
+	left: 25%;
 	text-align: left;
-	width: 430px;
-	background-color: #99CC99;
+	width: 230px;
+	background-color: #FFCC66;
+	border: 1px solid #FF9933;
+}
+div#compatibility
+{
+	position: absolute;
+	padding: 4%;
+	margin: 2%;
+	top: 380px;
+	left: 55%;
+	text-align: left;
+	width: 230px;
+	background-color: #99CC66;
 	border: 1px solid #669966;
+	
 }
 div#footer
 {
 	position: absolute;
+	font-size: 8pt;
 	padding: 2%;
 	margin: 2%;
 	top: 800px;
