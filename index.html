@@ -1,10 +1,17 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html>
-  <title>Gaudi build tool for the JVM</title>
-  <link rel="stylesheet" href="gaudi.css"/>
-  <body>
-<a href="http://github.com/stpettersens/Gaudi"><img id="forkMe" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+  	<title>Gaudi build tool for the JVM</title>
+ 	<link rel="stylesheet" href="gaudi.css"/>
+  	<meta http-equiv="content-type" content="application/xhtml+xml; charset=ISO-8859-1"/>
+  	</head>
+  	<body>
+  	<div>
+	<a href="http://github.com/stpettersens/Gaudi">
+	<img id="forkMe" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me 
+	on GitHub" /></a>
+	</div>
     <div id="navigation">
        <h2>Gaudi agnostic build tool</h2>
 	   <a class="navi" href="index.html">Home</a>
@@ -17,18 +24,18 @@
       src="images/photo_logo.jpg"/>
     </div>
     <div id="description">
-      <p>
-		<h3>What is Gaudi?</h3>
+    	<h3>What is Gaudi?</h3>
+      	<p>
 		<strong>Gaudi is a platform agnostic build tool written primarily in 
-		<a class="inline" href="http://www.scala-lang.org">Scala</a> which runs on a Java virtual machine (JVM).</strong>
-      </p>
-      <p>
-      Gaudi can be thought of as being similar to <a class="inline" href="http://ant.apache.org">Apache Ant</a> in that it too also abstracts commands related to
-      building software away from the operating system; but differs in that its build files are based on a <acronym title="JavaScript Object Notation">JSON</acronym>
+		Scala which runs on a Java virtual machine (JVM).</strong>
+      	</p>
+      	<p>
+      	Gaudi can be thought of as being similar to <a class="inline" href="http://ant.apache.org">Apache Ant</a> in that it too also abstracts commands related to
+     	building software away from the operating system; but differs in that its build files are based on a <acronym title="JavaScript Object Notation">JSON</acronym>
 		format rather than an <acronym title="eXtensible Markup Language">XML</acronym> format.
-      </p>
-      <p>You can clone Gaudi from its <a class="inline" href="http://git-scm.com">Git</a> repo, using:
-      <pre>$ git clone git://github.com/stpettersens/Gaudi</pre>
+      	</p>
+      	<p>You can clone Gaudi from its <a class="inline" href="http://git-scm.com">Git</a> repo, using:</p>
+      	<pre>$ git clone git://github.com/stpettersens/Gaudi</pre>
      </div>
      <div id="features">
      	<h3>Features</h3>
@@ -38,14 +45,34 @@
      		<li>Platform agnostic commands such as <strong>:erase</strong>.</li>
      		<li>Extendable commands via JSON based exension format.</li>
      		<li>Plug-in architecture to offer advanced functionality to the build system
-     		using either <a class="inline" href="http://groovy.codehaus.org">Groovy</a>
-     		or <a class="inline" href="http://www.jython.org">Jython</a> programming languages.
+     		using either the <a class="inline" href="http://groovy.codehaus.org">Groovy</a>
+     		or <a class="inline" href="http://www.jython.org">Jython</a> programming languages.</li>
      	</ul>
      </div>
+     <div id="compatibility">
+     	<h3>Compatibility</h3>
+     	<p>
+     	Gaudi overall should be <em>mostly</em><br/> compatible with most modern JVMs and has
+     	been tested with<br/>and is known to work with the following:
+     	</p>
+     	<ul>
+     		<li><a class="inline" href="http://java.sun.com">Sun's Java HotSpot JVM</a></li>
+     		<li><a class="inline" href="http://openjdk.java.net">OpenJDK JVM</a></li>
+     		<li><a class="inline" href="http://harmony.apache.org">Apache Harmony</a></li>
+     		<li><a class="inline" href="http://gcc.gnu.org/java">GNU GIJ (GCJ project)</a></li>
+     		<li><a class="inline" href="http://www.ikvm.net">IKVM.NET</a></li>
+     		<br/>
+		</ul>
+     </div>
      <div id="footer">
-      <p>Copyright &copy; 2010-2011 <a class="inline" href="http://about.me/stpettersens">Sam Saint-Pettersen</a>. All rights reserved.<br/>Photograph of hammer, courtesy of <a class="inline" href="http://www.flickr.com/photos/justinbaeder/183930977/">Justin Baeder</a>.</p>
+      <p>Copyright &copy; 2010-2011 <a class="inline" href="http://github.com/stpettersens">Sam Saint-Pettersen</a>. All rights reserved.<br/>Photograph of hammer, courtesy of <a class="inline" href="http://www.flickr.com/photos/justinbaeder/183930977/">Justin Baeder</a>.</p>
       <p>
       The <a class="inline" href="http://github.com/stpettersens/Gaudi">Gaudi project</a> is hosted courtesy of <a class="inline" href="http://github.com">Github</a>.
+      </p>
+      <p>
+      	This document validates as compliant
+      	<a class="inline" href="http://validator.w3.org/check?uri=referer">XHTML</a> &amp;
+      	<a class="inline" href="http://jigsaw.w3.org/css-validator/check/referer">CSS</a>.
       </p>
      </div>
   </body>
