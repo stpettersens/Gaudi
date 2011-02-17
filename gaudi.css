@@ -62,7 +62,7 @@ div#description
 div#features
 {
 	position: absolute;
-	padding: 2%;
+	padding: 3%;
 	margin: 2%;
 	top: 380px;
 	left: 25%;
@@ -74,15 +74,22 @@ div#features
 div#compatibility
 {
 	position: absolute;
-	padding: 4%;
+	padding: 2%;
 	margin: 2%;
 	top: 380px;
-	left: 55%;
+	left: 50%;
 	text-align: left;
 	width: 230px;
 	background-color: #99CC66;
 	border: 1px solid #669966;
 	
+}
+div#footnote
+{
+	font-size: 8pt;
+	position: absolute;
+	left: 53%;
+	top: 800px;
 }
 div#footer
 {
@@ -91,7 +98,7 @@ div#footer
 	padding: 2%;
 	margin: 2%;
 	top: 800px;
-	left: 30%;
+	left: 35%;
 	text-align: left;
 	width: 60%;
 	color: #505050;
