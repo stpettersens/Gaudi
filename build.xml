@@ -16,7 +16,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<delete file="${dist.dir}/gaudi.exe" quiet="true"/>
 		<delete file="${dist.dir}/Gaudi_setup.exe" quiet="true"/>
 		<delete file="${dist.dir}/JavaCheck.class" quiet="true"/>
-		<delete file="${dist.dir}/FindInPath.class" quiet="true"/>
+		<delete file="${dist.dir}/FindInVar.class" quiet="true"/>
 	</target>
 	
 	<target name="init">		

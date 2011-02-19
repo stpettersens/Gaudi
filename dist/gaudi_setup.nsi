@@ -94,7 +94,7 @@ Section
     ${libs->Write} 0 "scala-library.jar"
     ${libs->Write} 1 "json_simple-1.1.jar"
     ${libs->Write} 2 "commons-io-2.0.1.jar"
-    ${libs->Write} 3 "groovy-all-1.7.6.jar"
+    ${libs->Write} 3 "groovy-all-1.7.8.jar"
     ${libs->FreeUnusedMem}
     ${libsRedun->FreeUnusedMem}
 SectionEnd
@@ -161,7 +161,7 @@ FunctionEnd
 # Detect if third-party libraries Gaudi requires are
 # present on system by looking in the system's CLASSPATH
 Function detectTPLibs
-    File FindInPath.class ; Extract small FindInPath program
+    File FindInVar.class ; Extract small FindInVar program
     IntOp $libsFound $libsFound + 0 ; Set libraries found to 0
     IntOp $indx $indx + 0 ; Set loop index to 0
     ${DoUntil} $indx == 4
@@ -184,7 +184,7 @@ Function detectTPLibs
         DetailPrint "Warning: Libraries are missing. This may be a problem if you are not installing them."
     ${EndIf}
     ${libs->Delete} ; Delete first array, done with
-    Delete FindInPath.class ; Done with this program, delete it
+    Delete FindInVar.class ; Done with this program, delete it
 FunctionEnd
 
 # Remove installed libraries that were found in CLASSPATH before
@@ -245,7 +245,7 @@ Section "Third-party libraries" TPLibs
     File lib\scala-library.jar
     File lib\json_simple-1.1.jar
     File lib\commons-io-2.0.1.jar
-    File lib\groovy-all-1.7.6.jar
+    File lib\groovy-all-1.7.8.jar
     StrCmpS $R8 "true" 0 skip
     Call removeDuplicates
     skip:
