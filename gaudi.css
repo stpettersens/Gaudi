@@ -26,7 +26,7 @@ a.navi
 	padding: 2px;
 	
 }
-a.inline 
+a.inline, a.extern
 {
 	color: #484848;
 }
@@ -62,7 +62,7 @@ div#description
 div#features
 {
 	position: absolute;
-	padding: 3%;
+	padding: 2%;
 	margin: 2%;
 	top: 380px;
 	left: 25%;
@@ -77,7 +77,7 @@ div#compatibility
 	padding: 2%;
 	margin: 2%;
 	top: 380px;
-	left: 50%;
+	left: 58%;
 	text-align: left;
 	width: 230px;
 	background-color: #99CC66;
@@ -88,8 +88,8 @@ div#footnote
 {
 	font-size: 8pt;
 	position: absolute;
-	left: 53%;
-	top: 800px;
+	left: 62%;
+	top: 740px;
 }
 div#footer
 {
