@@ -14,7 +14,7 @@ Name Gaudi
 !define REGKEY "SOFTWARE\$(^Name)"
 !define VERSION 0.1.0.0
 !define COMPANY "Sam Saint-Pettersen"
-!define URL http://github.com/stpettersens/Gaudi
+!define URL http://stpettersens.github.com/Gaudi
 !define DESC "Gaudi platform agnostic build tool"
 !define COPYRIGHT "(c) 2010 Sam Saint-Pettersen"
 
@@ -45,10 +45,11 @@ Var StartMenuGroup
 Var lib
 Var libsFound
 Var indx
+Var libs
 
 # Installer pages
-;!insertmacro MUI_PAGE_WELCOME
-;!insertmacro MUI_PAGE_LICENSE license.txt
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_LICENSE license.txt
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
@@ -95,6 +96,7 @@ Section
     ${libs->Write} 1 "json_simple-1.1.jar"
     ${libs->Write} 2 "commons-io-2.0.1.jar"
     ${libs->Write} 3 "groovy-all-1.7.8.jar"
+    ${libs->Write} 4 "jython.jar"
     ${libs->FreeUnusedMem}
     ${libsRedun->FreeUnusedMem}
 SectionEnd
@@ -162,12 +164,13 @@ FunctionEnd
 # present on system by looking in the system's CLASSPATH
 Function detectTPLibs
     File FindInVar.class ; Extract small FindInVar program
+    IntOp $libs $libs + 5 ; Assign 5 as number of libraries
     IntOp $libsFound $libsFound + 0 ; Set libraries found to 0
     IntOp $indx $indx + 0 ; Set loop index to 0
-    ${DoUntil} $indx == 4
+    ${DoUntil} $indx == $libs
         ${libs->Read} $lib $indx ; Read indexed library as current library  to check for
-        ; Execute FindInPath program to check for current library in CLASSPATH
-        nsExec::ExecToStack `java -classpath . FindInPath CLASSPATH $lib` 
+        ; Execute FindInVar program to check for current library in CLASSPATH
+        nsExec::ExecToStack `java -classpath . FindInVar CLASSPATH $lib` 
         Pop $0 ; Pop return code from program from stack
         Pop $1 ; Pop stdout from program from stack (unused, but clears the stack)
         ${If} $0 == "1"
@@ -183,8 +186,8 @@ Function detectTPLibs
     ${If} $libsFound < 4:
         DetailPrint "Warning: Libraries are missing. This may be a problem if you are not installing them."
     ${EndIf}
-    ${libs->Delete} ; Delete first array, done with
     Delete FindInVar.class ; Done with this program, delete it
+    ${libs->Delete} ; Delete first array, done with
 FunctionEnd
 
 # Remove installed libraries that were found in CLASSPATH before
@@ -222,7 +225,8 @@ SectionEnd
 Section "Plug-ins" Plugins
     SetOutPath $INSTDIR\plugins
     ; TODO: Change to packaged plug-in files:
-    File plugins\ExamplePlugin.groovy 
+    File plugins\ExamplePluginA.gpod
+	File plugins\ExamplePluginB.gpod
 SectionEnd
 
 # Library dependencies for core program
@@ -230,22 +234,23 @@ Section "Third-party libraries" TPLibs
     ; Prompt user if they want the installable libraries to be  
     ; available to other JVM-based programs
     ${If} ${Cmd} `MessageBox MB_YESNO|MB_ICONQUESTION "Install libraries for all JVM applications?" IDYES`
-        ; Use FindInPath program again to find 1st path in CLASSPATH
+        ; Use FindInVar program again to find 1st path in CLASSPATH
         SetOutPath .
-        File FindInPath.class
-        nsExec::ExecToStack `java -classpath . FindInPath CLASSPATH`
+        File FindInVar.class
+        nsExec::ExecToStack `java -classpath . FindInVar CLASSPATH`
         Pop $0 ; Pop exit code for program from stack (unused)
         Pop $1 ; Pop stdout for program from stack (should be 1st path)
-        Delete FindInPath.class ; Done with FindInPath program, delete it
+        Delete FindInVar.class ; Done with FindInPath program, delete it
         SetOutPath $1 ; Use this path to install the libraries into
     ${Else}
         SetOutPath $INSTDIR\lib
         StrCpy $R8 "true"
     ${EndIf}
-    File lib\scala-library.jar
-    File lib\json_simple-1.1.jar
-    File lib\commons-io-2.0.1.jar
-    File lib\groovy-all-1.7.8.jar
+    File "lib\scala-library.jar"
+    File "lib\json_simple-1.1.jar"
+    File "lib\commons-io-2.0.1.jar"
+    File "lib\groovy-all-1.7.8.jar"
+    File "lib\jython.jar"
     StrCmpS $R8 "true" 0 skip
     Call removeDuplicates
     skip:
