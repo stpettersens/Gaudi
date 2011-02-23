@@ -19,7 +19,8 @@ Name Gaudi
 !define COPYRIGHT "(c) 2010 Sam Saint-Pettersen"
 
 # MUI Symbol Definitions
-!define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange.bmp" ; Change later to custom
+#!define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange.bmp" ; Change later to custom
+!define MUI_WELCOMEFINISHPAGE_BITMAP "gaudi_setup.bmp" ; Change later to custom
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\orange-install.ico"
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_LICENSEPAGE_CHECKBOX
