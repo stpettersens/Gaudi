@@ -1,5 +1,8 @@
 *.jar
+*.exe
+*.7z
+*.log
+src
 lib
 bin
 ant_build
-
