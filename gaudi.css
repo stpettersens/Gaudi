@@ -1,117 +1,4 @@
-/*body 
-{
-	font-family: Verdana, Helvetica, sans-serif;
-	font-size: 10pt;
-}
-div#navigation 
-{
-	position: absolute;
-	top: 10px;
-	padding: 2px;
-	margin: 4px;
-}
-div#logo
-{
-	position: absolute;
-	top: 120px;
-}
-a 
-{
-	text-decoration: underline;
-	color: #080808;
-}
-a.navi 
-{
-	font-size: 12pt;
-	padding: 2px;
-	
-}
-a.inline, a.extern
-{
-	color: #484848;
-}
-a:hover 
-{
-	text-decoration: none;
-}
-img#photo
-{
-	top: 200px;
-	margin: 4px;
-	border: 1px solid #989898;
-}
-img#forkMe 
-{
-	position: absolute; 
-	top: 0; 
-	right: 0; 
-	border: 0;
-}
-div#description 
-{
-	position: absolute;
-	padding: 2%;
-	margin: 2%;
-	top: 70px;
-	left: 30%;
-	text-align: left;
-	width: 430px;
-	background-color: #FFFFCC;
-	border: 1px solid #FFCC99;
-}
-div#features
-{
-	position: absolute;
-	padding: 2%;
-	margin: 2%;
-	top: 380px;
-	left: 25%;
-	text-align: left;
-	width: 230px;
-	background-color: #FFCC66;
-	border: 1px solid #FF9933;
-}
-div#compatibility
-{
-	position: absolute;
-	padding: 2%;
-	margin: 2%;
-	top: 380px;
-	left: 58%;
-	text-align: left;
-	width: 230px;
-	background-color: #99CC66;
-	border: 1px solid #669966;
-	
-}
-div#footnote
-{
-	font-size: 8pt;
-	position: absolute;
-	left: 62%;
-	top: 740px;
-}
-div#footer
-{
-	position: absolute;
-	font-size: 8pt;
-	padding: 2%;
-	margin: 2%;
-	top: 800px;
-	left: 35%;
-	text-align: left;
-	width: 60%;
-	color: #505050;
-}
-li
-{
-	padding: 4px;
-}
-acronym
-{
-	text-decoration: none;
-	border-bottom: 1px dotted #000000;
-}*/
+
 
 body 
 {
@@ -193,7 +80,7 @@ div#features
 	padding: 2%;
 	margin: 10px;
 	top: 380px;
-	left: 30%;
+	left: 28%;
 	text-align: left;
 	width: 230px;
 	background-color: #FFCC66;
@@ -205,7 +92,7 @@ div#compatibility
 	padding: 1%;
 	margin: 2%;
 	top: 360px;
-	left: 55%;
+	left: 58%;
 	text-align: left;
 	width: 230px;
 	background-color: #99CC66;
