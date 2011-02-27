@@ -1,4 +1,4 @@
-/*
+ing/*
 Gaudi platform agnostic build tool
 Copyright 2010-2011 Sam Saint-Pettersen.
 
@@ -66,8 +66,8 @@ public class GaudiPacker {
 			zipFile.close();
 			return entry.getName();
 		}
-		catch(IOException e) {
-			GaudiApp.displayError(e);
+		catch(IOException ioe) {
+			GaudiApp.displayError(ioe);
 		}
 		return null;
 	}
