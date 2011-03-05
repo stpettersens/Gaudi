@@ -1,4 +1,4 @@
-ing/*
+/*
 Gaudi platform agnostic build tool
 Copyright 2010-2011 Sam Saint-Pettersen.
 

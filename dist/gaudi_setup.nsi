@@ -191,19 +191,19 @@ Function detectTPLibs
     ${libs->Delete} ; Delete first array, done with
 FunctionEnd
 
-# Remove installed libraries that were found in CLASSPATH before
-# installation and therefore are unneeded
-Function removeDuplicates
-    DetailPrint "Removing any duplicate libraries..."
-    StrCpy $lib "x" ; Make lib variable not blank initially so that loop works
-    IntOp $indx $indx - 4 ; Reset loop index to 0
-    ${DoUntil} $lib == ""
-        ${libsRedun->Read} $lib $indx ; Get each duplicate library
-        Delete $INSTDIR\lib\$lib ; Delete each duplicate library from $INSTDIR
-        IntOp $indx $indx + 1 ; Increment index
-    ${Loop}
-    ${libsRedun->Delete} ; Delete second array, done with
-FunctionEnd
+;# Remove installed libraries that were found in CLASSPATH before
+;# installation and therefore are unneeded
+;Function removeDuplicates
+    ;DetailPrint "Removing any duplicate libraries..."
+    ;StrCpy $lib "x" ; Make lib variable not blank initially so that loop works
+    ;IntOp $indx $indx - 4 ; Reset loop index to 0
+    ;${DoUntil} $lib == ""
+        ;${libsRedun->Read} $lib $indx ; Get each duplicate library
+        ;Delete $INSTDIR\lib\$lib ; Delete each duplicate library from $INSTDIR
+        ;IntOp $indx $indx + 1 ; Increment index
+    ;${Loop}
+    ;${libsRedun->Delete} ; Delete second array, done with
+;FunctionEnd
 
 # Installer sections
 Section -Main SEC0000
@@ -253,7 +253,7 @@ Section "Third-party libraries" TPLibs
     File "lib\groovy-all-1.7.8.jar"
     File "lib\jython.jar"
     StrCmpS $R8 "true" 0 skip
-    Call removeDuplicates
+    ;Call removeDuplicates
     skip:
 SectionEnd
 
