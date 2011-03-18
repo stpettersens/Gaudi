@@ -52,14 +52,31 @@ div#description
 	margin: auto;
 	padding: 1em;
 	text-align: left;
-	background-color: #99CCFF;
-	border: 0.1em solid #9999FF;
-	width: 40em;
+	background-color: #E3EAF2;
+	border: 0.1em solid #E3EAF2;
+	width: 40em; /* In Chrome, this has to be 42em */
 }
+li
+{
+	padding: 0.5em;
+}
+div#features, #compatibility
+{
+	margin-top: 0.8em;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: left;
+	padding: 1em;
+	background-color: #F0F0F0; 
+	border: 0.1em solid #F0F0F0;
+	width: 40em;
+}	
 div#footer
 {
 	display: table;
-	margin: auto;
+	margin-top: 2em;
+	margin-left: auto;
+	margin-right: auto;
 	font-size: 8pt;
 	color: #505050;
 }
