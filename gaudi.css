@@ -54,7 +54,8 @@ div#description
 	text-align: left;
 	background-color: #E3EAF2;
 	border: 0.1em solid #E3EAF2;
-	width: 40em; /* In Chrome, this has to be 42em */
+	width: 40em; 
+	/* In WebKit based browsers (Chrome, Safari), width here has to be 42em */
 }
 li
 {
