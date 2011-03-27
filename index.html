@@ -6,7 +6,7 @@
   	<script type="text/javascript" src="jquery-1.5.1.min.js"></script>
 	<script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
 	<script type="text/javascript" src="gaudi.js"></script>
- 	<link rel="stylesheet" href="gaudi.css"/>
+ 	<link type="text/css" rel="stylesheet" href="gaudi.css"/>
   	<meta http-equiv="content-type" content="application/xhtml+xml; charset=ISO-8859-1"/>
   	</head>
   	<body onload="onLoad();">
@@ -37,20 +37,18 @@
      	building software away from the operating system; but differs in that its build files are based on a <acronym title="JavaScript Object Notation">JSON</acronym>
 		format rather than an <acronym title="eXtensible Markup Language">XML</acronym> format.
       	</p>
-	<p>
-	You can clone Gaudi from its <a class="extern" href="http://git-scm.com">Git</a> repo, using:
+		You can clone Gaudi from its <a class="extern" href="http://git-scm.com">Git</a> repo, using:
       	<pre id="repo">git clone git://github.com/stpettersens/Gaudi</pre>
-		<script>
+		<script type="text/javascript">
 			// Clipboard applet will go here...
 			// The following code is dependent on http://www.java.com/js/deployJava.js 
 			if(navigator.javaEnabled()) {
 				var attributes = { code:'ClipboardApplet', archive:'ClipboardApplet.jar', width:200, height:20}; 
-				var parameters = { toCopy: 'repo', jnlp_href: 'ClipboardApplet.jnlp'} ; 
+				var parameters = { tocopy: 'repo', jnlp_href: 'ClipboardApplet.jnlp'} ; 
 				deployJava.runApplet(attributes, parameters, '1.6');
 			}
 			else showNoJava();
 		</script>
-	</p>
      </div>
      <div id="features">
      	<h3>Features</h3>
