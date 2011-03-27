@@ -1,6 +1,8 @@
 /*
-	Stylesheet for Gaudi project website
-	Let's go crazy experimenting with ems
+	Stylesheet for Gaudi project website.
+	Let's go crazy experimenting with ems.
+	
+	Copyright (c) 2011 Sam Saint-Pettersen.
 */
 body 
 {
@@ -55,7 +57,7 @@ div#description
 	background-color: #E3EAF2;
 	border: 0.1em solid #E3EAF2;
 	width: 40em; 
-	/* In WebKit based browsers (Chrome, Safari), width here has to be 42em */
+	/* In Apple WebKit / KHTML? based browsers (Chrome, Safari), width here has to be 42em */
 }
 li
 {
@@ -83,7 +85,8 @@ div#footer
 }
 pre#repo
 {
-	width: 30em;
+	width: 28em;
+	padding: 0.5em;
 	background-color: #000000;
 	color: #FFFFFF;
 	border: 0.1em solid #FFFFFF;

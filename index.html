@@ -4,6 +4,7 @@
 	<head>
   	<title>Gaudi build tool for the JVM</title>
   	<script type="text/javascript" src="jquery-1.5.1.min.js"></script>
+	<script type="text/javascript" src="http://www.java.com/js/deployJava.js"></script>
 	<script type="text/javascript" src="gaudi.js"></script>
  	<link rel="stylesheet" href="gaudi.css"/>
   	<meta http-equiv="content-type" content="application/xhtml+xml; charset=ISO-8859-1"/>
@@ -38,7 +39,17 @@
       	</p>
 	<p>
 	You can clone Gaudi from its <a class="extern" href="http://git-scm.com">Git</a> repo, using:
-      	<pre id="repo" value="git clone git://github.com/stpettersens/Gaudi">$ git clone git://github.com/stpettersens/Gaudi</pre><span id="cbapplet"><!-- Clipboard applet will go here --></span>
+      	<pre id="repo">git clone git://github.com/stpettersens/Gaudi</pre>
+		<script>
+			// Clipboard applet will go here...
+			// The following code is dependent on http://www.java.com/js/deployJava.js 
+			if(navigator.javaEnabled()) {
+				var attributes = { code:'ClipboardApplet', archive:'ClipboardApplet.jar', width:200, height:20}; 
+				var parameters = { mayscript: 'true', tocopy: 'repo', jnlp_href: 'ClipboardApplet.jnlp'} ; 
+				deployJava.runApplet(attributes, parameters, '1.6');
+			}
+			else showNoJava();
+		</script>
 	</p>
      </div>
      <div id="features">
