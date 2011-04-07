@@ -31,10 +31,18 @@ a:hover
 {
 	text-decoration: none;
 }
+img 
+{
+	border: 0em;
+}
 img#photo
 {
 	float: left;
 	padding: 1.5em;
+}
+img#download_button
+{
+	margin-left: 3em;
 }
 img#forkMe 
 {
@@ -42,6 +50,12 @@ img#forkMe
 	top: 0em; 
 	right: 0em; 
 	border: 0em;
+}
+td.caption
+{
+	font-size: 8pt;
+	color: #606060;
+	padding-left: 0.8em;
 }
 div#navigation
 {

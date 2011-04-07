@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
+	<!-- Copyright (c) 2011 Sam Saint-Pettersen. -->
 	<head>
   	<title>Gaudi build tool for the JVM</title>
   	<script type="text/javascript" src="jquery-1.5.1.min.js"></script>
@@ -19,8 +20,8 @@
        <h2>Gaudi agnostic build tool for the JVM</h2>
            <br/>
 	   <a class="navi" href="index.html">Home</a>
-	   <a class="navi" href="#">Requirements</a>
-	   <a class="navi" href="#">Install</a>
+	   <a class="navi" href="#dl">Download</a>
+           <a class="navi" href="#">Dependencies</a>
 	   <a class="navi" href="#">Wiki</a>
        </div>
       
@@ -43,21 +44,36 @@
 			// Clipboard applet will go here...
 			// The following code is dependent on http://www.java.com/js/deployJava.js 
 			if(navigator.javaEnabled()) {
-				var attributes = { code:'ClipboardApplet', archive:'ClipboardApplet.jar', width:200, height:20}; 
-				var parameters = { tocopy: 'repo', jnlp_href: 'ClipboardApplet.jnlp'} ; 
+				var attributes = { id: 'cbApplet', code: 'ClipboardApplet', archive: 'ClipboardApplet.jar', width: 200, height: 20 }; 
+				var parameters = { mayscript: 'true', tocopy: 'repo', jnlp_href: 'ClipboardApplet.jnlp' } ; 
 				deployJava.runApplet(attributes, parameters, '1.6');
 			}
-			else showNoJava();
 		</script>
-     </div>
-     <div id="features">
+	</div>
+	<div id="features">
+	 <p>
+	 <a name="dl"></a>
+	 <!-- Thanks to Mihai Ungureanu for assistance in design of buttons below -->
+	 <table>
+	 <tr><td><a href="#">
+	 	<img id="download_button" alt="Download Gaudi executable." src="images/download_button.png"/></a></td>
+	 <td><a href="#">
+		<img id="download_src_button" alt="Download Gaudi source code." src="images/download_src_button.png"/></a></td></tr>
+	<tr><td class="caption">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Installation program (EXE, 18 MB)<br/>
+	<td class="caption">Scala/Java source code (ZIP, 65 KB)<td></tr>
+	<tr><td class="caption">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<a href="#">Other downloads</a></td><td class="caption"><a href="#">Dependencies</a></td></tr>
+	<tr><td></td></tr>
+	</table>
+	</span>
+	</p>
      	<h3>Features</h3>
      	<strong>Gaudi offers...</strong>
      	<ul>
      		<li>A compact, concise JSON based build file format.</li>
      		<li>Platform agnostic commands such as <strong>:erase</strong>.</li>
      		<li>Extendable commands via JSON based exension format.</li>
-     		<li>Plug-in architecture to offer advanced functionality to the build system
+     		<li>A plug-in architecture to offer advanced functionality to the build system
      		using either the <a class="extern" href="http://groovy.codehaus.org">Groovy</a>
      		or <a class="extern" href="http://www.jython.org">Jython</a> programming languages.</li>
      	</ul>
@@ -80,10 +96,10 @@
      <div id="footer">
      <noscript>
      	<p><strong>JavaScript is either unsupported or has been disabled in the browser.<br/>
-     	 For the best user experience, please enable scripting if possible. [
+     	 For the best user experience, please enable JavaScript if possible. [
 	<a href="http://help.yahoo.com/l/us/yahoo/help/faq/browsers/browsers-63474.html">How do I fix this?</a>]</strong></p>
 	</noscript>
-      <p>Copyright &copy; 2010-2011 <a class="flink" href="http://github.com/stpettersens">Sam Saint-Pettersen</a>. All rights reserved.<br/>Photograph of hammer, courtesy of <a class="flink" href="http://www.flickr.com/photos/justinbaeder/183930977/">Justin Baeder</a>.</p>
+      <p>Copyright &copy; 2010-2011 <a class="flink" href="http://github.com/stpettersens">Sam Saint-Pettersen</a>. All rights reserved.<br/>Photograph of hammer, courtesy of 	<a class="flink" href="http://www.flickr.com/photos/justinbaeder/183930977/">Justin Baeder</a>.</p>
       <p>
       The <a class="flink" href="http://github.com/stpettersens/Gaudi">Gaudi project</a> is hosted courtesy of <a class="flink" href="http://github.com">Github</a>.
       </p>
