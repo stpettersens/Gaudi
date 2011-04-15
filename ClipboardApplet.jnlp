@@ -1,4 +1,4 @@
- <jnlp spec="6.0" href="ClipboardApplet.jnlp">
+<jnlp spec="6.0" href="ClipboardApplet.jnlp">
 	<information>
        <title>ClipboardApplet</title>
        <vendor>Sam Saint-Pettersen</vendor>

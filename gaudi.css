@@ -76,6 +76,10 @@ li
 {
 	padding: 0.5em;
 }
+li.alt
+{
+	list-style-type: circle;
+}
 div#features, #compatibility
 {
 	margin-top: 0.8em;
