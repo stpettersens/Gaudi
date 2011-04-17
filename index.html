@@ -26,8 +26,7 @@
 	   <a class="navi" href="#dl">Download</a>
 	   <a class="navi" href="#">Wiki</a>
 	   <a class="navi" href="https://github.com/stpettersens/Gaudi/commits/master.atom">Commits</a>
-       </div>
-      
+       </div>  
     <div id="description">
  	<img id="photo" alt="Photo &copy; 2006 Justin Baeder. CC." 
        	src="images/photo_logo.jpg"/>
@@ -44,8 +43,9 @@
 		  format rather than an <acronym title="eXtensible Markup Language">XML</acronym> format.
       	</p>
 		You can clone Gaudi from its <a class="extern" href="http://git-scm.com">Git</a> repo, using:
-      	<pre id="repo">git clone git://github.com/stpettersens/Gaudi</pre>
+    <pre id="repo">git clone git://github.com/stpettersens/Gaudi</pre>
 		<script type="text/javascript">
+    <!--
 			// Clipboard applet will go here...
 			// The following code is dependent on http://www.java.com/js/deployJava.js 
 			// There seems to be problems with LiveConnect in Safari for some reason, so don't load applet in Safari
@@ -55,20 +55,19 @@
 				var parameters = { mayscript: 'true', tocopy: 'repo', jnlp_href: 'ClipboardApplet.jnlp' } ; 
 				deployJava.runApplet(attributes, parameters, '1.6');
 			}
+    -->
 		</script>
 	</div>
 	<div id="features">
-	 <p>
 	 <a name="dl"></a>
-	 <!-- Thanks to Mihai Ungureanu for assistance in design of buttons below -->
-   <div id="dl_subsection">
-	 <table>
+	 <!-- Thanks to Mihai Ungureanu for assistance in design of buttons below -->  
+	 <table id="dl_subsection">
 	 <tr><td><a href="#">
 	 	<img id="download_button" alt="Download Gaudi executable." src="images/download_button.png"/></a></td>
 	 <td><a href="#">
 		<img id="download_src_button" alt="Download Gaudi source code." src="images/download_src_button.png"/></a></td></tr>
-	<tr><td class="caption">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Installation program (EXE, 18 MB)<br/>
-	<td class="caption">Scala/Java source code (ZIP, 65 KB)<td></tr>
+	<tr><td class="caption">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Installation program (EXE, 18 MB)<br/></td>
+	<td class="caption">Scala/Java source code (ZIP, 65 KB)</td></tr>
 	<tr><td class="caption">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	<a href="#">Other downloads</a></td><td class="caption"><a id="deps_link">Dependencies</a></td></tr>
 	<tr><td></td><td><div id="deps_box">
@@ -95,9 +94,7 @@
 		Jython (minimal core library)</a><br/><small>(jython.jar 2.5.2)</small>
 	  </li>
     </ul>
-	</div></td></tr></table>
-	</div>
-	</p>
+	</div></td></tr></table><br/><br/>
      	<h3>Features</h3>
      	<strong>Gaudi offers...</strong>
      	<ul>
