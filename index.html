@@ -48,7 +48,9 @@
 		<script type="text/javascript">
 			// Clipboard applet will go here...
 			// The following code is dependent on http://www.java.com/js/deployJava.js 
-			if(navigator.javaEnabled()) {
+			// There seems to be problems with LiveConnect in Safari for some reason, so don't load applet in Safari
+			if(navigator.javaEnabled() && navigator.userAgent.search(/Version\/\d.\d.\d\sSafari/) == -1) {
+
 				var attributes = { id: 'cbApplet', code: 'ClipboardApplet', archive: 'ClipboardApplet.jar', width: 200, height: 20 }; 
 				var parameters = { mayscript: 'true', tocopy: 'repo', jnlp_href: 'ClipboardApplet.jnlp' } ; 
 				deployJava.runApplet(attributes, parameters, '1.6');
