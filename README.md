@@ -1,4 +1,5 @@
 Gaudi
+[!Gaudi](http://stpettersens.github.com/Gaudi/images/photo_logo.jpg)
 =====
 
 Overview
