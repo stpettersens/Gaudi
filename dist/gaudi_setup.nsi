@@ -19,8 +19,7 @@ Name Gaudi
 !define COPYRIGHT "(c) 2010 Sam Saint-Pettersen"
 
 # MUI Symbol Definitions
-#!define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange.bmp" ; Change later to custom
-!define MUI_WELCOMEFINISHPAGE_BITMAP "gaudi_setup.bmp" ; Change later to custom
+!define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange.bmp" ; Change later to custom
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\orange-install.ico"
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_LICENSEPAGE_CHECKBOX
@@ -250,7 +249,7 @@ Section "Third-party libraries" TPLibs
     File "lib\scala-library.jar"
     File "lib\json_simple-1.1.jar"
     File "lib\commons-io-2.0.1.jar"
-    File "lib\groovy-all-1.7.8.jar"
+    File "lib\groovy-all-1.7.10.jar"
     File "lib\jython.jar"
     StrCmpS $R8 "true" 0 skip
     ;Call removeDuplicates
