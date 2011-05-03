@@ -4,6 +4,7 @@ ant_build
 *.jar
 *.class
 *.exe
+*.7z
 *.log
 .project
 .pydevproject
