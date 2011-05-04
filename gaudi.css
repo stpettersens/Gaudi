@@ -35,6 +35,13 @@ img
 {
 	border: 0em;
 }
+img#commitFeed
+{
+	padding-top: 4em;
+	margin-top: -10em;
+	margin-left: -2em;
+	border: 0em;
+}
 img#photo
 {
 	float: left;
