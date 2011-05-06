@@ -49,7 +49,8 @@
 		<script type="text/javascript">
 		<!--
 			// Regular expression for unsupported user agents.
-			var unsupported = /Version\/\d.\d.\d\sSafari|PlayStation|iPhone/;
+      // As it stands, there are problems with the applet loading on Macs.
+			var unsupported = /Version\/\d.\d.\d\sSafari|PlayStation|iPhone|Mac/;
 			
 			// Run applet when Java is enabled and user agent is supported.
   			if(navigator.javaEnabled() && navigator.userAgent.search(unsupported) == -1)
