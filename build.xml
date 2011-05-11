@@ -22,7 +22,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 	<target name="init">		
 		<!-- Check for required tools, i.e. Scala compiler and library --> 
 		<property environment="env"/>
-		<fail unless="env.SCALA_HOME" message="Missing SCALA_HOME variable in OS environment"/>
+		<fail unless="env.SCALA_HOME" message="Missing SCALA_HOME variable in OS environment."/>
 		
 		<!-- Variables for paths and files -->
 		<property name="src.dir" location="${basedir}/src"/>
@@ -34,7 +34,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<property name="scala-compiler" location="${env.SCALA_HOME}/lib/scala-compiler.jar"/>
 		<property name="commons-io" location="${lib.dir}/commons-io-2.0.1.jar"/>
 		<property name="json-simple" location="${lib.dir}/json_simple-1.1.jar"/>
-		<property name="groovy-lib" location="${lib.dir}/groovy-all-1.7.10.jar"/>
+		<property name="groovy-lib" location="${lib.dir}/groovy-all-1.8.0.jar"/>
 		<property name="jython-lib" location="${lib.dir}/jython.jar"/>
 		<property name="target.abs" value="Gaudi"/>
 		<property name="target.mf" location="${basedir}/Manifest.mf"/>
@@ -90,7 +90,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 	
 	<target name="cjar" description="Create self-contained Jar" depends="package">
 		<echo message="Packaging Gaudi (self-contained Jar)..."/>
-		<fail unless="env.ONEJAR_TOOL" message="Missing ONEJAR_TOOL variable in OS environment"/>
+		<fail unless="env.ONEJAR_TOOL" message="Missing ONEJAR_TOOL variable in OS environment."/>
 		<!-- Load One Jar task -->
 		<taskdef resource="antlib.xml">
 			<classpath>
