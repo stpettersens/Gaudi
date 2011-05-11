@@ -24,10 +24,7 @@ import scala.util.matching.Regex
 import java.io._
 
 class GaudiBuilder(preamble: JSONObject, sSwitch: Boolean, 
-beVerbose: Boolean, logging: Boolean) extends IGaudiBuilder {
-	
-	// Define global logger object
-	val logger = new GaudiLogger(logging)
+beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 	
 	// Define global messenger object
 	var messenger = new GaudiMessenger(logging)
@@ -68,7 +65,7 @@ beVerbose: Boolean, logging: Boolean) extends IGaudiBuilder {
 	// Print an error related to action or command and exit
 	private def printError(error: String): Unit = {
 		println(String.format("\tAborting: %s.", error))
-		logger.dump(error) // Also log it
+		logDump(error) // Also log it
 		System.exit(-2) // Exit application with error code
 	}
 	// Print executed command
@@ -95,7 +92,7 @@ beVerbose: Boolean, logging: Boolean) extends IGaudiBuilder {
 	private def execExtern(param: String): Unit = {
 		val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
 		// -----------------------------------------------------------------
-		logger.dump(String.format("Executed -> %s %s\n" +
+		logDump(String.format("Executed -> %s %s\n" +
 		"Wildcard matched -> %s", exe._1, exe._2, handleWildcards(exe._2)))
 		// -----------------------------------------------------------------
 		if(exe._1 != null) {

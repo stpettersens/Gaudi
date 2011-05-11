@@ -21,34 +21,41 @@ import java.util.Date
 import java.text.{DateFormat,SimpleDateFormat}
 import java.io.{PrintWriter,FileOutputStream,IOException}
 
-object GaudiBase {
+class GaudiBase {
+
+	var logging: Boolean = false
+	var beVerbose: Boolean = true
+	val ErrCode: Int = -2
+	val LogFile: String = "gaudi.log"
 	
-	protected def logDump(logging: Boolean, message: String): Unit = {
+	protected def logDump(message: String): Unit = {
 		val timestamp: DateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss")
-		if(logging) {
-			try {
-				// TODO
-			}
-			catch {
-				case ioe: IOException => println(ioe.getMessage);
-			}
+		if(isLogging()) {
+			writeToFile(LogFile, 
+			String.format("[{0}]\n{1}", timestamp, message), true)
+		}
+	}
+
+	// File writing operations
+	protected def writeToFile(file: String, message: String, append: Boolean): Unit = {
+		var out: PrintWriter = null
+		try {
+			out = new PrintWriter(new FileOutputStream(file, append))
+			out.println(message)
+		}
+		catch {
+			case ioe: IOException => printError(ioe.getMessage)
+		}
+		finally {
+			out.close()
 		}
 	}
 }
 
-class GaudiBase {
-
-	var logging: Boolean = false;
-	var beVerbose: Boolean = true;
-	val ErrCode: Int = -2;
-	val LogFile: String = "gaudi.log";
+object GaudiBase {
 	
 	protected def logDump(message: String): Unit = {
-		val timestamp: DateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss")
-		//if(isLogging()) {
-			/*writeTo(
-				LogFile, String.format("[{0}]\n{1}", timestamp, message), true
-			)*/
-		//}
+		val gb = new GaudiBase()
+		gb.logDump(message)
 	}
 }
