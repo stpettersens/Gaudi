@@ -28,9 +28,9 @@ class GaudiBase {
 	val ErrCode: Int = -2
 	val LogFile: String = "gaudi.log"
 	
-	protected def logDump(message: String): Unit = {
+	protected def logDump(message: String, isLogging: Boolean): Unit = {
 		val timestamp: DateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss")
-		if(isLogging()) {
+		if(isLogging) {
 			writeToFile(LogFile, 
 			String.format("[{0}]\n{1}", timestamp, message), true)
 		}
@@ -44,7 +44,7 @@ class GaudiBase {
 			out.println(message)
 		}
 		catch {
-			case ioe: IOException => printError(ioe.getMessage)
+			case ioe: IOException =>  println(ioe.getMessage) // ! //printError(ioe.getMessage)
 		}
 		finally {
 			out.close()
@@ -54,8 +54,8 @@ class GaudiBase {
 
 object GaudiBase {
 	
-	protected def logDump(message: String): Unit = {
+	protected def logDump(message: String, isLogging: Boolean): Unit = {
 		val gb = new GaudiBase()
-		gb.logDump(message)
+		gb.logDump(message, isLogging)
 	}
 }

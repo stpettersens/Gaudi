@@ -65,7 +65,7 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 	// Print an error related to action or command and exit
 	private def printError(error: String): Unit = {
 		println(String.format("\tAborting: %s.", error))
-		logDump(error) // Also log it
+		logDump(error, logging) // Also log it
 		System.exit(-2) // Exit application with error code
 	}
 	// Print executed command
@@ -74,26 +74,13 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			println(String.format("\t:%s %s", command, param))
 		}
 	}
-	// File writing operations
-	private def writeToFile(file: String, message: String, append: Boolean): Unit = {
-		var out: PrintWriter = null
-		try {
-			out = new PrintWriter(new FileOutputStream(file, append))
-			out.println(message)
-		}
-		catch {
-			case ioe: IOException => printError(ioe.getMessage)
-		}
-		finally {
-			out.close()
-		}
-	}
 	// Execute an external program or process
 	private def execExtern(param: String): Unit = {
 		val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
 		// -----------------------------------------------------------------
 		logDump(String.format("Executed -> %s %s\n" +
-		"Wildcard matched -> %s", exe._1, exe._2, handleWildcards(exe._2)))
+		"Wildcard matched -> %s", exe._1, exe._2, handleWildcards(exe._2)),
+		logging)
 		// -----------------------------------------------------------------
 		if(exe._1 != null) {
 			var p: Process = Runtime.getRuntime().exec(String.format("%s %s", exe._1, handleWildcards(exe._2)))
