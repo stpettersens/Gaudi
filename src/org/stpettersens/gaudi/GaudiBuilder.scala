@@ -151,6 +151,9 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 				var jar = param
 				execExtern(String.format("jar xf %s", jar))
 			}
+			case "notify" => {
+				GaudiHabitat.sendOSNotif("null");
+			}
 			case _ => {
 				// Implement extendable commands
 				printError(String.format("%s is an invalid command", command))

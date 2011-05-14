@@ -50,7 +50,7 @@ object GaudiHabitat {
 		osName match {
 			case "Windows" => osFamily = 0
 			case "Linux" => osFamily = 1
-			case "Macintosh" => osFamily = 1
+			case "Macintosh" => osFamily = 2
 		}
 		osFamily
 	}
@@ -69,7 +69,7 @@ object GaudiHabitat {
 		if(getOSFamily() == 0) {
 			pathTerm ="\\"
 		}
-		else if(getOSFamily() == 1) {
+		else if(getOSFamily() == 1 || getOSFamily() == 2) {
 			pathTerm = "/"
 		}
 		val exts = new Array[String](5)
@@ -91,5 +91,11 @@ object GaudiHabitat {
 			}
 		}
 		(null, null)
+	}
+
+	def sendOSNotif(message: string) {
+		
+		val base = new GaudiBase()
+		base.executeProcess("notify-send", "-t 2000 \"Test message\"")
 	}
 }

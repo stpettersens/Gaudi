@@ -50,6 +50,13 @@ class GaudiBase {
 			out.close()
 		}
 	}
+
+	// Execute a process
+	protected def executeProcess(process: String, params: String, quiet: Boolean): Unit = {
+		
+		var p: Process = Runtime.getRuntime().exec(
+		String.format("%s %s", process, params));
+	}
 }
 
 object GaudiBase {
