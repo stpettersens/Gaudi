@@ -72,6 +72,8 @@ Gaudi depends on the following third-party JVM libraries:
 
 - [Jython (minimal core library)](http://www.jython.org) (*jython.jar* 2.5.1) (for plug-in support; better supported across JVMs).
 
+- [Gnome-Java](http://java-gnome.sourceforge.net) (*gtk-4.0.jar*) (for notification support in *nix with Gnome desktop).
+
 If building Gaudi with Gaudi (as in the case of potential upgrading),
 it supports dependency gathering like Apache Ant does. 
 Dependencies will be checked automatically before building the project,
