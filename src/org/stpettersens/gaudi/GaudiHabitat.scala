@@ -42,7 +42,7 @@ object GaudiHabitat {
 		}
 		paths.toList
 	}
-	private def getOSFamily(): Int = {
+	def getOSFamily(): Int = {
 		var osFamily: Int = -1
 		val env: (String, String) = getEnvAndOS()
 		val osFamilyPattn: Regex = """(\w+)[\s\d\w]*""".r
@@ -93,9 +93,9 @@ object GaudiHabitat {
 		(null, null)
 	}
 
-	def sendOSNotif(message: string) {
+	def sendOSNotif(message: String) {
 		
 		val base = new GaudiBase()
-		base.executeProcess("notify-send", "-t 2000 \"Test message\"")
+		// TO IMPLEMENT...
 	}
 }

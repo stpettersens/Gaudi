@@ -22,7 +22,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 	<target name="init">		
 		<!-- Check for required tools, i.e. Scala compiler and library --> 
 		<property environment="env"/>
-		<fail unless="env.SCALA_HOME" message="Missing SCALA_HOME variable in OS environment."/>
+		<fail unless="env.SCALA_HOME" message="Missing SCALA_HOME variable in OS environmental variables."/>
 		
 		<!-- Variables for paths and files -->
 		<property name="src.dir" location="${basedir}/src"/>
@@ -36,6 +36,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<property name="json-simple" location="${lib.dir}/json_simple-1.1.jar"/>
 		<property name="groovy-lib" location="${lib.dir}/groovy-all-1.8.0.jar"/>
 		<property name="jython-lib" location="${lib.dir}/jython.jar"/>
+		<property name="gtk-lib" location="${lib.dir}/gtk-4.0.jar"/>
 		<property name="target.abs" value="Gaudi"/>
 		<property name="target.mf" location="${basedir}/Manifest.mf"/>
 		<property name="target.jar" location="${basedir}/${target.abs}.jar"/>
@@ -51,6 +52,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 			<pathelement location="${json-simple}"/>
 			<pathelement location="${groovy-lib}"/>
 			<pathelement location="${jython-lib}"/>
+			<pathelement location="${gtk-lib}"/>
 		</path>
 
 		<!-- Load Scala's Ant tasks -->
@@ -90,7 +92,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 	
 	<target name="cjar" description="Create self-contained Jar" depends="package">
 		<echo message="Packaging Gaudi (self-contained Jar)..."/>
-		<fail unless="env.ONEJAR_TOOL" message="Missing ONEJAR_TOOL variable in OS environment."/>
+		<fail unless="env.ONEJAR_TOOL" message="Missing ONEJAR_TOOL variable in OS environmental variables."/>
 		<!-- Load One Jar task -->
 		<taskdef resource="antlib.xml">
 			<classpath>

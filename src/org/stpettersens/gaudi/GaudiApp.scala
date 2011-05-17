@@ -21,6 +21,7 @@ import scala.io.Source
 import scala.util.matching.Regex
 import java.io.IOException
 import org.json.simple.{JSONObject,JSONArray}
+import org.gnome.gtk.Gtk
 
 object GaudiApp {
 	
@@ -44,9 +45,14 @@ object GaudiApp {
 	  val filePattn: Regex = """([\w\:\\//]+.json)""".r
 	  val actPattn: Regex = """([a-z]+)""".r
 	  val cmdPattn: Regex = """:([a-z]+)\s{1}([\\\/A-Za-z0-9\s\.\*\+\_\-\>\!\,]+)""".r
-	  
 	  var cmd: String = null
 	  var param: String = null
+
+	  /* Attempt Gnome GTK integration when operating system is Linux */
+	  if(GaudiHabitat.getOSFamily() == 1)
+	  {
+		  Gtk.init(args)
+	  }
 	  
 	  /* Default behavior is to build project following
 	  build file in the current directory */
