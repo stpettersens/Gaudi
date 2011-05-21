@@ -9,6 +9,7 @@ Usage: chmod +x configure.py
 """
 import sys
 import optparse
+import os
 import subprocess
 
 def configureBuild(args):	
