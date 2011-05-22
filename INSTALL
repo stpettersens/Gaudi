@@ -1,4 +1,20 @@
+===================
 Build instructions.
+===================
+
+Prequisites:
+
+* Python 2.7+ (CPython/PyPy/Jython)
+* Apache Ant 1.8+
+* Scala 2.9.0 distribution
+* json.simple 1.1 (json_simple-1.1.jar)
+* Apache Commons IO 2.0.1 (commons-io-2.0.1.jar)
+* Jython minimal library (jython.jar) [for Jython-based plug-in support]
+* Groovy library 1.8.0 (groovy-all-1.8.0.jar) [for Groovy-based plug-in support]
+* java-gnome 4.0 (gtk-4.0.jar) [for Gnome/Xfce deskop notification suppport]
+
+
+Steps:
 
 Run on shell, under Gaudi root folder, the following *: 
 
@@ -8,3 +24,6 @@ $ sudo ant install
 $ ant clean
 
 * Show here using *nix notation. $ is the prompt.
+
+On Windows leave off "./" for configure.py
+to use default Python interpreter.
