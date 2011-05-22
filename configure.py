@@ -13,15 +13,15 @@ import re
 import os
 import subprocess
 
-env_SCALA_HOME = '/path/to/scala/dir'
-system_family = 'an.operating.system'
-
 def configureBuild(args):
+
+	env_SCALA_HOME = '/path/to/scala/dir'
+	system_family = 'an.operating.system'
 
 	# Detect operating system
 	try:
 		uname = subprocess.check_output(['uname', '-s'])
-		if(re.match('.*n[iu]x|.*BSD', uname)):
+		if(re.match('.*n[i|u]x|.*BSD|.*CYGWIN', uname)):
 			print('\nDetected system: Linux/Unix-like (not Mac OS X).\n')
 			system_family = '*nix'
 
@@ -33,7 +33,7 @@ def configureBuild(args):
 		system_family = 'windows'
 
 	# Detect windowing system on Unix-likes, not Mac OS X.
-	if(system_family == '*.nix'):
+	if(system_family == '*nix'):
 		pass
 
 	# Find required Scala distribution and associated tools
