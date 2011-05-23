@@ -31,7 +31,8 @@ def configureBuild(args):
 	env_SCALA_HOME = '/path/to/scala/dir'
 	system_family = 'an.operating.system'
 	system_desktop = 'desktop.environment'
-	scala = 'scala.distribution'
+	scala = 'scala distribution'
+	ant = 'apache ant'
 	notify_lib = 'notification.library'
 
 	# Detect operating system
@@ -55,21 +56,28 @@ def configureBuild(args):
 		print('Detected desktop:\n\t{0}\n'.format(system_desktop))
 
 	# Find required Scala distribution and associated tools
-	# necessary to build Gaudi on the system.
+	# necessary to build Gaudi on this system.
 	if(system_family == '*nix' or system_family == 'darwin'):
 		scala = subprocess.check_output(['whereis', 'scala'])
 		ant = subprocess.check_output(['whereis', 'ant'])
 	
 	else:
-		pass
+		scala = subprocess.check_output(['find', 'scala'])
+		ant = subprocess.check_output(['find', 'ant'])
+
+	# Choose appropriate path in results for each 
+	# `whereis` or `find` query.
 
 	checkDependency('Scala distribution', scala)
 	checkDependency('Apache Ant', ant)
-	writeEnvVars('SCALA_HOME', 'abc')
+	writeEnvVar('SCALA_HOME', 'abc', system_family)
+
+	# Find required JAR libraries necessary to build Gaudi
+	# on this system.
 
 def checkDependency(text, dep):
 	"""
-	Check for a dependency.
+	Check for a dependency.e
 	"""
 	try:
 		print('{0}:'.format(text))
@@ -85,20 +93,26 @@ def checkDependency(text, dep):
 		print("{0}.\n".format(e.value))
 		sys.exit(-1)
 
-def writeEnvVars(var, value):
+def writeEnvVar(var, value, osys):
 	"""
 	Write enviroment variables to build shellscript.
 	"""
-	f = open('build.sh', 'w')
-	f.write('#!/bin/sh\nexport {0}="{1}"\nant'.format(var, value))
-	f.close()
-	os.system('chmod +x build.sh')
+	# Generate shell script on Unix-likes / Mac OS X.
+	if(osys == '*nix' or osys == 'darwin'):
+		f = open('build.sh', 'w')
+		f.write('#!/bin/sh\nexport {0}="{1}"\nant\n'.format(var, value))
+		f.close()
+		# Mark shell script as executable.
+		os.system('chmod +x build.sh') 
 
-def removeEnvVars():
-	"""
-	Remove any set enviromental variables.
-	"""
-	os.unsetenv(SCALA_HOME)
+	# Generate batch file on Windows.
+	else:
+		f = open('build.bat', 'w')
+		f.write('@set {0}="{1}"\r\n@ant\r\n'.format(var, value))
+		f.close()
+
+def amendAntBld(line_num, new_line):
+	pass
 
 def showCLIoptions():
 	"""
