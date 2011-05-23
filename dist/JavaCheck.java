@@ -1,5 +1,5 @@
 /*
- Java version checker
+ Java version checker.
  @author Sam Saint-Pettersen, 2010
  Released into the public domain.
 	
@@ -20,11 +20,12 @@ import java.util.regex.*;
 
 class JavaCheck {
 	public static void main(String[] args) {
-		byte returned = -1; // Return exit code -1 for neither true or false; default assumption
+		byte returned = -1; // Return exit code -1 for neither true or false; 
+							// default assumption
 		String detectedVer = System.getProperty("java.version");
 		String vendor = System.getProperty("java.vendor");
 		
-		// When minimal version argument is provided, return either exit code 0 or 1
+		// When minimal version argument is provided, return either exit code 0 or 1.
 		if(args.length == 1) {
 			System.out.print(detectedVer);
 			Pattern p = Pattern.compile("\\d\\.\\d");
@@ -32,9 +33,9 @@ class JavaCheck {
 			float minimalVersion = Float.valueOf(args[0]).floatValue();
 			float detec_versionNum = Float.valueOf(m.group(0)).floatValue();
 			if(detec_versionNum >= minimalVersion) {
-				returned = 1; // Return exit code 1 for true
+				returned = 1; // Return exit code 1 for true.
 			}
-			else returned = 0; // Return exit code 0 for false
+			else returned = 0; // Return exit code 0 for false.
 		}
 		else System.out.print(vendor);
 		
