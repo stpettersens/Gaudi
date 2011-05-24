@@ -10,10 +10,10 @@ Usage: chmod +x configure.py
 \t./configure.py
 """
 import sys
-import optparse
 import re
 import os
 import subprocess
+import argparse
 
 class RequirementNotFound(Exception):
 	"""
@@ -62,11 +62,11 @@ def configureBuild(args):
 		ant = subprocess.check_output(['whereis', 'ant'])
 	
 	else:
-		scala = subprocess.check_output(['find', 'scala'])
-		ant = subprocess.check_output(['find', 'ant'])
+		scala = subprocess.check_output(['where', 'scala'])
+		ant = subprocess.check_output(['where', 'ant'])
 
 	# Choose appropriate path in results for each 
-	# `whereis` or `find` query.
+	# `whereis` or `where` query.
 
 	checkDependency('Scala distribution', scala)
 	checkDependency('Apache Ant', ant)
@@ -77,11 +77,11 @@ def configureBuild(args):
 
 def checkDependency(text, dep):
 	"""
-	Check for a dependency.e
+	Check for a dependency.
 	"""
 	try:
 		print('{0}:'.format(text))
-		if(re.match('.*/.*/.*', dep)):
+		if(re.match('.*/.*/.*', dep) or re.match('.*\.*\.*', dep)):
 			print('\tFOUND at {0}'.format(dep))
 
 		else:
