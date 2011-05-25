@@ -10,7 +10,8 @@ This requires Python 2.7+.
 Depends on txtrevise utility - which this
 script may download & install when prompted.
 
-Usage: chmod +x configure.py
+Usage:
+\t sh mark-exec.sh
 \t./configure.py
 """
 import sys
@@ -42,7 +43,6 @@ def configureBuild(args):
 	ant = 'apache ant'
 	notify_lib = 'notification.library'
 
-
 	# Detect operating system
 	try:
 		uname = subprocess.check_output(['uname', '-s'])
@@ -68,11 +68,11 @@ def configureBuild(args):
 	# Subversion repository over HTTP (in checkDependency(-,-)).
 	try:
 		if(system_family == '*nix' or system_family == 'darwin'):
-			txtrevise = subprocess.check_output(['whereis', 'txtrevise'])
+			txtrevise = subprocess.check_output(['find', 'txtrevise.py'])
 		else:
-			txtrevise = subprocess.check_output(['where', 'txtrevise'])
+			txtrevise = subprocess.check_output(['find', '/C txtrevise.py'])
 
-	except WindowsError:
+	except Exception:
 		txtrevise = '\W'
 
 	checkDependency('txtrevise utility', txtrevise)
@@ -99,19 +99,20 @@ def configureBuild(args):
 	# Find required JAR libraries necessary to build Gaudi
 	# on this system.
 
+
 def checkDependency(text, dep):
 	"""
 	Check for a dependency.
 	"""
 	try:
 		print('{0}:'.format(text))
-		if(re.match('.*/.*/.*', dep) or re.match('.*\.*\.*', dep)):
+		if(re.match('\w+', dep) or re.match('\s/*.*/*.*/*.*', dep) 
+		or re.match('\s\*.*\*.*\*.*', dep)):
 			print('\tFOUND at {0}'.format(dep))
 
 		elif(re.match('\W', dep)):
 			print('\tNOT FOUND.')
 			raise RequirementNotFound(text)
-
 		else:
 			print('\tNOT FOUND.')
 			raise RequirementNotFound(text)
@@ -121,20 +122,32 @@ def checkDependency(text, dep):
 		print("{0}.\n".format(e.value))
 
 		if(text[0:9] == 'txtrevise'):
-			print('\ntxtrevise utility.')
-			choice = raw_input('Download and install it now? (y/n): ')
-			if(choice == 'y' or choice == "Y"):
-				urllib.urlretrieve(
-				'http://sams-py.googlecode.com/svn/trunk/txtrevise/txtrevise.py',
-				'txtrevise.py')
+			y = re.compile('y', re.IGNORECASE)
+			n = re.compile('n', re.IGNORECASE)
+			choice = 'x'
+			while(not y.match(choice) or not n.match(choice)):
+				choice = raw_input('Download and install it now? (y/n): ')
+				if(y.match(choice)):
+					urllib.urlretrieve(
+					'http://sams-py.googlecode.com/svn/trunk/txtrevise/txtrevise.py',
+					'txtrevise.py')
+
+					# Mark txtrevise utility as executable.
+					os.system('chmod +x txtrevise.py')
+					print('\nNow rerun this script.')
+					break
+
+				elif(n.match(choice)):
+					break
 		else:
 			webbrowser.open_new_tab('http://stpettersens.github.com/Gaudi#dl')
-		
+
 		sys.exit(-1)
 
 def writeEnvVar(var, value, osys):
 	"""
-	Write enviroment variables to build shellscript.
+	Write enviroment variables to build shell script
+	or batch file.
 	"""
 	# Generate shell script on Unix-likes / Mac OS X.
 	if(osys == '*nix' or osys == 'darwin'):
@@ -150,8 +163,16 @@ def writeEnvVar(var, value, osys):
 		f.write('@set {0}="{1}"\r\n@ant %1\r\n'.format(var, value))
 		f.close()
 
-def amendAntBld(line_num, new_line):
-	pass
+def amendAntBld(line_num, new_line, osys):
+	"""
+	Amend Ant buildfile using txtrevise utility.
+	"""
+	command = 'txtrevise.py -q -f build.xml -l {0} -m "<>"'
+	+ ' -r "{1}"' .format(line_num, new_line)
+	if(osys == '*nix' or osys == 'darwin'):
+		os.system('./' + command)
+	else:
+		os.system(command)
 
 def showCLIoptions():
 	"""

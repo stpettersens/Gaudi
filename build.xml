@@ -17,6 +17,8 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<delete file="${dist.dir}/Gaudi_setup.exe" quiet="true"/>
 		<delete file="${dist.dir}/JavaCheck.class" quiet="true"/>
 		<delete file="${dist.dir}/FindInVar.class" quiet="true"/>
+		<delete file="${basedir}/build.sh" quiet="true"/>
+		<delete file="${basedir}/build.bat" quiet="true"/>
 	</target>
 	
 	<target name="init">		
@@ -36,7 +38,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<property name="json-simple" location="${lib.dir}/json_simple-1.1.jar"/>
 		<property name="groovy-lib" location="${lib.dir}/groovy-all-1.8.0.jar"/>
 		<property name="jython-lib" location="${lib.dir}/jython.jar"/>
-		<property name="gtk-lib" location="${lib.dir}/gtk-4.0.jar"/>
+		<>
 		<property name="target.abs" value="Gaudi"/>
 		<property name="target.mf" location="${basedir}/Manifest.mf"/>
 		<property name="target.jar" location="${basedir}/${target.abs}.jar"/>
@@ -52,7 +54,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 			<pathelement location="${json-simple}"/>
 			<pathelement location="${groovy-lib}"/>
 			<pathelement location="${jython-lib}"/>
-			<pathelement location="${gtk-lib}"/>
+			<>
 		</path>
 
 		<!-- Load Scala's Ant tasks -->
