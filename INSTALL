@@ -1,10 +1,11 @@
-===================
-Build instructions.
+
+Build instructions
 ===================
 
-Prequisites:
+Prequisites
+-----------
 
-* Python 2.7+ (CPython/PyPy/Jython)
+* Python 2.7+ (CPython/PyPy)
 * Apache Ant 1.8+
 * Scala 2.9.0 distribution
 * json.simple 1.1 (json_simple-1.1.jar)
@@ -14,16 +15,18 @@ Prequisites:
 * java-gnome 4.0 (gtk-4.0.jar) [for Gnome/Xfce deskop notification suppport]
 
 
-Steps:
+Steps
+-----
 
 Run on shell, under Gaudi root folder, the following *: 
 
 $ ./configure.py
-$ ant
-$ sudo ant install
-$ ant clean
+$ ./build.sh
+$ sudo build.sh install
+$ ./build.sh clean
 
 * Show here using *nix notation. $ is the prompt.
 
-On Windows leave off "./" for configure.py
-to use default Python interpreter.
+On Windows leave off './' for configure.py
+to use default Python interpreter and
+substitute './build.sh' with 'build.bat'.

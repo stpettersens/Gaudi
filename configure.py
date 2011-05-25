@@ -139,7 +139,7 @@ def writeEnvVar(var, value, osys):
 	# Generate shell script on Unix-likes / Mac OS X.
 	if(osys == '*nix' or osys == 'darwin'):
 		f = open('build.sh', 'w')
-		f.write('#!/bin/sh\nexport {0}="{1}"\nant\n'.format(var, value))
+		f.write('#!/bin/sh\nexport {0}="{1}"\nant $1\n'.format(var, value))
 		f.close()
 		# Mark shell script as executable.
 		os.system('chmod +x build.sh') 
@@ -147,7 +147,7 @@ def writeEnvVar(var, value, osys):
 	# Generate batch file on Windows.
 	else:
 		f = open('build.bat', 'w')
-		f.write('@set {0}="{1}"\r\n@ant\r\n'.format(var, value))
+		f.write('@set {0}="{1}"\r\n@ant %1\r\n'.format(var, value))
 		f.close()
 
 def amendAntBld(line_num, new_line):
