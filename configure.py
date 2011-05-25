@@ -70,12 +70,12 @@ def configureBuild(args):
 		if(system_family == '*nix' or system_family == 'darwin'):
 			txtrevise = subprocess.check_output(['find', 'txtrevise.py'])
 		else:
-			txtrevise = subprocess.check_output(['find', '/C txtrevise.py'])
+			txtrevise = subprocess.check_output(['where', 'txtrevise.py'])
 
 	except Exception:
 		txtrevise = '\W'
 
-	checkDependency('txtrevise utility', txtrevise)
+	checkDependency('txtrevise utility', txtrevise, system_family)
 
 	# Find required Scala distribution and associated tools
 	# necessary to build Gaudi on this system.
@@ -92,15 +92,15 @@ def configureBuild(args):
 
 	# Choose appropriate path in results for each 
 	# `whereis` or `where` query.
-	checkDependency('Scala distribution', scala)
-	checkDependency('Apache Ant', ant)
+	checkDependency('Scala distribution', scala, system_family)
+	checkDependency('Apache Ant', ant, system_family)
 	writeEnvVar('SCALA_HOME', 'abc', system_family)
 
 	# Find required JAR libraries necessary to build Gaudi
 	# on this system.
 
 
-def checkDependency(text, dep):
+def checkDependency(text, dep, osys):
 	"""
 	Check for a dependency.
 	"""
@@ -133,7 +133,9 @@ def checkDependency(text, dep):
 					'txtrevise.py')
 
 					# Mark txtrevise utility as executable.
-					os.system('chmod +x txtrevise.py')
+					if(osys == "*nix" or osys == "darwin"):
+						os.system('chmod +x txtrevise.py')
+					
 					print('\nNow rerun this script.')
 					break
 
