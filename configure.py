@@ -1,10 +1,14 @@
 #!/usr/bin/env python
 
 """
-Python-based configuration script to amend Ant build file (build.xml)
+Python-based configuration script to
+detect dependencies and amend Ant build file (build.xml)
 as necessary depending on target platform.
 
 This requires Python 2.7+.
+
+Depends on txtrevise utility - which this
+script may download & install when prompted.
 
 Usage: chmod +x configure.py
 \t./configure.py
@@ -14,6 +18,8 @@ import re
 import os
 import subprocess
 import argparse
+import urllib
+import webbrowser
 
 class RequirementNotFound(Exception):
 	"""
@@ -31,9 +37,11 @@ def configureBuild(args):
 	env_SCALA_HOME = '/path/to/scala/dir'
 	system_family = 'an.operating.system'
 	system_desktop = 'desktop.environment'
+	txtrevise = 'txtrevise utility'
 	scala = 'scala distribution'
 	ant = 'apache ant'
 	notify_lib = 'notification.library'
+
 
 	# Detect operating system
 	try:
@@ -55,19 +63,35 @@ def configureBuild(args):
 		system_desktop = os.environ.get('DESKTOP_SESSION')
 		print('Detected desktop:\n\t{0}\n'.format(system_desktop))
 
+	# Check for txtrevise utility,
+	# if not found, prompt to download from code.google.com/p/sams-py 
+	# Subversion repository over HTTP (in checkDependency(-,-)).
+	try:
+		if(system_family == '*nix' or system_family == 'darwin'):
+			txtrevise = subprocess.check_output(['whereis', 'txtrevise'])
+		else:
+			txtrevise = subprocess.check_output(['where', 'txtrevise'])
+
+	except WindowsError:
+		txtrevise = '\W'
+
+	checkDependency('txtrevise utility', txtrevise)
+
 	# Find required Scala distribution and associated tools
 	# necessary to build Gaudi on this system.
-	if(system_family == '*nix' or system_family == 'darwin'):
-		scala = subprocess.check_output(['whereis', 'scala'])
-		ant = subprocess.check_output(['whereis', 'ant'])
-	
-	else:
-		scala = subprocess.check_output(['where', 'scala'])
-		ant = subprocess.check_output(['where', 'ant'])
+	try:
+		if(system_family == '*nix' or system_family == 'darwin'):
+			scala = subprocess.check_output(['whereis', 'scala'])
+			ant = subprocess.check_output(['whereis', 'ant'])
+		else:
+			scala = subprocess.check_output(['where', 'scala'])
+			ant = subprocess.check_output(['where', 'ant'])
+
+	except WindowsError:
+		pass
 
 	# Choose appropriate path in results for each 
 	# `whereis` or `where` query.
-
 	checkDependency('Scala distribution', scala)
 	checkDependency('Apache Ant', ant)
 	writeEnvVar('SCALA_HOME', 'abc', system_family)
@@ -84,6 +108,10 @@ def checkDependency(text, dep):
 		if(re.match('.*/.*/.*', dep) or re.match('.*\.*\.*', dep)):
 			print('\tFOUND at {0}'.format(dep))
 
+		elif(re.match('\W', dep)):
+			print('\tNOT FOUND.')
+			raise RequirementNotFound(text)
+
 		else:
 			print('\tNOT FOUND.')
 			raise RequirementNotFound(text)
@@ -91,6 +119,17 @@ def checkDependency(text, dep):
 	except RequirementNotFound as e:
 		print("\nA requirement was not found. Please install it:")
 		print("{0}.\n".format(e.value))
+
+		if(text[0:9] == 'txtrevise'):
+			print('\ntxtrevise utility.')
+			choice = raw_input('Download and install it now? (y/n): ')
+			if(choice == 'y' or choice == "Y"):
+				urllib.urlretrieve(
+				'http://sams-py.googlecode.com/svn/trunk/txtrevise/txtrevise.py',
+				'txtrevise.py')
+		else:
+			webbrowser.open_new_tab('http://stpettersens.github.com/Gaudi#dl')
+		
 		sys.exit(-1)
 
 def writeEnvVar(var, value, osys):
