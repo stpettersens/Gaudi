@@ -9,7 +9,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 	<!-- Targets -->
 	<target name="build" depends="package" description="Build complete project"/>
 	
-	<target name="clean" depends="init" description="Clean up any built files">
+	<target name="clean" description="Clean up any built files">
 		<delete dir="${build.dir}" includeemptydirs="true" quiet="true"/>
 		<delete file="${target.jar}" quiet="true"/>
 		<delete file="${target.cjar}" quiet="true"/>
