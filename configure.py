@@ -106,8 +106,11 @@ def checkDependency(text, dep, osys):
 	"""
 	try:
 		print('{0}:'.format(text))
-		if(re.match('\w+', dep) or re.match('\s/*.*/*.*/*.*', dep) 
-		or re.match('\s\*.*\*.*\*.*', dep)):
+
+		if(text[0:9] == 'txtrevise' and re.match('\w+', dep)):
+			print('\tFOUND at {0}'.format(dep))
+		
+		elif(re.match('\s/*.*/*.*/*.*', dep) or re.match('\s\*.*\*.*\*.*', dep)):
 			print('\tFOUND at {0}'.format(dep))
 
 		elif(re.match('\W', dep)):
@@ -128,9 +131,9 @@ def checkDependency(text, dep, osys):
 			while(not y.match(choice) or not n.match(choice)):
 				choice = raw_input('Download and install it now? (y/n): ')
 				if(y.match(choice)):
-					urllib.urlretrieve(
-					'http://sams-py.googlecode.com/svn/trunk/txtrevise/txtrevise.py',
-					'txtrevise.py')
+					urllib.urlretrieve
+					('http://sams-py.googlecode.com/svn/trunk/'
+					+ 'txtrevise/txtrevise.py', 'txtrevise.py')
 
 					# Mark txtrevise utility as executable.
 					if(osys == "*nix" or osys == "darwin"):
@@ -142,7 +145,8 @@ def checkDependency(text, dep, osys):
 				elif(n.match(choice)):
 					break
 		else:
-			webbrowser.open_new_tab('http://stpettersens.github.com/Gaudi#dl')
+			webbrowser.open_new_tab
+			('http://stpettersens.github.com/Gaudi/dependencies.html')
 
 		sys.exit(-1)
 
