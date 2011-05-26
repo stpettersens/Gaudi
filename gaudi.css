@@ -118,3 +118,8 @@ acronym
 	text-decoration: none;
 	border-bottom: 1px dotted #000000;
 }
+
+.largeText
+{
+	font-size: 12pt;
+}
