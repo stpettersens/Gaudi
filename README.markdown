@@ -47,6 +47,8 @@ and has been tested with and is known to work with the following:
 
 - [IKVM.NET](http://www.ikvm.net)
 
+- [Jato VM](http://www.jatovm.org)
+
 Distributions
 -------------
 Gaudi will be available as installable Windows executable
