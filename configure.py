@@ -38,19 +38,16 @@ def configureBuild(args):
 	env_SCALA_HOME = '/path/to/scala/dir'
 	system_family = 'an.operating.system'
 	system_desktop = 'desktop.environment'
-	txtrevise = 'txtrevise utility'
-	scala = 'scala distribution'
-	ant = 'apache ant'
 	notify_lib = 'notification.library'
 
 	# Detect operating system
 	try:
 		uname = subprocess.check_output(['uname', '-s'])
-		if(re.match('.*n[i|u]x|.*BSD|.*CYGWIN', uname)):
+		if re.match('.*n[i|u]x|.*BSD|.*CYGWIN', uname):
 			print('\nDetected system:\n\tLinux/Unix-like (not Mac OS X).\n')
 			system_family = '*nix'
 
-		elif(re.match('.*Darwin', uname)):
+		elif re.match('.*Darwin', uname):
 			print('\nDetected system:\n\tDarwin/Mac OS X.\n')
 			system_family = 'darwin'
 
@@ -59,7 +56,7 @@ def configureBuild(args):
 		system_family = 'windows'
 
 	# Detect desktop environment on Linux/Unix-likes (not Mac OS X).
-	if(system_family == '*nix'):
+	if system_family == '*nix':
 		system_desktop = os.environ.get('DESKTOP_SESSION')
 		print('Detected desktop:\n\t{0}\n'.format(system_desktop))
 
@@ -67,38 +64,53 @@ def configureBuild(args):
 	# if not found, prompt to download from code.google.com/p/sams-py 
 	# Subversion repository over HTTP (in checkDependency(-,-)).
 	try:
-		if(system_family == '*nix' or system_family == 'darwin'):
+		# On *nix, detect using `find`. On Windows, use `where`.
+		if system_family == '*nix' or system_family == 'darwin':
 			txtrevise = subprocess.check_output(['find', 'txtrevise.py'])
 		else:
 			txtrevise = subprocess.check_output(['where', 'txtrevise.py'])
 
-	except Exception:
+	except:
 		txtrevise = '\W'
 
 	checkDependency('txtrevise utility', txtrevise, system_family)
 
-	# Find required Scala distribution and associated tools
+	# Find required JRE, JDK, Scala distribution and associated tools
 	# necessary to build Gaudi on this system.
-	try:
-		if(system_family == '*nix' or system_family == 'darwin'):
-			scala = subprocess.check_output(['whereis', 'scala'])
-			ant = subprocess.check_output(['whereis', 'ant'])
+	names = [ 'JRE (Java Runtime Environment)', 'JDK (Java Development Kit)',
+	'Scala distribution', 'Ant' ]
+
+	commands = [ 'java', 'javac', 'scala', 'ant' ]
+	i = 0	
+	# On *nix, detect using `whereis`. On Windows use `where`.
+	for c in commands:
+		if system_family == '*nix' or system_family == 'darwin':
+			e = subprocess.check_output(['whereis', c])
 		else:
-			scala = subprocess.check_output(['where', 'scala'])
-			ant = subprocess.check_output(['where', 'ant'])
+			e = subprocess.check_output(['where', c])		
+		checkDependency(names[i], e, system_family)
+		i += 1
 
-	except WindowsError:
-		pass
-
-	# Choose appropriate path in results for each 
-	# `whereis` or `where` query.
-	checkDependency('Scala distribution', scala, system_family)
-	checkDependency('Apache Ant', ant, system_family)
+	# Write environment variable to a build file.
 	writeEnvVar('SCALA_HOME', 'abc', system_family)
 
 	# Find required JAR libraries necessary to build Gaudi
 	# on this system.
 
+	# Done, prompt user to run build script.
+	print('\nDependencies met. Now run:\n')
+
+	if system_family == '*nix' or system_family == 'darwin':
+		print('./build.sh')
+		print('./build.sh clean')
+		print('./build.sh install')
+
+	else:
+		print('build.bat')
+		print('build.bat clean')
+		print('build.bat install')
+	print('\n')
+	# FIN!
 
 def checkDependency(text, dep, osys):
 	"""
@@ -107,13 +119,13 @@ def checkDependency(text, dep, osys):
 	try:
 		print('{0}:'.format(text))
 
-		if(text[0:9] == 'txtrevise' and re.match('\w+', dep)):
-			print('\tFOUND at {0}'.format(dep))
-		
-		elif(re.match('\s/*.*/*.*/*.*', dep) or re.match('\s\*.*\*.*\*.*', dep)):
-			print('\tFOUND at {0}'.format(dep))
+		if text[0:9] == 'txtrevise' and re.match('\w+', dep):
+			print('\tFOUND.\n')
 
-		elif(re.match('\W', dep)):
+		elif re.search('\s.+', dep):
+			print('\tFOUND.\n')
+
+		elif re.match('\W', dep):
 			print('\tNOT FOUND.')
 			raise RequirementNotFound(text)
 		else:
@@ -124,16 +136,15 @@ def checkDependency(text, dep, osys):
 		print("\nA requirement was not found. Please install it:")
 		print("{0}.\n".format(e.value))
 
-		if(text[0:9] == 'txtrevise'):
+		if text[0:9] == 'txtrevise':
 			y = re.compile('y', re.IGNORECASE)
 			n = re.compile('n', re.IGNORECASE)
 			choice = 'x'
-			while(not y.match(choice) or not n.match(choice)):
+			while not y.match(choice) or not n.match(choice):
 				choice = raw_input('Download and install it now? (y/n): ')
 				if(y.match(choice)):
-					urllib.urlretrieve
-					('http://sams-py.googlecode.com/svn/trunk/'
-					+ 'txtrevise/txtrevise.py', 'txtrevise.py')
+					urllib.urlretrieve('http://sams-py.googlecode.com/svn/trunk/txtrevise/txtrevise.py',
+					'txtrevise.py')
 
 					# Mark txtrevise utility as executable.
 					if(osys == "*nix" or osys == "darwin"):
@@ -142,11 +153,13 @@ def checkDependency(text, dep, osys):
 					print('\nNow rerun this script.')
 					break
 
-				elif(n.match(choice)):
+				elif n.match(choice):
 					break
 		else:
-			webbrowser.open_new_tab
-			('http://stpettersens.github.com/Gaudi/dependencies.html')
+			a = text.split(' ')
+			b = a[0].lower()
+			del a
+			webbrowser.open_new_tab('http://stpettersens.github.com/Gaudi/dependencies.html#{0}'.format(b))
 
 		sys.exit(-1)
 
@@ -156,7 +169,7 @@ def writeEnvVar(var, value, osys):
 	or batch file.
 	"""
 	# Generate shell script on Unix-likes / Mac OS X.
-	if(osys == '*nix' or osys == 'darwin'):
+	if osys == '*nix' or osys == 'darwin':
 		f = open('build.sh', 'w')
 		f.write('#!/bin/sh\nexport {0}="{1}"\nant $1\n'.format(var, value))
 		f.close()
@@ -173,9 +186,9 @@ def amendAntBld(line_num, new_line, osys):
 	"""
 	Amend Ant buildfile using txtrevise utility.
 	"""
-	command = 'txtrevise.py -q -f build.xml -l {0} -m "<>"'
+	command = 'txtrevise.py -q -f build.xml -l {0} -m "<\!---->"'
 	+ ' -r "{1}"' .format(line_num, new_line)
-	if(osys == '*nix' or osys == 'darwin'):
+	if osys == '*nix' or osys == 'darwin':
 		os.system('./' + command)
 	else:
 		os.system(command)

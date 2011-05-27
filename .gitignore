@@ -11,3 +11,7 @@ ant_build
 .scala_dependencies
 .settings
 .metadata
+txtrevise.py
+build.sh
+build.bat
+
