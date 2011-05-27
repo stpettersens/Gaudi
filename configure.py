@@ -55,17 +55,27 @@ def configureBuild(args):
 		print('\nDetected system:\nWindows.\n')
 		system_family = 'windows'
 
-	# Detect desktop environment on Linux/Unix-likes (not Mac OS X).
+	# Detect desktop environment on Unix-likes (not Mac OS X).
 	if system_family == '*nix':
 		system_desktop = os.environ.get('DESKTOP_SESSION')
+
+		if re.match('x.*', system_desktop):
+			system_desktop = 'Xfce'
+
+		elif system_desktop == 'default':
+			system_desktop = 'KDE'
+
+		elif system_desktop == 'gnome':
+			system_desktop = system_desktop.upper()
+
 		print('Detected desktop:\n\t{0}\n'.format(system_desktop))
 
 	# Check for txtrevise utility,
 	# if not found, prompt to download from code.google.com/p/sams-py 
-	# Subversion repository over HTTP (in checkDependency(-,-)).
+	# Subversion repository over HTTP - in checkDependency(-,-,-).
 	try:
-		# On *nix, detect using `find`. On Windows, use `where`.
-		if system_family == '*nix' or system_family == 'darwin':
+		# On Unix-likes, detect using `find`. On Windows, use `where`.
+		if re.match('[*nix]|[darwin]', system_family):
 			txtrevise = subprocess.check_output(['find', 'txtrevise.py'])
 		else:
 			txtrevise = subprocess.check_output(['where', 'txtrevise.py'])
@@ -84,7 +94,7 @@ def configureBuild(args):
 	i = 0	
 	# On *nix, detect using `whereis`. On Windows use `where`.
 	for c in commands:
-		if system_family == '*nix' or system_family == 'darwin':
+		if re.match('[*nix]|[darwin]', system_family):
 			e = subprocess.check_output(['whereis', c])
 		else:
 			e = subprocess.check_output(['where', c])		
@@ -100,7 +110,7 @@ def configureBuild(args):
 	# Done, prompt user to run build script.
 	print('\nDependencies met. Now run:\n')
 
-	if system_family == '*nix' or system_family == 'darwin':
+	if re.match('[*nix]|[darwin]', system_family):
 		print('./build.sh')
 		print('./build.sh clean')
 		print('./build.sh install')
@@ -161,7 +171,7 @@ def checkDependency(text, dep, osys):
 			del a
 			webbrowser.open_new_tab('http://stpettersens.github.com/Gaudi/dependencies.html#{0}'.format(b))
 
-		sys.exit(-1)
+		sys.exit(1)
 
 def writeEnvVar(var, value, osys):
 	"""
@@ -169,7 +179,7 @@ def writeEnvVar(var, value, osys):
 	or batch file.
 	"""
 	# Generate shell script on Unix-likes / Mac OS X.
-	if osys == '*nix' or osys == 'darwin':
+	if re.match('[*nix]|[darwin]', osys):
 		f = open('build.sh', 'w')
 		f.write('#!/bin/sh\nexport {0}="{1}"\nant $1\n'.format(var, value))
 		f.close()
@@ -188,7 +198,19 @@ def amendAntBld(line_num, new_line, osys):
 	"""
 	command = 'txtrevise.py -q -f build.xml -l {0} -m "<\!---->"'
 	+ ' -r "{1}"' .format(line_num, new_line)
-	if osys == '*nix' or osys == 'darwin':
+	if re.match('[*nix]|[darwin]', osys):
+		os.system('./' + command)
+	else:
+		os.system(command)
+
+def amendManifest(new_lib):
+	"""
+	Amend Manifest.mf file,
+	by adding new library for CLASSPATH.
+	"""
+	command = 'txtrevise.py -q -f Manifest.mf -l 2 -m "#"'
+	+ ' -r "{0}"'.format(new_lib)
+	if re.match('[*nix]|[darwin]', osys):
 		os.system('./' + command)
 	else:
 		os.system(command)
