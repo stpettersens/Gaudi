@@ -5,9 +5,16 @@ Build instructions
 Prequisites
 -----------
 
-* Python 2.7+ (CPython/PyPy)
+Tools & Runtimes:
+
+* Python 2.7+ (recommended: CPython or PyPy)
 * Apache Ant 1.8+
 * Scala 2.9.0 distribution
+* Java Runtime Environment/Java Virtual Machine (recommended: HotSpot JVM, OpenJDK JRE or GNU GIJ)
+* Java Development Kit (recommended: Oracle JDK, OpenJDK or GNU GCJ)
+
+Libraries:
+
 * json.simple 1.1 (json_simple-1.1.jar)
 * Apache Commons IO 2.0.1 (commons-io-2.0.1.jar)
 * Jython minimal library (jython.jar) [for Jython-based plug-in support]

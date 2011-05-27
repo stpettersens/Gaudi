@@ -75,7 +75,7 @@ def configureBuild(args):
 	# Subversion repository over HTTP - in checkDependency(-,-,-).
 	try:
 		# On Unix-likes, detect using `find`. On Windows, use `where`.
-		if re.match('[*nix]|[darwin]', system_family):
+		if re.match('\*nix|darwin', system_family):
 			txtrevise = subprocess.check_output(['find', 'txtrevise.py'])
 		else:
 			txtrevise = subprocess.check_output(['where', 'txtrevise.py'])
@@ -87,18 +87,18 @@ def configureBuild(args):
 
 	# Find required JRE, JDK, Scala distribution and associated tools
 	# necessary to build Gaudi on this system.
-	names = [ 'JRE (Java Runtime Environment)', 'JDK (Java Development Kit)',
+	t_names = [ 'JRE (Java Runtime Environment)', 'JDK (Java Development Kit)',
 	'Scala distribution', 'Ant' ]
 
-	commands = [ 'java', 'javac', 'scala', 'ant' ]
+	t_commands = [ 'java', 'javac', 'scala', 'ant' ]
 	i = 0	
 	# On *nix, detect using `whereis`. On Windows use `where`.
-	for c in commands:
-		if re.match('[*nix]|[darwin]', system_family):
+	for c in t_commands:
+		if re.match('\*nix|darwin', system_family):
 			e = subprocess.check_output(['whereis', c])
 		else:
 			e = subprocess.check_output(['where', c])		
-		checkDependency(names[i], e, system_family)
+		checkDependency(t_names[i], e, system_family)
 		i += 1
 
 	# Write environment variable to a build file.
@@ -106,11 +106,12 @@ def configureBuild(args):
 
 	# Find required JAR libraries necessary to build Gaudi
 	# on this system.
+	l_names = [ 'json-simple', 'commons-io']
 
 	# Done, prompt user to run build script.
 	print('\nDependencies met. Now run:\n')
 
-	if re.match('[*nix]|[darwin]', system_family):
+	if re.match('\*nix|darwin', system_family):
 		print('./build.sh')
 		print('./build.sh clean')
 		print('./build.sh install')
@@ -179,7 +180,7 @@ def writeEnvVar(var, value, osys):
 	or batch file.
 	"""
 	# Generate shell script on Unix-likes / Mac OS X.
-	if re.match('[*nix]|[darwin]', osys):
+	if re.match('\*nix|darwin', osys):
 		f = open('build.sh', 'w')
 		f.write('#!/bin/sh\nexport {0}="{1}"\nant $1\n'.format(var, value))
 		f.close()
@@ -198,7 +199,7 @@ def amendAntBld(line_num, new_line, osys):
 	"""
 	command = 'txtrevise.py -q -f build.xml -l {0} -m "<\!---->"'
 	+ ' -r "{1}"' .format(line_num, new_line)
-	if re.match('[*nix]|[darwin]', osys):
+	if re.match('\*nix|darwin', osys):
 		os.system('./' + command)
 	else:
 		os.system(command)
@@ -210,7 +211,7 @@ def amendManifest(new_lib):
 	"""
 	command = 'txtrevise.py -q -f Manifest.mf -l 2 -m "#"'
 	+ ' -r "{0}"'.format(new_lib)
-	if re.match('[*nix]|[darwin]', osys):
+	if re.match('\*nix|darwin', osys):
 		os.system('./' + command)
 	else:
 		os.system(command)
