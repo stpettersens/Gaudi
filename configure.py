@@ -39,6 +39,7 @@ def configureBuild(args):
 	system_family = 'an.operating.system'
 	system_desktop = 'desktop.environment'
 	notify_lib = 'notification.library'
+	use_gnu = False
 
 	# Detect operating system
 	try:
@@ -85,30 +86,49 @@ def configureBuild(args):
 
 	checkDependency('txtrevise utility', txtrevise, system_family)
 
-	# Find required JRE, JDK, Scala distribution and associated tools
-	# necessary to build Gaudi on this system.
+	# Find required JRE, JDK (look for a Java compiler),
+	# Scala distribution and associated tools necessary to build Gaudi on this system.
 	t_names = [ 'JRE (Java Runtime Environment)', 'JDK (Java Development Kit)',
 	'Scala distribution', 'Ant' ]
 
 	t_commands = [ 'java', 'javac', 'scala', 'ant' ]
-	i = 0	
+
+	# If user specified to use GNU Foundation software
+	# where possible, substitute `java` and `javac` for `gij` and `gcj`.
+	if use_gnu: 
+		t_names[0] = 'JRE (GNU GIJ)'
+		t_names[1] = 'JDK (GNU GCJ)'
+		t_commands[0] = 'gij'
+		t_commands[1] = 'gcj'
+
 	# On *nix, detect using `whereis`. On Windows use `where`.
+	i = 0
 	for c in t_commands:
 		if re.match('\*nix|darwin', system_family):
-			e = subprocess.check_output(['whereis', c])
+			o = subprocess.check_output(['whereis', c])
 		else:
-			e = subprocess.check_output(['where', c])		
-		checkDependency(t_names[i], e, system_family)
+			o = subprocess.check_output(['where', c])		
+		checkDependency(t_names[i], o, system_family)
 		i += 1
 
 	# Write environment variable to a build file.
 	writeEnvVar('SCALA_HOME', 'abc', system_family)
 
-	# Find required JAR libraries necessary to build Gaudi
-	# on this system.
+	# Find required JAR libraries necessary to build Gaudi on this system.
 	l_names = [ 'json-simple', 'commons-io']
+	l_jars = [ 'json_simple-1.1.jar', 'commons-io-2.0.1.jar']
 
-	# Done, prompt user to run build script.
+	i = 0
+	for l in l_jars:
+		if re.match('\*nix|darwin', system_family):
+			o = ''
+			#o = subprocess.check_output(['find', 'lib/{0}'.format(l)])
+		else:
+			pass
+			#o = subprocess.check_output(['find', '/C lib\{0}'.format(l)])
+		checkDependency(l_names[i], o, system_family)
+
+	# Done; now prompt user to run build script.
 	print('\nDependencies met. Now run:\n')
 
 	if re.match('\*nix|darwin', system_family):
@@ -158,7 +178,7 @@ def checkDependency(text, dep, osys):
 					'txtrevise.py')
 
 					# Mark txtrevise utility as executable.
-					if(osys == "*nix" or osys == "darwin"):
+					if re.match('\*nix|darwin', osys):
 						os.system('chmod +x txtrevise.py')
 					
 					print('\nNow rerun this script.')
