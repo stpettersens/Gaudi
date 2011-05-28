@@ -115,7 +115,7 @@ def configureBuild(args):
 	writeEnvVar('SCALA_HOME', 'abc', system_family)
 
 	# Find required JAR libraries necessary to build Gaudi on this system.
-	l_names = [ 'json-simple', 'commons-io']
+	l_names = [ 'json.simple', 'commons-io']
 	l_jars = [ 'json_simple-1.1.jar', 'commons-io-2.0.1.jar']
 
 	i = 0
