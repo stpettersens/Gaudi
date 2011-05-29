@@ -242,4 +242,5 @@ def showCLIoptions():
 	"""
 	print(__doc__)
 
-configureBuild(sys.argv)
+if __name__ == '__main__':
+	configureBuild(sys.argv)
