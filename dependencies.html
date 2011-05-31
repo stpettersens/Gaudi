@@ -6,10 +6,12 @@
 	Copyright (c) 2011 Sam Saint-Pettersen. -->
   <head>
   <title>Dependencies for Gaudi</title>
+  <script type="text/javascript" src="jquery-1.6.min.js"></script>
+  <script type="text/javascript" src="gaudi.js"></script>
  	<link type="text/css" rel="stylesheet" href="gaudi.css"/>
   <meta http-equiv="content-type" content="application/xhtml+xml; charset=ISO-8859-1"/>
   	</head>
-  	<body class="largeText">
+  	<body onload="onLoad();" class="largeText">
     <a href="index.html">Gaudi</a> depends on the following...
     <div id="deps_box_1">
     <!-- Dependencies for Gaudi application -->
@@ -18,8 +20,9 @@
     <br/> or run Gaudi itself)</small>
     <ul>
     <li class="alt"><a name="python"></a>
-    Python<br/><small>(python 2.7+ - recommended: <a href="http://www.python.org/download">CPython</a>
-    or <a href="http://pypy.org/download.html">PyPy</a>)</small>
+    Python<br/><small>(python 2.7+ - recommended: 
+    <a class="extern" href="http://www.python.org/download">CPython</a>
+    or <a class="extern" href="http://pypy.org/download.html">PyPy</a>)</small>
     </li>
     <li class="alt"><a name="ant"></a>
     <a class="extern" href="http://ant.apache.org/bindownload.cgi">
@@ -32,12 +35,16 @@
     <li class="alt"><a name="jre"></a>
     Java Runtime Environment (JRE)<br/>
     <small>(recommended: 
-    <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">HotSpot JRE</a>, <a href="http://openjdk.java.net">OpenJDK JRE</a> or <a href="http://gcc.gnu.org/java">GNU GIJ</a>)</small>
+    <a class="extern" href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">HotSpot JRE</a>,
+    <a class="extern" href="http://openjdk.java.net">OpenJDK JRE</a> or 
+    <a class="extern" href="http://gcc.gnu.org/java">GNU GIJ</a>)</small>
     </li>
     <li class="alt"><a name="jdk"></a>
     Java Development Kit (JDK)<br/>
     <small>(recommended: 
-    <a href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle JDK</a> or <a href="http://openjdk.java.net">OpenJDK JDK</a> or <a href="http://gcc.gnu.org/java">GNU GCJ</a>)</small>
+    <a class="extern" href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle JDK</a> 
+    or <a class="extern" href="http://openjdk.java.net">OpenJDK JDK</a> or
+    <a class="extern" href="http://gcc.gnu.org/java">GNU GCJ</a>)</small>
     </li>
     </ul>
 

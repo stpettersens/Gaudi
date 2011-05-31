@@ -87,16 +87,16 @@ li.alt
 {
 	list-style-type: circle;
 }
-div#features, #compatibility
+div#features, #compatibility, #license
 {
 	margin-top: 0.8em;
 	margin-left: auto;
 	margin-right: auto;
 	text-align: left;
-	padding: 1em;
 	background-color: #F0F0F0; 
+	padding: 1em;
 	width: 40.1em;
-}	
+}
 div#footer
 {
 	display: table;
