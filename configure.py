@@ -42,17 +42,16 @@ def configureBuild(args):
 	use_gnu = False
 
 	# Detect operating system
-	try:
-		uname = subprocess.check_output(['uname', '-s'])
-		if re.match('.*n[i|u]x|.*BSD|.*CYGWIN', uname):
-			print('\nDetected system:\n\tLinux/Unix-like (not Mac OS X).\n')
-			system_family = '*nix'
+	uname = subprocess.check_output(['uname', '-s'])
+	if re.match('.*n[i|u]x|.*BSD|.*CYGWIN', uname):
+		print('\nDetected system:\n\tLinux/Unix-like (not Mac OS X).\n')
+		system_family = '*nix'
 
-		elif re.match('.*Darwin', uname):
-			print('\nDetected system:\n\tDarwin/Mac OS X.\n')
-			system_family = 'darwin'
+	elif re.match('.*Darwin', uname):
+		print('\nDetected system:\n\tDarwin/Mac OS X.\n')
+		system_family = 'darwin'
 
-	except:
+	else:
 		print('\nDetected system:\nWindows.\n')
 		system_family = 'windows'
 
