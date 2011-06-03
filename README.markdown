@@ -70,7 +70,7 @@ Gaudi depends on the following third-party JVM libraries:
 
 - [Scala library](http://www.scala-lang.org) (*scala-library.jar* 2.9.1)
 
-- [Groovy library](http://groovy.codehaus.org) (*groovy-all-8.0.jar*) (for plug-in support; works on HotSpot, OpenJDK, IKVM.NET).
+- [Groovy library](http://groovy.codehaus.org) (*groovy-all-1.8.jar*) (for plug-in support; works on HotSpot, OpenJDK, IKVM.NET).
 
 - [Jython (minimal core library)](http://www.jython.org) (*jython.jar* 2.5.2) (for plug-in support; better supported across JVMs).
 
