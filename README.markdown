@@ -66,13 +66,13 @@ Gaudi depends on the following third-party JVM libraries:
 
 - [JSON.simple](http://code.google.com/p/json-simple) (*json_simple-1.1.jar*)
 
-- [Apache Commons IO Library](http://commons.apache.org/io) (*commons-io-2.0.jar*)
+- [Apache Commons IO Library](http://commons.apache.org/io) (*commons-io-2.0.1.jar*)
 
-- [Scala library](http://www.scala-lang.org) (*scala-library.jar* 2.8.1final)
+- [Scala library](http://www.scala-lang.org) (*scala-library.jar* 2.9.1)
 
-- [Groovy library](http://groovy.codehaus.org) (*groovy-all-1.7.5.jar*) (for plug-in support; works on HotSpot, OpenJDK, IKVM.NET).
+- [Groovy library](http://groovy.codehaus.org) (*groovy-all-1.8.jar*) (for plug-in support; works on HotSpot, OpenJDK, IKVM.NET).
 
-- [Jython (minimal core library)](http://www.jython.org) (*jython.jar* 2.5.1) (for plug-in support; better supported across JVMs).
+- [Jython (minimal core library)](http://www.jython.org) (*jython.jar* 2.5.2) (for plug-in support; better supported across JVMs).
 
 - [java-Gnome](http://java-gnome.sourceforge.net) (*gtk-4.0.jar*) (for notification support in *nix with Gnome desktop).
 
