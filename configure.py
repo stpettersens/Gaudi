@@ -19,6 +19,8 @@ import re
 import os
 import subprocess
 import argparse
+#! Encode URLs to save line space? Will this save line space?
+#import base64?
 import urllib
 import webbrowser
 
@@ -216,7 +218,9 @@ def amendAntBld(line_num, new_line, osys):
 	"""
 	Amend Ant buildfile using txtrevise utility.
 	"""
-	command = 'txtrevise.py -q -f build.xml -l {0} -m "<\!---->"'
+	# Copy _build.xml -> build.xml
+	#...
+	command = 'txtrevise.py -q -f build.xml -l {0} -m "<\!---->"' #! Change to execute like a Python script?
 	+ ' -r "{1}"' .format(line_num, new_line)
 	if re.match('\*nix|darwin', osys):
 		os.system('./' + command)
@@ -228,7 +232,9 @@ def amendManifest(new_lib):
 	Amend Manifest.mf file,
 	by adding new library for CLASSPATH.
 	"""
-	command = 'txtrevise.py -q -f Manifest.mf -l 2 -m "#"'
+	# Copy _Manifest.mf -> Manifest.mf
+	#...
+	command = 'txtrevise.py -q -f Manifest.mf -l 2 -m "#"' #! Change to execute like a Python script?
 	+ ' -r "{0}"'.format(new_lib)
 	if re.match('\*nix|darwin', osys):
 		os.system('./' + command)
@@ -237,7 +243,7 @@ def amendManifest(new_lib):
 
 def showCLIoptions():
 	"""
-	Show command line options.
+	Show command line options for configuration script.
 	"""
 	print(__doc__)
 
