@@ -85,7 +85,7 @@ def configureBuild(args):
 	except:
 		txtrevise = '\W'
 
-	checkDependency('txtrevise utility', txtrevise, system_family)
+	checkDependency('txtrevise utility', txtrevise, system_family, False)
 
 	# Find required JRE, JDK (look for a Java compiler),
 	# Scala distribution and associated tools necessary to build Gaudi on this system.
@@ -109,7 +109,7 @@ def configureBuild(args):
 			o = subprocess.check_output(['whereis', c])
 		else:
 			o = subprocess.check_output(['where', c])		
-		checkDependency(t_names[i], o, system_family)
+		checkDependency(t_names[i], o, system_family, False)
 		i += 1
 
 	# Write environment variable to a build file.
@@ -122,12 +122,11 @@ def configureBuild(args):
 	i = 0
 	for l in l_jars:
 		if re.match('\*nix|darwin', system_family):
-			o = ''
-			#o = subprocess.check_output(['find', 'lib/{0}'.format(l)])
+			o = subprocess.check_output(['find', 'lib/{0}'.format(l)])
 		else:
-			pass
-			#o = subprocess.check_output(['find', '/C lib\{0}'.format(l)])
-		checkDependency(l_names[i], o, system_family)
+			o = subprocess.check_output(['find', '/C lib\{0}'.format(l)])
+		checkDependency(l_names[i], o, system_family, True)
+		i += 1
 
 	# Done; now prompt user to run build script.
 	print('\nDependencies met. Now run:\n')
@@ -144,7 +143,7 @@ def configureBuild(args):
 	print('\n')
 	# FIN!
 
-def checkDependency(text, dep, osys):
+def checkDependency(text, dep, osys, is_lib):
 	"""
 	Check for a dependency.
 	"""
@@ -155,6 +154,9 @@ def checkDependency(text, dep, osys):
 			print('\tFOUND.\n')
 
 		elif re.search('\s.+', dep):
+			print('\tFOUND.\n')
+
+		elif is_lib and re.match('lib/{0}'.format(dep), dep):
 			print('\tFOUND.\n')
 
 		elif re.match('\W', dep):
