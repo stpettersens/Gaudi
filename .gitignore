@@ -5,6 +5,7 @@ ant_build
 *.class
 *.exe
 *.log
+*.html
 .project
 .pydevproject
 .classpath
@@ -14,4 +15,5 @@ ant_build
 txtrevise.py
 build.sh
 build.bat
-
+build.xml
+Manifest.mf
