@@ -19,8 +19,6 @@ import re
 import os
 import subprocess
 import argparse
-#! Encode URLs to save line space? Will this save line space?
-#import base64?
 import urllib
 import webbrowser
 
@@ -119,14 +117,18 @@ def configureBuild(args):
 	l_names = [ 'json.simple', 'commons-io']
 	l_jars = [ 'json_simple-1.1.jar', 'commons-io-2.0.1.jar']
 
-	i = 0
-	for l in l_jars:
-		if re.match('\*nix|darwin', system_family):
-			o = subprocess.check_output(['find', 'lib/{0}'.format(l)])
-		else:
-			o = subprocess.check_output(['find', '/C lib\{0}'.format(l)])
-		checkDependency(l_names[i], o, system_family, True)
-		i += 1
+	try:
+		i = 0
+		for l in l_jars:
+			if re.match('\*nix|darwin', system_family):
+				o = subprocess.check_output(['find', 'lib/{0}'.format(l)])
+			else:
+				o = subprocess.check_output(['find', '/C lib\{0}'.format(l)])
+			checkDependency(l_names[i], o, system_family, True)
+			i += 1
+
+	except:
+		checkDependency(l_names[i], '!', system_family, True)
 
 	# Done; now prompt user to run build script.
 	print('\nDependencies met. Now run:\n')
@@ -156,7 +158,11 @@ def checkDependency(text, dep, osys, is_lib):
 		elif re.search('\s.+', dep):
 			print('\tFOUND.\n')
 
-		elif is_lib and re.match('lib/{0}'.format(dep), dep):
+		elif is_lib and dep == '!':
+			print('\tNOT FOUND.\n')
+			raise RequirementNotFound(text)
+		
+		elif is_lib and re.search('{0}'.format(dep), dep):
 			print('\tFOUND.\n')
 
 		elif re.match('\W', dep):

@@ -27,7 +27,7 @@ Steps
 
 Run on shell, under Gaudi root folder, the following *: 
 
-$ sh mark-exec.sh
+$ [sh mark-exec.sh]
 $ ./configure.py
 $ ./build.sh
 $ sudo build.sh install
@@ -35,6 +35,9 @@ $ ./build.sh clean
 
 * Show here using *nix notation. $ is the prompt.
 
-On Windows leave off './' for configure.py
+On Windows:
+
+First step will never be necessary.
+Leave off './' for configure.py
 to use default Python interpreter and
 substitute './build.sh' with 'build.bat'.
