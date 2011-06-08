@@ -3,7 +3,8 @@
 """
 Python-based configuration script to
 detect dependencies and amend Ant build file (build.xml)
-as necessary depending on target platform.
+and Manifest.mf as necessary depending on target platform
+and chosen configuration.
 
 This requires Python 2.7+.
 
@@ -19,6 +20,7 @@ import re
 import os
 import subprocess
 import argparse
+import shutil
 import urllib
 import webbrowser
 
@@ -52,7 +54,7 @@ def configureBuild(args):
 		system_family = 'darwin'
 
 	else:
-		print('\nDetected system:\nWindows.\n')
+		print('\nDetected system:\n\tWindows.\n')
 		system_family = 'windows'
 
 	# Detect desktop environment on Unix-likes (not Mac OS X).
@@ -117,18 +119,19 @@ def configureBuild(args):
 	l_names = [ 'json.simple', 'commons-io']
 	l_jars = [ 'json_simple-1.1.jar', 'commons-io-2.0.1.jar']
 
-	try:
-		i = 0
-		for l in l_jars:
+	i = 0
+	for l in l_jars:
+		try:
 			if re.match('\*nix|darwin', system_family):
 				o = subprocess.check_output(['find', 'lib/{0}'.format(l)])
 			else:
-				o = subprocess.check_output(['find', '/C lib\{0}'.format(l)])
+				o = subprocess.check_output(['where', 'lib:{0}'.format(l)])
+				m = re.findall(l, o)
+				o = m[0]
 			checkDependency(l_names[i], o, system_family, True)
-			i += 1
-
-	except:
-		checkDependency(l_names[i], '!', system_family, True)
+		except:
+			checkDependency(l_names[i], '!', system_family, True)
+		i += 1
 
 	# Done; now prompt user to run build script.
 	print('\nDependencies met. Now run:\n')
@@ -165,9 +168,10 @@ def checkDependency(text, dep, osys, is_lib):
 		elif is_lib and re.search('{0}'.format(dep), dep):
 			print('\tFOUND.\n')
 
-		elif re.match('\W', dep):
-			print('\tNOT FOUND.')
-			raise RequirementNotFound(text)
+		#elif re.match('\W', dep):
+			#print('\tNOT FOUND.')
+			#raise RequirementNotFound(text)
+
 		else:
 			print('\tNOT FOUND.')
 			raise RequirementNotFound(text)
