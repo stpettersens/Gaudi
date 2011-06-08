@@ -168,10 +168,6 @@ def checkDependency(text, dep, osys, is_lib):
 		elif is_lib and re.search('{0}'.format(dep), dep):
 			print('\tFOUND.\n')
 
-		#elif re.match('\W', dep):
-			#print('\tNOT FOUND.')
-			#raise RequirementNotFound(text)
-
 		else:
 			print('\tNOT FOUND.')
 			raise RequirementNotFound(text)
@@ -231,8 +227,8 @@ def amendAntBld(line_num, new_line, osys):
 	Amend Ant buildfile using txtrevise utility.
 	"""
 	# Copy _build.xml -> build.xml
-	#...
-	command = 'txtrevise.py -q -f build.xml -l {0} -m "<\!---->"' #! Change to execute like a Python script?
+	shutil.copyfile('_build.xml', 'build.xml')
+	command = 'txtrevise.py -q -f build.xml -l {0} -m "<\!---->"'
 	+ ' -r "{1}"' .format(line_num, new_line)
 	if re.match('\*nix|darwin', osys):
 		os.system('./' + command)
@@ -245,8 +241,8 @@ def amendManifest(new_lib):
 	by adding new library for CLASSPATH.
 	"""
 	# Copy _Manifest.mf -> Manifest.mf
-	#...
-	command = 'txtrevise.py -q -f Manifest.mf -l 2 -m "#"' #! Change to execute like a Python script?
+	shutil.copyfile('_Manifest.mf', 'Manifest.mf')
+	command = 'txtrevise.py -q -f Manifest.mf -l 2 -m "#"'
 	+ ' -r "{0}"'.format(new_lib)
 	if re.match('\*nix|darwin', osys):
 		os.system('./' + command)
