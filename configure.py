@@ -57,7 +57,7 @@ def configureBuild(args):
 
 		else:
 			raise Exception
-			
+
 	except Exception:
 			print('\nDetected system:\n\tWindows.\n')
 			system_family = 'windows'
@@ -113,6 +113,7 @@ def configureBuild(args):
 
 	# On *nix, detect using `whereis`. On Windows use `where`.
 	i = 0
+	scala_dir = None
 	for c in t_commands:
 		if re.match('\*nix|darwin', system_family):
 			o = subprocess.check_output(['whereis', c],
@@ -121,13 +122,19 @@ def configureBuild(args):
 			o = subprocess.check_output(['where', c],
 			stderr=subprocess.STDOUT)
 					
+		if re.search('scala', o): 
+			if re.match('\*nix|darwin', system_family):
+				p = re.findall('/+\w+/+scala', o)
+			else:
+				p = re.findall('|[\w:]+\\+\w+\\+scala', o)
+			scala_dir = p[0]
+			del p
+
 		checkDependency(t_names[i], o, system_family, False)
 		i += 1
 
 	# Write environment variable to a build file.
-	# First, determine where lib subdirectory in Scala installation is.
-	# ...
-	writeEnvVar('SCALA_HOME', 'abc', system_family)
+	writeEnvVar('SCALA_HOME', scala_dir, system_family)
 
 	# Find required JAR libraries necessary to build Gaudi on this system.
 	l_names = [ 'json.simple', 'commons-io']
@@ -159,6 +166,7 @@ def configureBuild(args):
 				stderr=subprocess.STDOUT)
 				m = re.findall(l, o)
 				o = m[0]
+				del m
 
 			checkDependency(l_names[i], o, system_family, True)	
 		except:
