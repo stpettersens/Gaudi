@@ -125,7 +125,7 @@ def configureBuild(args):
 			if re.match('\*nix|darwin', system_family):
 				o = subprocess.check_output(['find', 'lib/{0}'.format(l)])
 			else:
-				o = subprocess.check_output(['where', 'lib:{0}'.format(l)])
+				o = subprocess.check_output(['where', 'lib:{0}'.format(l)], stderr=subprocess.STDOUT)
 				m = re.findall(l, o)
 				o = m[0]
 			checkDependency(l_names[i], o, system_family, True)
