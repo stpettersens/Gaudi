@@ -124,9 +124,9 @@ def configureBuild(args):
 					
 		if re.search('scala', o): 
 			if re.match('\*nix|darwin', system_family):
-				p = re.findall('/+\w+/+scala', o)
+				p = re.findall('/+\w+/+scala\-*\d*\.*\d*\.*\d*\.*\d*\w*', o)
 			else:
-				p = re.findall('|[\w:]+\\+\w+\\+scala', o)
+				p = re.findall('[\w:]+\\+\w+\\+scala\-*\d*\.*\d*\.*\d*\.*\d*\.*\w*', o)
 			scala_dir = p[0]
 			del p
 
