@@ -45,18 +45,22 @@ def configureBuild(args):
 	Configure build; entry method.
 	"""
 	# Detect operating system
-	uname = subprocess.check_output(['uname', '-s'])
-	if re.match('.*n[i|u]x|.*BSD|.*CYGWIN', uname):
-		print('\nDetected system:\n\tLinux/Unix-like (not Mac OS X).\n')
-		system_family = '*nix'
+	try:
+		uname = subprocess.check_output(['uname', '-s'])
+		if re.match('.*n[i|u]x|.*BSD|.*CYGWIN', uname):
+			print('\nDetected system:\n\tLinux/Unix-like (not Mac OS X).\n')
+			system_family = '*nix'
 
-	elif re.match('.*Darwin', uname):
-		print('\nDetected system:\n\tDarwin/Mac OS X.\n')
-		system_family = 'darwin'
+		elif re.match('.*Darwin', uname):
+			print('\nDetected system:\n\tDarwin/Mac OS X.\n')
+			system_family = 'darwin'
 
-	else:
-		print('\nDetected system:\n\tWindows.\n')
-		system_family = 'windows'
+		else:
+			raise Exception
+			
+	except Exception:
+			print('\nDetected system:\n\tWindows.\n')
+			system_family = 'windows'
 
 	# Detect desktop environment on Unix-likes (not Mac OS X).
 	if system_family == '*nix':
