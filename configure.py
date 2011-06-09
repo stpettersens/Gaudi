@@ -24,6 +24,13 @@ import shutil
 import urllib
 import webbrowser
 
+# Globals
+use_gnu = False
+use_gtk = True
+use_groovy = True
+use_jython = True
+no_notify = False
+
 class RequirementNotFound(Exception):
 	"""
 	RequirementNotFound exception class.
@@ -37,12 +44,6 @@ def configureBuild(args):
 	"""
 	Configure build; entry method.
 	"""
-	env_SCALA_HOME = '/path/to/scala/dir'
-	system_family = 'an.operating.system'
-	system_desktop = 'desktop.environment'
-	notify_lib = 'notification.library'
-	use_gnu = False
-
 	# Detect operating system
 	uname = subprocess.check_output(['uname', '-s'])
 	if re.match('.*n[i|u]x|.*BSD|.*CYGWIN', uname):
@@ -69,6 +70,10 @@ def configureBuild(args):
 
 		elif system_desktop == 'gnome':
 			system_desktop = system_desktop.upper()
+			global no_notify
+			if no_notify == False: 
+				global use_gtk
+				use_gtk = True
 
 		print('Detected desktop:\n\t{0}\n'.format(system_desktop))
 
@@ -106,32 +111,58 @@ def configureBuild(args):
 	i = 0
 	for c in t_commands:
 		if re.match('\*nix|darwin', system_family):
-			o = subprocess.check_output(['whereis', c])
+			o = subprocess.check_output(['whereis', c],
+			stderr=subprocess.STDOUT)
 		else:
-			o = subprocess.check_output(['where', c])		
+			o = subprocess.check_output(['where', c],
+			stderr=subprocess.STDOUT)
+					
 		checkDependency(t_names[i], o, system_family, False)
 		i += 1
 
 	# Write environment variable to a build file.
+	# First, determine where lib subdirectory in Scala installation is.
+	# ...
 	writeEnvVar('SCALA_HOME', 'abc', system_family)
 
 	# Find required JAR libraries necessary to build Gaudi on this system.
 	l_names = [ 'json.simple', 'commons-io']
-	l_jars = [ 'json_simple-1.1.jar', 'commons-io-2.0.1.jar']
+	l_jars = [ 'json_simple-1.1.jar', 'commons-io-2.0.1.jar' ]
 
+	# When enabled, use plug-in support for Groovy and Jython
+	if use_groovy:
+		l_names.append('groovy')
+		l_jars.append('groovy-all-1.8.0.jar')
+
+	if use_jython:
+		l_names.append('jython')
+		l_jars.append('jython.jar')
+
+	# When use GTK is enabled, add java-gnome [GTK] library to libraries list.
+	if use_gtk:
+		l_names.append('java-gnome')
+		l_jars.append('gtk.jar')
+
+	# On *nix, detect using `find`. On Windows use `where` again.
 	i = 0
 	for l in l_jars:
 		try:
 			if re.match('\*nix|darwin', system_family):
-				o = subprocess.check_output(['find', 'lib/{0}'.format(l)])
+				o = subprocess.check_output(['find', 'lib/{0}'.format(l)],
+				stderr=subprocess.STDOUT)
 			else:
-				o = subprocess.check_output(['where', 'lib:{0}'.format(l)], stderr=subprocess.STDOUT)
+				o = subprocess.check_output(['where', 'lib:{0}'.format(l)], 
+				stderr=subprocess.STDOUT)
 				m = re.findall(l, o)
 				o = m[0]
-			checkDependency(l_names[i], o, system_family, True)
+
+			checkDependency(l_names[i], o, system_family, True)	
 		except:
 			checkDependency(l_names[i], '!', system_family, True)
 		i += 1
+
+	# Copy scala-library.jar from Scala installation to Gaudi lib folder.
+	#shutil.copyfile('', 'lib/scala-library.jar')
 
 	# Done; now prompt user to run build script.
 	print('\nDependencies met. Now run:\n')
