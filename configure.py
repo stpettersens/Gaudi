@@ -44,6 +44,14 @@ def configureBuild(args):
 	"""
 	Configure build; entry method.
 	"""
+
+	# First offer or parse any arguments
+	parser = argparse.ArgumentParser(description='Configuration script for building Gaudi.')
+	parser.print_help()
+
+
+	sys.exit(-1)
+
 	# Detect operating system
 	try:
 		uname = subprocess.check_output(['uname', '-s'])
