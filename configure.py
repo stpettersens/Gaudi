@@ -122,7 +122,7 @@ def configureBuild(args):
 			o = subprocess.check_output(['where', c],
 			stderr=subprocess.STDOUT)
 					
-		if re.search('scala', o): 
+		if re.search('\wscala', o): 
 			if re.match('\*nix|darwin', system_family):
 				p = re.findall('/+\w+/+scala\-*\d*\.*\d*\.*\d*\.*\d*\w*', o)
 			else:
