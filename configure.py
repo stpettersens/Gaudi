@@ -13,7 +13,7 @@ script may download & install when prompted.
 
 Usage:
 \t sh mark-exec.sh
-\t./configure.py
+\t./configure.py [arguments]
 """
 import sys
 import re
@@ -30,6 +30,18 @@ use_gtk = True
 use_groovy = True
 use_jython = True
 no_notify = False
+log_conf = False
+logger = None
+use_deppage = True
+
+class Logger:
+	"""
+	Logger class.
+	"""
+	def __init__(self):
+		self.content = []
+	def write(self, string):
+		self.content.append(string)
 
 class RequirementNotFound(Exception):
 	"""
@@ -44,13 +56,43 @@ def configureBuild(args):
 	"""
 	Configure build; entry method.
 	"""
-
-	# First offer or parse any arguments
+	# Handle any command line arguments
+	usegnu = nojython = nogroovy = nonotify = log = nodeppage = None
 	parser = argparse.ArgumentParser(description='Configuration script for building Gaudi.')
-	parser.print_help()
+	parser.add_argument('--usegnu', action='store_true', dest=usegnu, 
+	help='Use GNU software - GCJ and GIJ')
+	parser.add_argument('--nojython', action='store_false', dest=nojython,
+	help='Disable Jython plug-in support')
+	parser.add_argument('--nogroovy', action='store_false', dest=nogroovy,
+	help='Disable Groovy plug-in support')
+	parser.add_argument('--nonotify', action='store_true', dest=nonotify,
+	help='Disable notification support')
+	parser.add_argument('--log', action='store_true', dest=log, 
+	help='Log output of script to file instead of terminal')
+	parser.add_argument('--nodeppage', action='store_false', dest=nodeppage,
+	help='Do not open dependencies web page for missing dependencies')
+	results = parser.parse_args()
 
+	# Set and print configuration
+	global use_gnu, use_groovy, use_jython, no_notify, log_conf, logger, use_deppage
+	use_gnu = results.usegnu
+	use_jython = results.nojython
+	use_groovy = results.nogroovy
+	no_notify = results.nonotify
+	use_deppage = results.nodeppage
+	log_conf = results.log
+	logger = Logger()
+	if(log_conf):
+		sys.stdout = logger
 
-	sys.exit(-1)
+	print("--------------------------------------")
+	print("Build configuration")
+	print("--------------------------------------")
+	print("Use GNU GCJ & GIJ: {0}".format(use_gnu))
+	print("Jython plug-in support enabled: {0}".format(use_jython))
+	print("Groovy plug-in support enabled: {0}".format(use_groovy))
+	print("Notification support disabled: {0}".format(no_notify))
+	print("--------------------------------------")
 
 	# Detect operating system
 	try:
@@ -81,11 +123,9 @@ def configureBuild(args):
 			system_desktop = 'KDE'
 
 		elif system_desktop == 'gnome':
-			system_desktop = system_desktop.upper()
-			global no_notify
-			if no_notify == False: 
-				global use_gtk
-				use_gtk = True
+			system_desktop = system_desktop.upper() 
+			global use_gtk
+			use_gtk = True
 
 		print('Detected desktop:\n\t{0}\n'.format(system_desktop))
 
@@ -157,8 +197,9 @@ def configureBuild(args):
 		l_names.append('jython')
 		l_jars.append('jython.jar')
 
-	# When use GTK is enabled, add java-gnome [GTK] library to libraries list.
-	if use_gtk:
+	# When use GTK and use notifications are enabled, 
+	# add java-gnome [GTK] library to libraries list.
+	if use_gtk and not no_notify:
 		l_names.append('java-gnome')
 		l_jars.append('gtk.jar')
 
@@ -197,6 +238,7 @@ def configureBuild(args):
 		print('build.bat clean')
 		print('build.bat install')
 	print('\n')
+	saveLog()
 	# FIN!
 
 def checkDependency(text, dep, osys, is_lib):
@@ -247,11 +289,14 @@ def checkDependency(text, dep, osys, is_lib):
 				elif n.match(choice):
 					break
 		else:
-			a = text.split(' ')
-			b = a[0].lower()
-			del a
-			webbrowser.open_new_tab('http://stpettersens.github.com/Gaudi/dependencies.html#{0}'.format(b))
+			global use_deppage
+			if use_deppage:
+				a = text.split(' ')
+				b = a[0].lower()
+				del a
+				webbrowser.open_new_tab('http://stpettersens.github.com/Gaudi/dependencies.html#{0}'.format(b))
 
+		saveLog()
 		sys.exit(1)
 
 def writeEnvVar(var, value, osys):
@@ -300,11 +345,18 @@ def amendManifest(new_lib):
 	else:
 		os.system(command)
 
-def showCLIoptions():
+def saveLog():
 	"""
-	Show command line options for configuration script.
+	Save script output to log.
 	"""
-	print(__doc__)
+	sys.stdout = sys.__stdout__
+	global logger, log_conf
+	if log_conf:
+		print('Saved output to log file.')
+		f = open('configure.log', 'w')
+		for line in logger.content:
+			f.write(line)
+		f.close()
 
 if __name__ == '__main__':
 	configureBuild(sys.argv)
