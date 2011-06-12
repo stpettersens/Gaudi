@@ -1,4 +1,3 @@
-
 Build & install instructions
 ============================
 
@@ -32,8 +31,7 @@ Gaudi will run on Jato VM (http://www.jatovm.org), but this VM does not
 support plug-ins or notifications as its JNI support is not yet 100% compatible
 with the Java 2.0 specification.
 
-To build a 100% Jato-compatible Gaudi without 
-notification or plug-in support use:
+To build a 100% Jato-compatible Gaudi without notification or plug-in support use:
 
 [python] configure.py --minbuild
 
