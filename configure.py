@@ -57,7 +57,7 @@ def configureBuild(args):
 	Configure build; entry method.
 	"""
 	# Handle any command line arguments
-	usegnu = nojython = nogroovy = nonotify = log = nodeppage = None
+	usegnu = nojython = nogroovy = nonotify = noplugins = minbuild = log = nodeppage = None
 	parser = argparse.ArgumentParser(description='Configuration script for building Gaudi.')
 	parser.add_argument('--usegnu', action='store_true', dest=usegnu, 
 	help='Use GNU software - GCJ and GIJ')
@@ -67,6 +67,10 @@ def configureBuild(args):
 	help='Disable Groovy plug-in support')
 	parser.add_argument('--nonotify', action='store_true', dest=nonotify,
 	help='Disable notification support')
+	parser.add_argument('--noplugins', action='store_true', dest=noplugins,
+	help='Disable all plug-in support')
+	parser.add_argument('--minbuild', action='store_true', dest=minbuild,
+	help='Use only core functionality; disable plug-ins, disable notifications')
 	parser.add_argument('--log', action='store_true', dest=log, 
 	help='Log output of script to file instead of terminal')
 	parser.add_argument('--nodeppage', action='store_false', dest=nodeppage,
@@ -82,17 +86,25 @@ def configureBuild(args):
 	use_deppage = results.nodeppage
 	log_conf = results.log
 	logger = Logger()
-	if(log_conf):
+
+	if results.noplugins or results.minbuild:
+		use_jython = False
+		use_groovy = False
+
+	if results.minbuild:
+		no_notify = True
+
+	if log_conf:
 		sys.stdout = logger
 
-	print("--------------------------------------")
-	print("Build configuration")
-	print("--------------------------------------")
-	print("Use GNU GCJ & GIJ: {0}".format(use_gnu))
-	print("Jython plug-in support enabled: {0}".format(use_jython))
-	print("Groovy plug-in support enabled: {0}".format(use_groovy))
-	print("Notification support disabled: {0}".format(no_notify))
-	print("--------------------------------------")
+	print('--------------------------------------')
+	print('Build configuration for Gaudi')
+	print('--------------------------------------')
+	print('Use GNU GCJ & GIJ: {0}'.format(use_gnu))
+	print('Jython plug-in support enabled: {0}'.format(use_jython))
+	print('Groovy plug-in support enabled: {0}'.format(use_groovy))
+	print('Notification support disabled: {0}'.format(no_notify))
+	print('--------------------------------------')
 
 	# Detect operating system
 	try:
@@ -113,18 +125,19 @@ def configureBuild(args):
 			system_family = 'windows'
 
 	# Detect desktop environment on Unix-likes (not Mac OS X).
+	global use_gtk
 	if system_family == '*nix':
 		system_desktop = os.environ.get('DESKTOP_SESSION')
 
 		if re.match('x.*', system_desktop):
 			system_desktop = 'Xfce'
+			use_gtk = True
 
 		elif system_desktop == 'default':
 			system_desktop = 'KDE'
 
 		elif system_desktop == 'gnome':
 			system_desktop = system_desktop.upper() 
-			global use_gtk
 			use_gtk = True
 
 		print('Detected desktop:\n\t{0}\n'.format(system_desktop))
@@ -171,13 +184,14 @@ def configureBuild(args):
 				o = subprocess.check_output(['where', '{0}'.format(c)],
 				stderr=subprocess.STDOUT)
 					
-			if re.search('\wscala', o): 
+			if re.search('\w.+scala', o): 
 				if re.match('\*nix|darwin', system_family):
+					print 'meh'
 					p = re.findall('/+\w+/+scala\-*\d*\.*\d*\.*\d*\.*\d*\w*', o)
+					scala_dir = p[0]
 				else:
 					p = re.findall('[\w:]+\\+\w+\\+scala\-*\d*\.*\d*\.*\d*\.*\d*\.*\w*', o)
 					scala_dir = p[0]
-					del p
 
 			checkDependency(t_names[i], o, system_family, False)
 
@@ -220,11 +234,10 @@ def configureBuild(args):
 				stderr=subprocess.STDOUT)
 				m = re.findall(l, o)
 				o = m[0]
-				del m
 
 			checkDependency(l_names[i], o, system_family, True)	
 		except:
-			checkDependency(l_names[i], '!', system_family, True)
+			checkDependency(l_names[i], '!', system_family, False)
 		i += 1
 
 	# Copy scala-library.jar from Scala installation to Gaudi lib folder.
@@ -256,20 +269,16 @@ def checkDependency(text, dep, osys, is_lib):
 		if text[0:9] == 'txtrevise' and re.match('\w+', dep):
 			print('\tFOUND.\n')
 
-		elif re.search('\s.+', dep):
+		elif not is_lib and re.search('\s.+', dep):
 			print('\tFOUND.\n')
 
-		elif is_lib and re.search('{0}'.format(dep), dep):
+		elif is_lib and re.match(dep, dep):
 			print('\tFOUND.\n')
-
-		elif is_lib and dep == '!':
-			print('\tNOT FOUND.\n')
-			raise RequirementNotFound(text)
 
 		else:
-			print('\tNOT FOUND.')
+			print('\tNOT FOUND.\n')
 			raise RequirementNotFound(text)
-
+			
 	except RequirementNotFound as e:
 		print("\nA requirement was not found. Please install it:")
 		print("{0}.\n".format(e.value))

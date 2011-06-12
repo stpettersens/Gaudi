@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Apache Ant buildfile to build Gaudi, partially based on the example from:
+http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
+-->
+<project name="Gaudi" default="build" basedir=".">
+	
+	<description>Gaudi buildfile for Ant</description>
+	
+	<!-- Targets -->
+	<target name="build" depends="package" description="Build complete project"/>
+	
+	<target name="clean" description="Clean up any built files">
+		<delete dir="${build.dir}" includeemptydirs="true" quiet="true"/>
+		<delete file="${target.jar}" quiet="true"/>
+		<delete file="${target.cjar}" quiet="true"/>
+		<delete file="${dist.dir}/gaudi.exe" quiet="true"/>
+		<delete file="${dist.dir}/Gaudi_setup.exe" quiet="true"/>
+		<delete file="${dist.dir}/JavaCheck.class" quiet="true"/>
+		<delete file="${dist.dir}/FindInVar.class" quiet="true"/>
+		<delete file="${basedir}/build.sh" quiet="true"/>
+		<delete file="${basedir}/build.bat" quiet="true"/>
+	</target>
+	
+	<target name="init">		
+		<!-- Check for required tools, i.e. Scala compiler and library --> 
+		<property environment="env"/>
+		<fail unless="env.SCALA_HOME" message="Missing SCALA_HOME variable in OS environmental variables."/>
+		
+		<!-- Variables for paths and files -->
+		<property name="src.dir" location="${basedir}/src"/>
+		<property name="lib.dir" location="${basedir}/lib"/>
+		<property name="plugins.dir" location="${basedir}/plugins"/>
+		<property name="build.dir" location="${basedir}/ant_build"/>
+		<property name="dist.dir" location="${basedir}/dist/"/>
+		<property name="scala-library" location="${env.SCALA_HOME}/lib/scala-library.jar"/>
+		<property name="scala-compiler" location="${env.SCALA_HOME}/lib/scala-compiler.jar"/>
+		<property name="commons-io" location="${lib.dir}/commons-io-2.0.1.jar"/>
+		<property name="json-simple" location="${lib.dir}/json_simple-1.1.jar"/>
+		<property name="groovy-lib" location="${lib.dir}/groovy-all-1.8.0.jar"/>
+		<property name="jython-lib" location="${lib.dir}/jython.jar"/>
+		<property name="gtk-lib" location="${lib.dir}/gtk.jar"/>
+		<property name="target.abs" value="Gaudi"/>
+		<property name="target.mf" location="${basedir}/Manifest.mf"/>
+		<property name="target.jar" location="${basedir}/${target.abs}.jar"/>
+		<property name="target.cjar" location="${dist.dir}/${target.abs}.jar"/>
+		<property name="cjar.mf" value="org.stpettersens.gaudi.GaudiApp"/>
+		<property name="exe.mf" location="${dist.dir}/gaudi_exe.xml"/>
+		<property name="nsis.mf" location="${dist.dir}/gaudi_setup.nsi"/>
+		
+		<!-- Add libraries used by project to classpath -->
+		<path id="project.cp">
+			<pathelement location="${scala-library}"/>
+			<pathelement location="${commons-io}"/>
+			<pathelement location="${json-simple}"/>
+			<pathelement location="${groovy-lib}"/>
+			<pathelement location="${jython-lib}"/>
+			<pathelement location="${gtk-lib}"/>
+		</path>
+
+		<!-- Load Scala's Ant tasks -->
+		<taskdef resource="scala/tools/ant/antlib.xml">
+			<classpath>
+				<pathelement location="${scala-compiler}"/>
+				<pathelement location="${scala-library}"/>
+			</classpath>
+		</taskdef>
+		
+		<!-- Print where this project will get Scala from -->
+		<echo message="Using Scala dir -> ${env.SCALA_HOME}"/>
+		
+		<!-- Scan folders for changes since last build and store status in variable -->
+		<uptodate property="build.uptodate" targetfile="${build.dir}/build.done">
+			<srcfiles dir="${src.dir}" includes="**"/>
+		</uptodate>
+	</target>
+	
+	<target name="compile" description="Compile source code to classes" depends="init" 
+	 unless="build.uptodate">
+		<echo message="Compiling Gaudi..."/>
+		<mkdir dir="${build.dir}"/>
+		<scalac classpath="${toString:project.cp}" srcdir="${src.dir}" destdir="${build.dir}"/>
+		<javac includeantruntime="false" classpath="${toString:project.cp}" srcdir="${src.dir}" 
+		destdir="${build.dir}"/>
+	</target>
+	
+	<target name="package" description="Package the Gaudi classes into a Jar" depends="compile"
+	 unless="build.uptodate">
+	 	<echo message="Packaging Gaudi (std Jar)..."/>
+	 	<jar manifest="${target.mf}" destfile="${target.jar}">
+	 		<fileset dir="${build.dir}"/>
+	 	</jar>
+	 	<touch file="${build.dir}/build.done"/><!-- Mark build as up-to-date -->
+	</target>
+	
+	<target name="cjar" description="Create self-contained Jar" depends="package">
+		<echo message="Packaging Gaudi (self-contained Jar)..."/>
+		<fail unless="env.ONEJAR_TOOL" message="Missing ONEJAR_TOOL variable in OS environmental variables."/>
+		<!-- Load One Jar task -->
+		<taskdef resource="antlib.xml">
+			<classpath>
+				<pathelement location="${env.ONEJAR_TOOL}"/>
+			</classpath>
+		</taskdef>
+		<one-jar destfile="${target.cjar}">
+			<manifest>
+				<attribute name="One-Jar-Main-Class" value="${cjar.mf}"/>
+			</manifest>
+			<main jar="${target.jar}"/>
+			<lib>
+				<fileset dir="${lib.dir}">
+					<exclude name=".dummy"/>
+				</fileset>
+			</lib>
+		</one-jar>
+		<uptodate property="buildcpkg.uptodate" targetfile="${build.dir}/buildcpkg.done">
+			<srcfiles dir="${src.dir}" includes="**"/>
+		</uptodate>
+		<touch file="${build.dir}/buildcpkg.done"/><!-- Mark that cpackage has been built -->
+	</target>
+	
+	<target name="exe" description="Create Windows executable" depends="package" 
+	 unless="buildcpkg.uptodate">
+	 	<echo message="Generating Windows executable..."/>
+		<copy file="${target.jar}" todir="${dist.dir}"/>
+		<condition property="l4j" value="launch4jc">
+			<os family="windows"/>
+		</condition>
+		<condition property="l4j" value="launch4j">
+			<os family="unix"/>
+		</condition>
+		<fail unless="l4j" message="Problem invoking launch4j program."/>
+		<exec executable="${l4j}"><arg value="${exe.mf}"/></exec>
+		<delete file="${target.cjar}" quiet="true"/>
+	</target>
+	
+	<target name="sapps" description="Compile supporting applications for NSIS installer"
+	 depends="exe">
+	 	<echo message="Compiling supporting programs for NSIS installer..."/>
+	 	<javac includeantruntime="false" srcdir="${dist.dir}" destdir="${dist.dir}"/>
+	 	<uptodate property="buildsapps.uptodate" targetfile="${build.dir}/buildsapps.done">
+			<srcfiles dir="${src.dir}" includes="**"/>
+		</uptodate>
+	</target>
+	
+	<target name="nsis" description="Generate NSIS installer program" depends="sapps">
+		<echo message="Generating NSIS installer program..."/>
+		<mkdir dir="${dist.dir}/lib"/>
+		<mkdir dir="${dist.dir}/plugins"/>
+		<copy todir="${dist.dir}/lib"><fileset dir="${lib.dir}"/></copy>
+		<copy todir="${dist.dir}/plugins"><fileset dir="${plugins.dir}"/></copy>
+		<condition property="mnsis" value="makensis">
+			<os family="windows"/>
+		</condition>
+		<fail unless="mnsis" 
+		 message="NSIS installer must be built on Windows. Or try with Wine."/>
+		<exec executable="${mnsis}"><arg value="${nsis.mf}"/></exec>
+		<delete dir="${dist.dir}/lib"/>
+		<delete dir="${dist.dir}/plugins"/>
+		<delete><fileset dir="." includes="**/*.class"/></delete>
+	</target>
+	 
+</project>
