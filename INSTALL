@@ -1,6 +1,6 @@
 
-Build instructions
-===================
+Build & install instructions
+============================
 
 Prequisites
 -----------
@@ -19,7 +19,22 @@ Libraries:
 * Apache Commons IO 2.0.1 (commons-io-2.0.1.jar)
 * Jython minimal library (jython.jar) [for Jython-based plug-in support]
 * Groovy library 1.8.0 (groovy-all-1.8.0.jar) [for Groovy-based plug-in support]
-* java-gnome 4.0 (gtk-4.0.jar) [for Gnome/Xfce deskop notification suppport]
+* java-gnome 4.0 (gtk.jar) [for Gnome/Xfce deskop notification suppport]
+
+
+Known issues
+------------
+On Windows, PyPy will not work properly with the configuration.py script,
+please use CPython, the de-facto implementation, instead.
+
+Gaudi will run on Jato VM (http://www.jatovm.org), but this VM does not
+support plug-ins or notifications as its JNI support is not yet 100% compatible
+with the Java 2.0 specification.
+
+To build a 100% Jato-compatible Gaudi without 
+notification or plug-in support use:
+
+[python] configure.py --minbuild
 
 
 Steps
@@ -27,17 +42,19 @@ Steps
 
 Run on shell, under Gaudi root folder, the following *: 
 
-$ [sh mark-exec.sh]
-$ ./configure.py
+$ sh mark-exec.sh
+$ ./configure.py [arguments]
 $ ./build.sh
-$ sudo build.sh install
+# build.sh install
 $ ./build.sh clean
 
 * Show here using *nix notation. $ is the prompt.
+# indicates root or prefixing `sudo` command on *nix.
+
+For configuration options, run:
+[python] configure.py --help
 
 On Windows:
 
-First step will never be necessary.
-Leave off './' for configure.py
-to use default Python interpreter and
-substitute './build.sh' with 'build.bat'.
+First step will never be necessary. Leave off './' for configure.py
+to use default Python interpreter and substitute './build.sh' with 'build.bat'.
