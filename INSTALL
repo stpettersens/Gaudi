@@ -24,6 +24,7 @@ Libraries:
 
 Known issues
 ------------
+
 On Windows, PyPy will not work properly with the configuration.py script,
 please use CPython, the de-facto implementation, instead.
 
