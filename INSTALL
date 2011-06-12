@@ -18,7 +18,7 @@ Libraries:
 * Apache Commons IO 2.0.1 (commons-io-2.0.1.jar)
 * Jython minimal library (jython.jar) [for Jython-based plug-in support]
 * Groovy library 1.8.0 (groovy-all-1.8.0.jar) [for Groovy-based plug-in support]
-* java-gnome 4.0 (gtk.jar) [for Gnome/Xfce deskop notification suppport]
+* java-gnome 4.0 (gtk.jar) [for Gnome/Xfce deskop notification support]
 
 
 Known issues

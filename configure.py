@@ -1,15 +1,19 @@
 #!/usr/bin/env python
 
 """
+Gaudi build configuration script.
+---------------------------------
+
 Python-based configuration script to
 detect dependencies and amend Ant build file (build.xml)
-and Manifest.mf as necessary depending on target platform
-and chosen configuration.
+and Manifest.mf as necessary and to generate script
+wrappers depending on target platform and chosen
+configuration.
 
-This requires Python 2.7+.
+This script requires Python 2.7+.
 
-Depends on txtrevise utility - which this
-script may download & install when prompted.
+This script depends on txtrevise utility - which it
+may download & install when prompted.
 
 Usage:
 \t sh mark-exec.sh
@@ -57,7 +61,7 @@ def configureBuild(args):
 	Configure build; entry method.
 	"""
 	# Handle any command line arguments
-	usegnu = nojython = nogroovy = nonotify = noplugins = minbuild = log = nodeppage = None
+	doc = usegnu = nojython = nogroovy = nonotify = noplugins = minbuild = log = nodeppage = None
 	parser = argparse.ArgumentParser(description='Configuration script for building Gaudi.')
 	parser.add_argument('--usegnu', action='store_true', dest=usegnu, 
 	help='Use GNU software - GCJ and GIJ')
@@ -75,6 +79,8 @@ def configureBuild(args):
 	help='Log output of script to file instead of terminal')
 	parser.add_argument('--nodeppage', action='store_false', dest=nodeppage,
 	help='Do not open dependencies web page for missing dependencies')
+	parser.add_argument('--doc', action='store_true', dest=doc,
+	help='Show documentation for script and exit')
 	results = parser.parse_args()
 
 	# Set and print configuration
@@ -85,8 +91,12 @@ def configureBuild(args):
 	no_notify = results.nonotify
 	use_deppage = results.nodeppage
 	log_conf = results.log
-	logger = Logger()
 
+	if results.doc:
+		print(__doc__)
+		sys.exit(0)
+
+	logger = Logger()
 	if results.noplugins or results.minbuild:
 		use_jython = False
 		use_groovy = False
@@ -201,6 +211,9 @@ def configureBuild(args):
 
 	# Write environment variable to a build file.
 	writeEnvVar('SCALA_HOME', scala_dir, system_family)
+
+	# Write exectuable wrapper
+	writeExecutable(t_commands[0], system_family)
 
 	# Find required JAR libraries necessary to build Gaudi on this system.
 	l_names = [ 'json.simple', 'commons-io']
@@ -346,8 +359,7 @@ def amendAntBld(line_num, new_line, osys):
 
 def amendManifest(new_lib):
 	"""
-	Amend Manifest.mf file,
-	by adding new library for CLASSPATH.
+	Amend Manifest.mf file, by adding new library for CLASSPATH.
 	"""
 	# Copy _Manifest.mf -> Manifest.mf
 	shutil.copyfile('_Manifest.mf', 'Manifest.mf')
@@ -357,6 +369,22 @@ def amendManifest(new_lib):
 		os.system('./' + command)
 	else:
 		os.system(command)
+
+def writeExecutable(java, osys):
+	"""
+	Write executable wrapper.
+	"""
+	f = open('gaudi', 'w')
+	if re.match('\*nix|darwin', osys):
+		f.write('#!/bin/sh')
+		f.write('\n# Run Gaudi')
+		f.write('\n{0} -jar Gaudi.jar "$@"'.format(java))
+		f.close()
+		os.system('chmod +x gaudi')
+	else:
+		f.write('@rem Run Gaudi')
+		f.write('\r\n@{0} -jar Gaudi.jar "%*"\r\n'.format(java))
+		f.close()
 
 def saveLog():
 	"""
