@@ -163,22 +163,27 @@ def configureBuild(args):
 	i = 0
 	scala_dir = None
 	for c in t_commands:
-		if re.match('\*nix|darwin', system_family):
-			o = subprocess.check_output(['whereis', c],
-			stderr=subprocess.STDOUT)
-		else:
-			o = subprocess.check_output(['where', c],
-			stderr=subprocess.STDOUT)
-					
-		if re.search('\wscala', o): 
+		try:
 			if re.match('\*nix|darwin', system_family):
-				p = re.findall('/+\w+/+scala\-*\d*\.*\d*\.*\d*\.*\d*\w*', o)
+				o = subprocess.check_output(['whereis', c],
+				stderr=subprocess.STDOUT)
 			else:
-				p = re.findall('[\w:]+\\+\w+\\+scala\-*\d*\.*\d*\.*\d*\.*\d*\.*\w*', o)
-			scala_dir = p[0]
-			del p
+				o = subprocess.check_output(['where', '{0}'.format(c)],
+				stderr=subprocess.STDOUT)
+					
+			if re.search('\wscala', o): 
+				if re.match('\*nix|darwin', system_family):
+					p = re.findall('/+\w+/+scala\-*\d*\.*\d*\.*\d*\.*\d*\w*', o)
+				else:
+					p = re.findall('[\w:]+\\+\w+\\+scala\-*\d*\.*\d*\.*\d*\.*\d*\.*\w*', o)
+					scala_dir = p[0]
+					del p
 
-		checkDependency(t_names[i], o, system_family, False)
+			checkDependency(t_names[i], o, system_family, False)
+
+		except:
+			sys.exit(-1)
+
 		i += 1
 
 	# Write environment variable to a build file.
@@ -254,12 +259,12 @@ def checkDependency(text, dep, osys, is_lib):
 		elif re.search('\s.+', dep):
 			print('\tFOUND.\n')
 
+		elif is_lib and re.search('{0}'.format(dep), dep):
+			print('\tFOUND.\n')
+
 		elif is_lib and dep == '!':
 			print('\tNOT FOUND.\n')
 			raise RequirementNotFound(text)
-		
-		elif is_lib and re.search('{0}'.format(dep), dep):
-			print('\tFOUND.\n')
 
 		else:
 			print('\tNOT FOUND.')
