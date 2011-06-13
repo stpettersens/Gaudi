@@ -205,7 +205,7 @@ def configureBuild(args):
 			checkDependency(t_names[i], o, system_family, False)
 
 		except:
-			sys.exit(-1)
+			checkDependency(t_names[i], o, system_family, False)
 
 		i += 1
 
