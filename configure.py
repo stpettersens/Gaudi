@@ -199,7 +199,7 @@ def configureBuild(args):
 					p = re.findall('/+\w+/+scala\-*\d*\.*\d*\.*\d*\.*\d*\w*', o)
 					scala_dir = p[0]
 				else:
-					p = re.findall('[\w:]+\\+\w+\\+scala\-*\d*\.*\d*\.*\d*\.*\d*\.*\w*', o)
+					p = re.findall('[\w\:]+[^/]+scala[^\.\d]*', o)
 					scala_dir = p[0]
 
 			checkDependency(t_names[i], o, system_family, False)
