@@ -116,7 +116,7 @@ def configureBuild(args):
 	print('Notification support disabled: {0}'.format(no_notify))
 	print('--------------------------------------')
 
-	# Detect operating system
+	# Detect operating system.
 	try:
 		uname = subprocess.check_output(['uname', '-s'])
 		if re.match('.*n[i|u]x|.*BSD|.*CYGWIN', uname):
@@ -216,7 +216,7 @@ def configureBuild(args):
 	writeExecutable(t_commands[0], system_family)
 
 	# Find required JAR libraries necessary to build Gaudi on this system.
-	l_names = [ 'json.simple', 'commons-io']
+	l_names = [ 'JSON.simple', 'commons-io']
 	l_jars = [ 'json_simple-1.1.jar', 'commons-io-2.0.1.jar' ]
 
 	# When enabled, use plug-in support for Groovy and Jython
