@@ -199,14 +199,14 @@ def configureBuild(args):
 					p = re.findall('/+\w+/+scala\-*\d*\.*\d*\.*\d*\.*\d*', o)
 					scala_dir = p[0]
 				else:
-					p = re.findall('[\w\:]+[^/]+scala\-*(\d\.\d\.\d)*(\.\d)*', o)
-					scala_dir = p[0]
+					p = re.findall('[\w\:]+[^/]+scala\-*\d*\.*\d*\.*\d*\.*\d*', o)
+					fp = p[0].split(r'\bin')
+					scala_dir = fp[0]
 
 			checkDependency(t_names[i], o, system_family, False)
 
 		except:
-			checkDependency(t_names[i], o, system_family, False)
-
+			sys.exit(1)
 		i += 1
 
 	# Write environment variable to a build file.
@@ -281,6 +281,9 @@ def checkDependency(text, dep, osys, is_lib):
 		if text[0:9] == 'txtrevise' and re.match('\w+', dep):
 			print('\tFOUND.\n')
 
+		elif osys == 'windows' and text[0:5] == 'Scala' and re.match('\w+', dep):
+			print('\tFOUND.\n')
+
 		elif not is_lib and re.search('\s.+', dep):
 			print('\tFOUND.\n')
 
@@ -319,7 +322,6 @@ def checkDependency(text, dep, osys, is_lib):
 			if use_deppage:
 				a = text.split(' ')
 				b = a[0].lower()
-				del a
 				webbrowser.open_new_tab('http://stpettersens.github.com/Gaudi/dependencies.html#{0}'.format(b))
 
 		saveLog()
@@ -341,7 +343,7 @@ def writeEnvVar(var, value, osys):
 	# Generate batch file on Windows.
 	else:
 		f = open('build.bat', 'w')
-		f.write('@set {0}="{1}"\r\n@ant %1\r\n'.format(var, value))
+		f.write('@set {0}={1}\r\n@ant %1\r\n'.format(var, value))
 		f.close()
 
 def amendAntBld(line_num, new_line, osys):
