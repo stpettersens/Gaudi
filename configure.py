@@ -12,7 +12,7 @@ configuration.
 
 This script requires Python 2.7+.
 
-This script depends on txtrevise utility - which it
+This script depends on the txtrevise utility - which it
 may download & install when prompted.
 
 Usage:
@@ -165,7 +165,7 @@ def configureBuild(args):
 	except:
 		txtrevise = '\W'
 
-	checkDependency('txtrevise utility', txtrevise, system_family, False)
+	checkDependency('txtrevise utility', txtrevise, 'txtrevise', system_family)
 
 	# Find required JRE, JDK (look for a Java compiler),
 	# Scala distribution and associated tools necessary to build Gaudi on this system.
@@ -182,7 +182,7 @@ def configureBuild(args):
 		t_commands[0] = 'gij'
 		t_commands[1] = 'gcj'
 
-	# On *nix, detect using `whereis`. On Windows use `where`.
+	# On *nix, detect using `whereis`. On Windows, use `where`.
 	i = 0
 	scala_dir = None
 	for c in t_commands:
@@ -203,10 +203,10 @@ def configureBuild(args):
 					fp = p[0].split(r'\bin')
 					scala_dir = fp[0]
 
-			checkDependency(t_names[i], o, system_family, False)
+			checkDependency(t_names[i], o, c)
 
 		except:
-			sys.exit(1)
+			pass
 		i += 1
 
 	# Write environment variable to a build file.
@@ -247,9 +247,9 @@ def configureBuild(args):
 				m = re.findall(l, o)
 				o = m[0]
 
-			checkDependency(l_names[i], o, system_family, True)	
+			checkDependency(l_names[i], o, l, system_family)	
 		except:
-			checkDependency(l_names[i], '!', system_family, False)
+			checkDependency(l_names[i], '!', system_family)
 		i += 1
 
 	# Copy scala-library.jar from Scala installation to Gaudi lib folder.
@@ -271,25 +271,15 @@ def configureBuild(args):
 	saveLog()
 	# FIN!
 
-def checkDependency(text, dep, osys, is_lib):
+def checkDependency(text, required, tomatch, osys):
 	"""
 	Check for a dependency.
 	"""
 	try:
 		print('{0}:'.format(text))
 
-		if text[0:9] == 'txtrevise' and re.match('\w+', dep):
+		if re.search(tomatch, required):
 			print('\tFOUND.\n')
-
-		elif osys == 'windows' and text[0:5] == 'Scala' and re.match('\w+', dep):
-			print('\tFOUND.\n')
-
-		elif not is_lib and re.search('\s.+', dep):
-			print('\tFOUND.\n')
-
-		elif is_lib and re.match(dep, dep):
-			print('\tFOUND.\n')
-
 		else:
 			print('\tNOT FOUND.\n')
 			raise RequirementNotFound(text)
