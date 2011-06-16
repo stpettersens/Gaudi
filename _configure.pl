@@ -66,6 +66,8 @@ Use GNU GCJ & GCJ: $usegnu
 Jython plug-in support disabled: $nojython
 Groovy plug-in support disabled: $nogroovy
 Notification support disabled: $nonotify
+
+0 = False, 1 = True
 -------------------------------------
 
 INFO
@@ -107,19 +109,11 @@ INFO
 		$systemdesktop = 'GNOME';
 		$usegtk = 1;
 	}
+	print "\n";
 	
 	# Check for txtrevise utility,
-	# if not found, prompt to download from github.com/stpettersens/txtrevise,
-	# the freeze or Py2Exe executable package.
-	
-	# On Unix-likes, detect using `find`. On Windows, use `where`.
-	my $txtrevise = '#';
-	if($systemfamily =~ /\*nix|darwin/) {
-		$txtrevise = `find txtrevise 2>&1`;
-	}
-	else {
-		$txtrevise = `where txtrevise.exe 2>&1`;
-	}
+	# if not found, prompt to download from github.com/stpettersens/txtrevise
+	my $txtrevise = `find txtrevise.pl 2>&1`;
 	checkDependency('txtrevise utility', $txtrevise, 'txtrevise', $systemfamily);
 	
 	# Find required JRE, JDK (look for a Java compiler),
@@ -137,7 +131,7 @@ INFO
 		$tcommands[0] = 'gij';
 		$tcommands[1] = 'gcj';
 	}
-	
+
 	# On *nix, detect using `whereis`. On Windows, use `where'.
 	my $i = 0;
 	my $scaladir;
@@ -162,6 +156,9 @@ INFO
 		checkDependency($tnames[$i], $o, $c, $systemfamily);
 		$i++;
 	}
+
+	# Write environment variable to a build file.
+	writeEnvVar('SCALA_HOME', 'abc', $systemfamily);
 }
 
 sub checkDependency {
@@ -169,7 +166,7 @@ sub checkDependency {
 	# Check for a dependency.
 	##
 	print "$_[0]:\n";
-	
+
 	if($_[1] =~ m/($_[2])/) {
 		print "\tFOUND.\n\n";
 	}
@@ -185,25 +182,9 @@ sub checkDependency {
 				print "\nDownload and install it now? (y/n):\n";
 				$choice = <>;
 				if($choice =~ /y/i) {
-					my $url = 'https://github.com/downloads/stpettersens/txtrevise/';
-					my $zip = 'txtrevise.zip';
-					my $file = 'txtrevise';
-					if($_[3] eq 'windows') {
-						$url = $url . 'txtrevise_win32py27.zip';
-						$file = $file . '.exe';
-					}
-					else {
-						$url = $url . 'txtrevise_nix32py27.zip';
-					}
-					
+	
 					# Download zip file.
-					getstore($url, $zip);
-					
-					# Extract utility from zip.
-					unzip $zip => $file or die "Unzip failed: $UnzipError.\n";
-					
-					# Delete zip.
-					unlink $zip;
+					#getstore($url, $zip);
 					
 					print "\nNow rerun this script.";
 					$loop = 0;
@@ -218,8 +199,20 @@ sub checkDependency {
 }
 
 sub writeEnvVar {
-
-
+	##
+	# Write enviroment variables to build shell script
+	# or batch file.
+	##
+	# Generate shell script on Unix-likes / Mac OS X.
+	if($_[2] =~ /\*nix|darwin/) {
+		if(-e 'build.sh') {
+			unlink 'build.sh';
+		}
+		open(FILE, '>>build.sh');
+		print FILE "#!/bin/sh\nexport $_[0]=\"$_[1]\"\nant \$1\n";
+		close(FILE);
+		system('chmod +x build.sh');
+	}
 }
 
 sub showUsage {
@@ -241,6 +234,7 @@ optional arguments:
                notifications
   --log        Log output of script to file instead of terminal
   --nodeppage  Do not open dependencies web page for missing dependencies
+  --doc	       Show documentation for script and exit
 
 USAGE
 	exit;

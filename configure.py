@@ -155,17 +155,22 @@ def configureBuild(args):
 	# Check for txtrevise utility,
 	# if not found, prompt to download from code.google.com/p/sams-py 
 	# Subversion repository over HTTP - in checkDependency(-,-,-).
+	tool = None
 	try:
 		# On Unix-likes, detect using `find`. On Windows, use `where`.
 		if re.match('\*nix|darwin', system_family):
-			txtrevise = subprocess.check_output(['find', 'txtrevise.py'])
+			txtrevise = subprocess.check_output(['find', 'txtrevise.py'],
+			stderr=subprocess.STDOUT)
+			tool = 'find'
 		else:
-			txtrevise = subprocess.check_output(['where', 'txtrevise.py'])
+			txtrevise = subprocess.check_output(['where', 'txtrevise.py'],
+			stderr=subprocess.STDOUT)
+			tool = 'where'
 
 	except:
 		txtrevise = '\W'
 
-	checkDependency('txtrevise utility', txtrevise, 'txtrevise', system_family)
+	checkDependency('txtrevise utility', txtrevise, 'txtrevise', system_family, tool)
 
 	# Find required JRE, JDK (look for a Java compiler),
 	# Scala distribution and associated tools necessary to build Gaudi on this system.
@@ -185,14 +190,17 @@ def configureBuild(args):
 	# On *nix, detect using `whereis`. On Windows, use `where`.
 	i = 0
 	scala_dir = None
+	tool = None
 	for c in t_commands:
 		try:
 			if re.match('\*nix|darwin', system_family):
 				o = subprocess.check_output(['whereis', c],
 				stderr=subprocess.STDOUT)
+				tool = 'whereis'
 			else:
-				o = subprocess.check_output(['where', '{0}'.format(c)],
+				o = subprocess.check_output(['where', c],
 				stderr=subprocess.STDOUT)
+				tool = 'where'
 					
 			if re.search('\w.+scala', o): 
 				if re.match('\*nix|darwin', system_family):
@@ -203,10 +211,10 @@ def configureBuild(args):
 					fp = p[0].split(r'\bin')
 					scala_dir = fp[0]
 
-			checkDependency(t_names[i], o, c)
+			checkDependency(t_names[i], o, c, system_family, tool)
 
 		except:
-			pass
+			sys.exit(1)
 		i += 1
 
 	# Write environment variable to a build file.
@@ -241,15 +249,17 @@ def configureBuild(args):
 			if re.match('\*nix|darwin', system_family):
 				o = subprocess.check_output(['find', 'lib/{0}'.format(l)],
 				stderr=subprocess.STDOUT)
+				tool = 'find'
 			else:
 				o = subprocess.check_output(['where', 'lib:{0}'.format(l)], 
 				stderr=subprocess.STDOUT)
+				tool = 'where'
 				m = re.findall(l, o)
 				o = m[0]
 
-			checkDependency(l_names[i], o, l, system_family)	
+			checkDependency(l_names[i], o, l, system_family, tool)	
 		except:
-			checkDependency(l_names[i], '!', system_family)
+			sys.exit(1)
 		i += 1
 
 	# Copy scala-library.jar from Scala installation to Gaudi lib folder.
@@ -271,21 +281,29 @@ def configureBuild(args):
 	saveLog()
 	# FIN!
 
-def checkDependency(text, required, tomatch, osys):
+def checkDependency(text, required, tomatch, osys, tool):
 	"""
 	Check for a dependency.
 	"""
 	try:
 		print('{0}:'.format(text))
 
-		if re.search(tomatch, required):
-			print('\tFOUND.\n')
+		if tool == 'find' or tool == 'where':
+			if re.search(tomatch, required):
+				print('\tFOUND.\n')
+
+		elif tool == 'whereis':
+			if re.search('/', required):
+				print('\tFOUND.\n')
+			else:
+				print('\tNOT FOUND.\n')
+				raise RequirementNotFound(text)
 		else:
 			print('\tNOT FOUND.\n')
 			raise RequirementNotFound(text)
 			
 	except RequirementNotFound as e:
-		print("\nA requirement was not found. Please install it:")
+		print("A requirement was not found. Please install it:")
 		print("{0}.\n".format(e.value))
 
 		if text[0:9] == 'txtrevise':
