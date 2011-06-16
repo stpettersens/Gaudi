@@ -109,8 +109,8 @@ INFO
 	}
 	
 	# Check for txtrevise utility,
-	# if not found, prompt to download from code.google.com/p/sams-py,
-	# the freeze / Py2Exe executable package.
+	# if not found, prompt to download from github.com/stpettersens/txtrevise,
+	# the freeze or Py2Exe executable package.
 	
 	# On Unix-likes, detect using `find`. On Windows, use `where`.
 	my $txtrevise = '#';
@@ -120,7 +120,7 @@ INFO
 	else {
 		$txtrevise = `where txtrevise.exe 2>&1`;
 	}
-	checkDependency('txtrevise utility', $txtrevise, 'txtrevise');
+	checkDependency('txtrevise utility', $txtrevise, 'txtrevise', $systemfamily);
 	
 	# Find required JRE, JDK (look for a Java compiler),
 	# Scala distribution and associated tools necessary to build Gaudi on this system.
@@ -185,12 +185,26 @@ sub checkDependency {
 				print "\nDownload and install it now? (y/n):\n";
 				$choice = <>;
 				if($choice =~ /y/i) {
-					my $url = 'http://sams-py.googlecode.com/svn/trunk/txtrevise/txtrevise.py';
+					my $url = 'https://github.com/downloads/stpettersens/txtrevise/';
+					my $zip = 'txtrevise.zip';
 					my $file = 'txtrevise';
 					if($_[3] eq 'windows') {
+						$url = $url . 'txtrevise_win32py27.zip';
 						$file = $file . '.exe';
 					}
-					#getstore($url, $file);
+					else {
+						$url = $url . 'txtrevise_nix32py27.zip';
+					}
+					
+					# Download zip file.
+					getstore($url, $zip);
+					
+					# Extract utility from zip.
+					unzip $zip => $file or die "Unzip failed: $UnzipError.\n";
+					
+					# Delete zip.
+					unlink $zip;
+					
 					print "\nNow rerun this script.";
 					$loop = 0;
 				}
