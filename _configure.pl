@@ -119,11 +119,11 @@ INFO
 	my $txtrevise;
 	my $tool;
 	if($systemfamily =~ /\*nix|darwin/) {
-	 	$txtrevise = `find txtrevise.py 2>&1`;
+	 	$txtrevise = `find txtrevise.pl 2>&1`;
 	 	$tool = 'find';
 	}
 	else {
-		$txtrevise = `where txtrevise.py 2>&1`;
+		$txtrevise = `where txtrevise.pl 2>&1`;
 		$tool = 'where';
 	}
 	checkDependency('txtrevise utility', $txtrevise, 'txtrevise', $tool);
@@ -187,6 +187,14 @@ sub checkDependency {
 
 	if($_[3] eq 'find') {
 		if($_[1] =~ m/^($_[2])/) {
+			print "\tFOUND.\n\n";
+		}
+		else {
+			requirementNotFound($_[0]);
+		}
+	}
+	elsif($_[3] eq 'where') {
+		if($_[1] =~ m/($_[2])/) {
 			print "\tFOUND.\n\n";
 		}
 		else {
