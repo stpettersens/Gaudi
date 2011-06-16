@@ -23,7 +23,6 @@ use strict;
 use warnings;
 use Getopt::Long;
 use LWP::Simple;
-use IO::Uncompress::Unzip qw(unzip $UnzipError);
 
 # Globals
 my $usegnu = 0;
@@ -58,24 +57,26 @@ sub configureBuild {
 		showUsage();
 	}
 
-	print <<INFO;
---------------------------------------
-Build configuration for Gaudi
---------------------------------------
-Use GNU GCJ & GCJ: $usegnu
-Jython plug-in support disabled: $nojython
-Groovy plug-in support disabled: $nogroovy
-Notification support disabled: $nonotify
+	my $busegnu = toBool($usegnu);
+	my $bnojython = toBool($nojython);
+	my $bnogroovy = toBool($nogroovy);
+	my $bnonotify = toBool($nonotify);
 
-0 = False, 1 = True
--------------------------------------
+	print <<INFO;
+-------------------------------------------
+Build configuration for Gaudi
+-------------------------------------------
+Use GNU GCJ & GCJ: $busegnu
+Jython plug-in support disabled: $bnojython
+Groovy plug-in support disabled: $bnogroovy
+Notification support disabled: $bnonotify
+-------------------------------------------
 
 INFO
 
 	# Detect operating system.
 	my $systemfamily;
 	my $uname = `uname -s 2>&1`;
-
 	if($uname =~ /.*n[i|u]x|.*BSD|.*CYGWIN/) {
 		print "Detected system:\n\tLinux/Unix-like (not Mac OS X).\n";
 		$systemfamily = '*nix';
@@ -113,8 +114,19 @@ INFO
 	
 	# Check for txtrevise utility,
 	# if not found, prompt to download from github.com/stpettersens/txtrevise
-	my $txtrevise = `find txtrevise.pl 2>&1`;
-	checkDependency('txtrevise utility', $txtrevise, 'txtrevise', $systemfamily);
+
+	# On Unix-likes, detect using `find`. On Windows, use `where`.
+	my $txtrevise;
+	my $tool;
+	if($systemfamily =~ /\*nix|darwin/) {
+	 	$txtrevise = `find txtrevise.py 2>&1`;
+	 	$tool = 'find';
+	}
+	else {
+		$txtrevise = `where txtrevise.py 2>&1`;
+		$tool = 'where';
+	}
+	checkDependency('txtrevise utility', $txtrevise, 'txtrevise', $tool);
 	
 	# Find required JRE, JDK (look for a Java compiler),
 	# Scala distribution and associated tools necessary to build Gaudi on this system.
@@ -134,31 +146,37 @@ INFO
 
 	# On *nix, detect using `whereis`. On Windows, use `where'.
 	my $i = 0;
-	my $scaladir;
+	my $scaladir = '#';
 	my $o;
 	foreach(@tcommands) {
 		my $c = $_;
 		if($systemfamily =~ /\*nix|darwin/) {
 			$o = `whereis $c 2>&1`;
+			$tool = 'whereis';
 		}
 		else {
 			$o = `where $c 2>&1`;
+			$tool = 'where';
 		}
 		
-		if($o =~ /\w.+scala/) {
+		if($o =~ /scala/) {
 			if($systemfamily =~ /\*nix|darwin/) {
-				#...
+				if($o =~ /\/+\w+\/+scala\-*\d*\.*\d*\.*\d*\.*\d*/) {
+					$scaladir = $&;
+				}
 			}
 			else {
-				#...
+				if($o =~ /[\w\:]+[^\/]+scala\-*\d*\.*\d*\.*\d*\.*\d*/) {
+					$scaladir = $&;
+				}
 			}
 		}
-		checkDependency($tnames[$i], $o, $c, $systemfamily);
+		checkDependency($tnames[$i], $o, $c,  $tool);
 		$i++;
 	}
 
 	# Write environment variable to a build file.
-	writeEnvVar('SCALA_HOME', 'abc', $systemfamily);
+	writeEnvVar('SCALA_HOME', $scaladir, $systemfamily);
 }
 
 sub checkDependency {
@@ -167,26 +185,42 @@ sub checkDependency {
 	##
 	print "$_[0]:\n";
 
-	if($_[1] =~ m/($_[2])/) {
-		print "\tFOUND.\n\n";
+	if($_[3] eq 'find') {
+		if($_[1] =~ m/^($_[2])/) {
+			print "\tFOUND.\n\n";
+		}
+		else {
+			requirementNotFound($_[0]);
+		}
 	}
-	else {
+	elsif($_[3] eq 'whereis') {
+		if($_[1] =~ /\//) {
+			print "\tFOUND.\n\n";
+		}
+		else {
+			requirementNotFound($_[0]);
+		}
+	}
+}
+
+sub requirementNotFound {
+
 		print "\tNOT FOUND.\n";
 		print "\nA requirement was not found. Please install it:";
-		print "\n$_[0].\n";
+		print "\n$_[0].\n\n";
 		
 		if(substr($_[0], 0, 9) eq 'txtrevise') {
 			my $loop = 1;
 			my $choice;
 			while($loop == 1) {
-				print "\nDownload and install it now? (y/n):\n";
+				print "Download and install it now? (y/n):\n";
 				$choice = <>;
 				if($choice =~ /y/i) {
 	
 					# Download zip file.
 					#getstore($url, $zip);
 					
-					print "\nNow rerun this script.";
+					print "\nNow rerun this script.\n\n";
 					$loop = 0;
 				}
 				elsif($choice =~ /n/i) {
@@ -194,8 +228,11 @@ sub checkDependency {
 				}
 			}
 		}
+		else {
+			my $a = lc($_[0]);
+			system("firefox http://stpettersens.github.com/Gaudi/dependencies.html#$a");
+		}
 		exit;
-	}
 }
 
 sub writeEnvVar {
@@ -209,10 +246,27 @@ sub writeEnvVar {
 			unlink 'build.sh';
 		}
 		open(FILE, '>>build.sh');
-		print FILE "#!/bin/sh\nexport $_[0]=\"$_[1]\"\nant \$1\n";
+		print FILE "#!/bin/sh\nexport $_[0]\=\"$_[1]\"\nant \$1\n";
 		close(FILE);
+		# Mark shell script as executable.
 		system('chmod +x build.sh');
 	}
+	# Generate batch file on Windows.
+	else {
+		if(-e 'build.bat') {
+			unlink 'build.bat';
+		}
+		open(FILE, '>>build.bat');
+		print FILE "\@set $_[0]\=$_[1]\r\n\@ant \%1\r\n";
+		close(FILE);
+	}
+}
+
+sub writeExecutable {
+	##
+	# Write executable wrapper.
+	##
+
 }
 
 sub showUsage {
@@ -238,6 +292,17 @@ optional arguments:
 
 USAGE
 	exit;
+}
+
+sub toBool {
+	my $bool;
+	if($_[0] == 1) {
+		$bool = 'True';
+	}
+	else {
+		$bool = 'False';
+	}
+	return $bool;
 }
 
 configureBuild();

@@ -202,7 +202,7 @@ def configureBuild(args):
 				stderr=subprocess.STDOUT)
 				tool = 'where'
 					
-			if re.search('\w.+scala', o): 
+			if re.search('scala', o): 
 				if re.match('\*nix|darwin', system_family):
 					p = re.findall('/+\w+/+scala\-*\d*\.*\d*\.*\d*\.*\d*', o)
 					scala_dir = p[0]
@@ -214,7 +214,7 @@ def configureBuild(args):
 			checkDependency(t_names[i], o, c, system_family, tool)
 
 		except:
-			sys.exit(1)
+			checkDependency(t_names[i], o, c, system_family, tool)
 		i += 1
 
 	# Write environment variable to a build file.
@@ -291,18 +291,17 @@ def checkDependency(text, required, tomatch, osys, tool):
 		if tool == 'find' or tool == 'where':
 			if re.search(tomatch, required):
 				print('\tFOUND.\n')
+			else:
+				raise RequirementNotFound(text)
 
 		elif tool == 'whereis':
 			if re.search('/', required):
 				print('\tFOUND.\n')
 			else:
-				print('\tNOT FOUND.\n')
 				raise RequirementNotFound(text)
-		else:
-			print('\tNOT FOUND.\n')
-			raise RequirementNotFound(text)
 			
 	except RequirementNotFound as e:
+		print('\tNOT FOUND.\n')
 		print("A requirement was not found. Please install it:")
 		print("{0}.\n".format(e.value))
 
@@ -329,8 +328,8 @@ def checkDependency(text, required, tomatch, osys, tool):
 			global use_deppage
 			if use_deppage:
 				a = text.split(' ')
-				b = a[0].lower()
-				webbrowser.open_new_tab('http://stpettersens.github.com/Gaudi/dependencies.html#{0}'.format(b))
+				a = a[0].lower()
+				webbrowser.open_new_tab('http://stpettersens.github.com/Gaudi/dependencies.html#{0}'.format(a))
 
 		saveLog()
 		sys.exit(1)
