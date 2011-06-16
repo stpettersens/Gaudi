@@ -20,8 +20,10 @@
 # ./configure.pl [arguments]
 
 use strict;
+use warnings;
 use Getopt::Long;
 use LWP::Simple;
+use IO::Uncompress::Unzip qw(unzip $UnzipError);
 
 # Globals
 my $usegnu = 0;
@@ -70,7 +72,8 @@ INFO
 
 	# Detect operating system.
 	my $systemfamily;
-	my $uname = `uname -s`;
+	my $uname = `uname -s 2>&1`;
+
 	if($uname =~ /.*n[i|u]x|.*BSD|.*CYGWIN/) {
 		print "Detected system:\n\tLinux/Unix-like (not Mac OS X).\n";
 		$systemfamily = '*nix';
@@ -112,10 +115,10 @@ INFO
 	# On Unix-likes, detect using `find`. On Windows, use `where`.
 	my $txtrevise = '#';
 	if($systemfamily =~ /\*nix|darwin/) {
-		$txtrevise = `find txtrevise.pl 2>&1`;
+		$txtrevise = `find txtrevise 2>&1`;
 	}
 	else {
-		$txtrevise = `where txtrevise.pl 2>&1`;
+		$txtrevise = `where txtrevise.exe 2>&1`;
 	}
 	checkDependency('txtrevise utility', $txtrevise, 'txtrevise');
 	
@@ -156,7 +159,7 @@ INFO
 				#...
 			}
 		}
-		checkDependency($tnames[$i], $o, $c);
+		checkDependency($tnames[$i], $o, $c, $systemfamily);
 		$i++;
 	}
 }
@@ -183,8 +186,11 @@ sub checkDependency {
 				$choice = <>;
 				if($choice =~ /y/i) {
 					my $url = 'http://sams-py.googlecode.com/svn/trunk/txtrevise/txtrevise.py';
-					my $file = 'txtrevise.py';
-					getstore($url, $file);
+					my $file = 'txtrevise';
+					if($_[3] eq 'windows') {
+						$file = $file . '.exe';
+					}
+					#getstore($url, $file);
 					print "\nNow rerun this script.";
 					$loop = 0;
 				}
