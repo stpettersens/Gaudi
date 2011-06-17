@@ -56,6 +56,15 @@ sub configureBuild {
 	if($help == 1) {
 		showUsage();
 	}
+	
+	if($noplugins == 1 || $minbuild == 1) {
+		$nojython = 1;
+		$nogroovy = 1;
+	}
+	
+	if($minbuild == 1) {
+		$nonotify = 1;
+	}
 
 	my $busegnu = toBool($usegnu);
 	my $bnojython = toBool($nojython);
@@ -113,8 +122,7 @@ INFO
 	print "\n";
 	
 	# Check for txtrevise utility,
-	# if not found, prompt to download from github.com/stpettersens/txtrevise
-
+	# if not found, prompt to download from github.com/stpettersens/txtrevise.
 	# On Unix-likes, detect using `find`. On Windows, use `where`.
 	my $txtrevise;
 	my $tool;
@@ -126,7 +134,7 @@ INFO
 		$txtrevise = `where txtrevise.pl 2>&1`;
 		$tool = 'where';
 	}
-	checkDependency('txtrevise utility', $txtrevise, 'txtrevise', $tool);
+	checkDependency('txtrevise utility', $txtrevise, 'txtrevise', $tool, $systemfamily);
 	
 	# Find required JRE, JDK (look for a Java compiler),
 	# Scala distribution and associated tools necessary to build Gaudi on this system.
@@ -159,6 +167,7 @@ INFO
 			$tool = 'where';
 		}
 		
+		# Find location of Scala distribution.
 		if($o =~ /scala/) {
 			if($systemfamily =~ /\*nix|darwin/) {
 				if($o =~ /\/+\w+\/+scala\-*\d*\.*\d*\.*\d*\.*\d*/) {
@@ -167,16 +176,81 @@ INFO
 			}
 			else {
 				if($o =~ /[\w\:]+[^\/]+scala\-*\d*\.*\d*\.*\d*\.*\d*/) {
-					$scaladir = $&;
+					my $p = $&;
+					my @fp = split('bin', $p);
+					$scaladir = $fp[0];
 				}
 			}
 		}
-		checkDependency($tnames[$i], $o, $c,  $tool);
+		checkDependency($tnames[$i], $o, $c,  $tool, $systemfamily);
 		$i++;
 	}
 
 	# Write environment variable to a build file.
 	writeEnvVar('SCALA_HOME', $scaladir, $systemfamily);
+
+	# Write exectuable wrapper.
+	writeExecutable($tcommands[0], $systemfamily);
+	
+	# Find required JAR libraries necessary to build Gaudi on this system.
+	my @lnames = ( 'JSON.simple', 'commons-io' );
+	my @ljars = ( 'json_simple-1.1.jar', 'commons-io-2.0.1.jar' );
+	
+	# When enabled, use plug-in support for Groovy and Jython.
+	if($nogroovy == 0) {
+		push(@lnames, 'Groovy');
+		push(@ljars, 'groovy-all-1.8.0.jar');
+	}
+	if($nojython == 0) {
+		push(@lnames, 'Jython');
+		push(@ljars, 'jython.jar');
+	}
+	
+	# When use GTK and use notifications are enabled,
+	# add java-gnome [GTK] library to libraries list.
+	if($usegtk == 1 && $nonotify == 0) {
+		push(@lnames, 'java-gnome');
+		push(@ljars, 'gtk.jar');
+	}
+	
+	# On *nix, detect using `find`. On Windows, use `where' again.
+	$i = 0;
+	foreach(@ljars) {
+		my $l= $_;
+		if($systemfamily =~ /\*nix|darwin/) {
+			$o = `find lib/$l 2>&1`;
+			$tool = 'find';
+		}
+		else {
+			$o = `where lib:$l 2>&1`;
+			$tool = 'where';
+			if($o =~ /($l)/) {
+				$o = $&;
+			}
+		}
+		checkDependency($lnames[$i], $o, $l, $tool, $systemfamily);
+		$i++;
+	}
+	
+	# Copy scala-library.jar from Scala installation to Gaudi lib folder.
+	#...
+
+	# Done; now prompt user to run build script.
+	print "\nDependencies met. Now run:\n";
+
+	if($systemfamily =~ /\*nix|darwin/) {
+		print "\n./build.sh";
+		print "\n./build.sh clean";
+		print "\nbuild.sh install";
+	}
+	else {
+		print "\nbuild.bat";
+		print "\nbuild.bat clean";
+		print "\nbuild.bat install";
+	}
+	print "\n\n";
+	saveLog()
+	# FIN!
 }
 
 sub checkDependency {
@@ -190,7 +264,7 @@ sub checkDependency {
 			print "\tFOUND.\n\n";
 		}
 		else {
-			requirementNotFound($_[0]);
+			requirementNotFound($_[0], $_[4]);
 		}
 	}
 	elsif($_[3] eq 'where') {
@@ -198,7 +272,7 @@ sub checkDependency {
 			print "\tFOUND.\n\n";
 		}
 		else {
-			requirementNotFound($_[0]);
+			requirementNotFound($_[0], $_[4]);
 		}
 	}
 	elsif($_[3] eq 'whereis') {
@@ -206,13 +280,16 @@ sub checkDependency {
 			print "\tFOUND.\n\n";
 		}
 		else {
-			requirementNotFound($_[0]);
+			requirementNotFound($_[0], $_[4]);
 		}
 	}
 }
 
 sub requirementNotFound {
-
+		##
+		# requirmentNotFound.
+		# This mirrors the purpose of the exception in the Python script.
+		##
 		print "\tNOT FOUND.\n";
 		print "\nA requirement was not found. Please install it:";
 		print "\n$_[0].\n\n";
@@ -222,11 +299,18 @@ sub requirementNotFound {
 			my $choice;
 			while($loop == 1) {
 				print "Download and install it now? (y/n):\n";
-				$choice = <>;
+				$choice = <STDIN>;
 				if($choice =~ /y/i) {
+					my $url = 'https://raw.github.com/stpettersens/txtrevise/master/txtrevise.pl';
+					my $util = 'txtrevise.pl';
 	
-					# Download zip file.
-					#getstore($url, $zip);
+					# Download utility.
+					LWP::Simple::getstore($url, $util);
+					
+					# Mark as executable on *nix/darwin.
+					if($_[1] =~ /\*nix|darwin/) {
+						system("chmod -x $util");
+					}
 					
 					print "\nNow rerun this script.\n\n";
 					$loop = 0;
@@ -237,23 +321,27 @@ sub requirementNotFound {
 			}
 		}
 		else {
-			my $a = lc($_[0]);
-			system("firefox http://stpettersens.github.com/Gaudi/dependencies.html#$a");
+			my @a = split(' ', $_[0]);
+			my $b = lc($a[0]);
+			my $wurl = "http://stpettersens.github.com/Gaudi/dependencies.html#$b";
+			if($_[1] eq 'windows') {
+				system("start $wurl");
+			}
+			else {
+				system("firefox $wurl");
+			}
 		}
 		exit;
 }
 
 sub writeEnvVar {
 	##
-	# Write enviroment variables to build shell script
+	# Write environment variables to build shell script
 	# or batch file.
 	##
 	# Generate shell script on Unix-likes / Mac OS X.
 	if($_[2] =~ /\*nix|darwin/) {
-		if(-e 'build.sh') {
-			unlink 'build.sh';
-		}
-		open(FILE, '>>build.sh');
+		open(FILE, ">build.sh");
 		print FILE "#!/bin/sh\nexport $_[0]\=\"$_[1]\"\nant \$1\n";
 		close(FILE);
 		# Mark shell script as executable.
@@ -261,10 +349,7 @@ sub writeEnvVar {
 	}
 	# Generate batch file on Windows.
 	else {
-		if(-e 'build.bat') {
-			unlink 'build.bat';
-		}
-		open(FILE, '>>build.bat');
+		open(FILE, '>build.bat');
 		print FILE "\@set $_[0]\=$_[1]\r\n\@ant \%1\r\n";
 		close(FILE);
 	}
@@ -274,7 +359,20 @@ sub writeExecutable {
 	##
 	# Write executable wrapper.
 	##
-
+	my $exe = 'gaudi';
+	open(FILE, ">$exe");
+	if($_[1] =~ /\*nix|darwin/) {
+		print FILE "#!/bin/sh\n# Run Gaudi";
+		print FILE "\n$_[0] -jar Gaudi.jar \"\$\@\"";
+		close(FILE);
+		system("chmod +x $exe");
+	}
+	else {
+		print FILE "\@rem Run Gaudi";
+		print FILE "\r\n\@$_[0] -jar Gaudi.jar \"\%*\"\r\n";
+		close(FILE);
+		rename($exe, $exe . '.bat');
+	}
 }
 
 sub showUsage {
@@ -302,7 +400,14 @@ USAGE
 	exit;
 }
 
+sub saveLog {
+	
+}
+
 sub toBool {
+	##
+	# Perl does not have booleans,
+	# convert 1 and 0 to "boolean strings", just for representation.
 	my $bool;
 	if($_[0] == 1) {
 		$bool = 'True';

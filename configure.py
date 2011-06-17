@@ -202,6 +202,7 @@ def configureBuild(args):
 				stderr=subprocess.STDOUT)
 				tool = 'where'
 					
+			# Find location of Scala distribution.
 			if re.search('scala', o): 
 				if re.match('\*nix|darwin', system_family):
 					p = re.findall('/+\w+/+scala\-*\d*\.*\d*\.*\d*\.*\d*', o)
@@ -224,16 +225,16 @@ def configureBuild(args):
 	writeExecutable(t_commands[0], system_family)
 
 	# Find required JAR libraries necessary to build Gaudi on this system.
-	l_names = [ 'JSON.simple', 'commons-io']
+	l_names = [ 'JSON.simple', 'commons-io' ]
 	l_jars = [ 'json_simple-1.1.jar', 'commons-io-2.0.1.jar' ]
 
-	# When enabled, use plug-in support for Groovy and Jython
+	# When enabled, use plug-in support for Groovy and Jython.
 	if use_groovy:
-		l_names.append('groovy')
+		l_names.append('Groovy')
 		l_jars.append('groovy-all-1.8.0.jar')
 
 	if use_jython:
-		l_names.append('jython')
+		l_names.append('Jython')
 		l_jars.append('jython.jar')
 
 	# When use GTK and use notifications are enabled, 
@@ -242,7 +243,7 @@ def configureBuild(args):
 		l_names.append('java-gnome')
 		l_jars.append('gtk.jar')
 
-	# On *nix, detect using `find`. On Windows use `where` again.
+	# On *nix, detect using `find`. On Windows, use `where` again.
 	i = 0
 	for l in l_jars:
 		try:
@@ -259,7 +260,7 @@ def configureBuild(args):
 
 			checkDependency(l_names[i], o, l, system_family, tool)	
 		except:
-			sys.exit(1)
+			checkDependency(_names[i], o, l, system_family, tool)
 		i += 1
 
 	# Copy scala-library.jar from Scala installation to Gaudi lib folder.
@@ -312,12 +313,13 @@ def checkDependency(text, required, tomatch, osys, tool):
 			while not y.match(choice) or not n.match(choice):
 				choice = raw_input('Download and install it now? (y/n): ')
 				if(y.match(choice)):
-					urllib.urlretrieve('http://sams-py.googlecode.com/svn/trunk/txtrevise/txtrevise.py',
-					'txtrevise.py')
+					url = 'http://sams-py.googlecode.com/svn/trunk/txtrevise/txtrevise.py'
+					util = 'txtrevise.py'
+					urllib.urlretrieve(url, util)
 
 					# Mark txtrevise utility as executable.
 					if re.match('\*nix|darwin', osys):
-						os.system('chmod +x txtrevise.py')
+						os.system('chmod +x {0}'.format(util))
 					
 					print('\nNow rerun this script.')
 					break
@@ -329,14 +331,15 @@ def checkDependency(text, required, tomatch, osys, tool):
 			if use_deppage:
 				a = text.split(' ')
 				a = a[0].lower()
-				webbrowser.open_new_tab('http://stpettersens.github.com/Gaudi/dependencies.html#{0}'.format(a))
+				wurl = 'http://stpettersens.github.com/Gaudi/dependencies.html#{0}'.format(a)
+				webbrowser.open_new_tab(wurl)
 
 		saveLog()
 		sys.exit(1)
 
 def writeEnvVar(var, value, osys):
 	"""
-	Write enviroment variables to build shell script
+	Write environment variables to build shell script
 	or batch file.
 	"""
 	# Generate shell script on Unix-likes / Mac OS X.
@@ -383,17 +386,18 @@ def writeExecutable(java, osys):
 	"""
 	Write executable wrapper.
 	"""
-	f = open('gaudi', 'w')
+	exe = 'gaudi'
+	f = open(exe, 'w')
 	if re.match('\*nix|darwin', osys):
-		f.write('#!/bin/sh')
-		f.write('\n# Run Gaudi')
+		f.write('#!/bin/sh\n# Run Gaudi')
 		f.write('\n{0} -jar Gaudi.jar "$@"'.format(java))
 		f.close()
-		os.system('chmod +x gaudi')
+		os.system('chmod +x {0}'.format(exe))
 	else:
 		f.write('@rem Run Gaudi')
 		f.write('\r\n@{0} -jar Gaudi.jar "%*"\r\n'.format(java))
 		f.close()
+		os.rename(exe, exe + '.bat')
 
 def saveLog():
 	"""
