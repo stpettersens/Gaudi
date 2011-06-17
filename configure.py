@@ -300,6 +300,8 @@ def checkDependency(text, required, tomatch, osys, tool):
 				print('\tFOUND.\n')
 			else:
 				raise RequirementNotFound(text)
+		else:
+			raise RequirementNotFound(text)
 			
 	except RequirementNotFound as e:
 		print('\tNOT FOUND.\n')
@@ -397,6 +399,8 @@ def writeExecutable(java, osys):
 		f.write('@rem Run Gaudi')
 		f.write('\r\n@{0} -jar Gaudi.jar "%*"\r\n'.format(java))
 		f.close()
+		if os.exists(exe + '.bat'):
+			os.delete(exe + '.bat')
 		os.rename(exe, exe + '.bat')
 
 def saveLog():

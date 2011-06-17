@@ -241,7 +241,7 @@ INFO
 	if($systemfamily =~ /\*nix|darwin/) {
 		print "\n./build.sh";
 		print "\n./build.sh clean";
-		print "\nbuild.sh install";
+		print "\n./build.sh install";
 	}
 	else {
 		print "\nbuild.bat";
@@ -259,15 +259,7 @@ sub checkDependency {
 	##
 	print "$_[0]:\n";
 
-	if($_[3] eq 'find') {
-		if($_[1] =~ m/^($_[2])/) {
-			print "\tFOUND.\n\n";
-		}
-		else {
-			requirementNotFound($_[0], $_[4]);
-		}
-	}
-	elsif($_[3] eq 'where') {
+	if($_[3] eq 'find' || $_[3] eq 'where') {
 		if($_[1] =~ m/($_[2])/) {
 			print "\tFOUND.\n\n";
 		}
@@ -301,15 +293,15 @@ sub requirementNotFound {
 				print "Download and install it now? (y/n):\n";
 				$choice = <STDIN>;
 				if($choice =~ /y/i) {
-					my $url = 'https://raw.github.com/stpettersens/txtrevise/master/txtrevise.pl';
+					my $url = 'http://pastebin.com/raw.php?i=a0xEqyeq';
 					my $util = 'txtrevise.pl';
 	
 					# Download utility.
-					LWP::Simple::getstore($url, $util);
-					
+					getstore($url, $util);
+
 					# Mark as executable on *nix/darwin.
 					if($_[1] =~ /\*nix|darwin/) {
-						system("chmod -x $util");
+						system("chmod +x $util");
 					}
 					
 					print "\nNow rerun this script.\n\n";
@@ -328,7 +320,11 @@ sub requirementNotFound {
 				system("start $wurl");
 			}
 			else {
-				system("firefox $wurl");
+				my $pid = fork();
+				if($pid == 0) {
+					system("firefox $wurl");
+					exit;
+				}
 			}
 		}
 		exit;
