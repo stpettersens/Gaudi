@@ -23,6 +23,7 @@ use strict;
 use warnings;
 use Getopt::Long;
 use LWP::Simple;
+use IO::Handle;
 
 # Globals
 my $usegnu = 0;
@@ -52,6 +53,12 @@ sub configureBuild {
 		'nodeppage' => \$nodeppage,
 		'help' => \$help
 	);
+
+	if($logconf == 1) {
+		print 'Saving output to log file.';
+		open OUTPUT, '>', 'configure.log' or die $!;
+		STDOUT->fdopen( \*OUTPUT, 'w') or die $!;
+	}
 
 	if($help == 1) {
 		showUsage();
@@ -193,7 +200,7 @@ INFO
 	writeExecutable($tcommands[0], $systemfamily);
 	
 	# Find required JAR libraries necessary to build Gaudi on this system.
-	my @lnames = ( 'JSON.simple', 'commons-io' );
+	my @lnames = ( 'JSON.simple', 'Commons-IO' );
 	my @ljars = ( 'json_simple-1.1.jar', 'commons-io-2.0.1.jar' );
 	
 	# When enabled, use plug-in support for Groovy and Jython.
@@ -249,7 +256,6 @@ INFO
 		print "\nbuild.bat install";
 	}
 	print "\n";
-	saveLog()
 	# FIN!
 }
 
@@ -258,7 +264,6 @@ sub checkDependency {
 	# Check for a dependency.
 	##
 	print "$_[0]:\n";
-
 	if($_[3] eq 'find') {
 		if($_[1] =~ /^($_[2])/) {
 			print "\tFOUND.\n\n";
@@ -267,8 +272,8 @@ sub checkDependency {
 			requirementNotFound($_[0], $_[4]);
 		}
 	}
-	elsif($_[3] eq 'whereis') {
-		if($_[1] =~ /\//) {
+	elsif($_[3] eq 'whereis' || $_[3] eq 'where') {
+		if($_[1] =~ /\// || $_[1] =~ /($_[2])/) {
 			print "\tFOUND.\n\n";
 		}
 		else {
@@ -396,14 +401,11 @@ USAGE
 	exit;
 }
 
-sub saveLog {
-	
-}
-
 sub toBool {
 	##
 	# Perl does not have booleans,
 	# convert 1 and 0 to "boolean strings", just for representation.
+	##
 	my $bool;
 	if($_[0] == 1) {
 		$bool = 'True';

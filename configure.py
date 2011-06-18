@@ -225,7 +225,7 @@ def configureBuild(args):
 	writeExecutable(t_commands[0], system_family)
 
 	# Find required JAR libraries necessary to build Gaudi on this system.
-	l_names = [ 'JSON.simple', 'commons-io' ]
+	l_names = [ 'JSON.simple', 'Commons-IO' ]
 	l_jars = [ 'json_simple-1.1.jar', 'commons-io-2.0.1.jar' ]
 
 	# When enabled, use plug-in support for Groovy and Jython.
@@ -287,15 +287,14 @@ def checkDependency(text, required, tomatch, osys, tool):
 	"""
 	try:
 		print('{0}:'.format(text))
-
 		if tool == 'find':
-			if re.search('^{0}'.format(tomatch), required):
+			if re.match('{0}'.format(tomatch), required):
 				print('\tFOUND.\n')
 			else:
 				raise RequirementNotFound(text)
 
 		elif tool == 'whereis' or tool == 'where':
-			if re.search('/', required):
+			if re.search('\/', required) or re.search(tomatch, required):
 				print('\tFOUND.\n')
 			else:
 				raise RequirementNotFound(text)
