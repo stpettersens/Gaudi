@@ -105,6 +105,8 @@ def configureBuild(args):
 		no_notify = True
 
 	if log_conf:
+		# Do not show dep page for any missing dependencies when logging.
+		use_deppage = False
 		sys.stdout = logger
 
 	print('--------------------------------------')
@@ -128,6 +130,7 @@ def configureBuild(args):
 			system_family = 'darwin'
 
 		else:
+			# In the event that Windows user has `uname` available:
 			raise Exception
 
 	except Exception:
@@ -258,9 +261,11 @@ def configureBuild(args):
 				m = re.findall(l, o)
 				o = m[0]
 
+				print o + "\n"
+
 			checkDependency(l_names[i], o, l, system_family, tool)	
 		except:
-			checkDependency(l_names[i], o, l, system_family, tool)
+			sys.exit(1)
 		i += 1
 
 	# Copy scala-library.jar from Scala installation to Gaudi lib folder.
@@ -288,7 +293,7 @@ def checkDependency(text, required, tomatch, osys, tool):
 	try:
 		print('{0}:'.format(text))
 		if tool == 'find':
-			if re.match('{0}'.format(tomatch), required):
+			if re.search('{0}'.format(tomatch), required):
 				print('\tFOUND.\n')
 			else:
 				raise RequirementNotFound(text)
@@ -334,7 +339,6 @@ def checkDependency(text, required, tomatch, osys, tool):
 				wurl = 'http://stpettersens.github.com/Gaudi/dependencies.html#{0}'.format(a)
 				webbrowser.open_new_tab(wurl)
 
-		saveLog()
 		sys.exit(1)
 
 def writeEnvVar(var, value, osys):

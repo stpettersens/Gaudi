@@ -42,7 +42,7 @@ sub configureBuild {
 	my $noplugins = 0;
 	my $minbuild = 0;
 	my $help = 0;
-	Getopt::Long::GetOptions(
+	GetOptions(
 		'usegnu' => \$usegnu,
 		'nojython' => \$nojython,
 		'nogroovy' => \$nogroovy,
@@ -55,7 +55,9 @@ sub configureBuild {
 	);
 
 	if($logconf == 1) {
-		print 'Saving output to log file.';
+		# Do not show dep page for any missing dependencies when logging.
+		$nodeppage = 1;
+		print "Saving output to log file.\n";
 		open OUTPUT, '>', 'configure.log' or die $!;
 		STDOUT->fdopen( \*OUTPUT, 'w') or die $!;
 	}
@@ -231,9 +233,11 @@ INFO
 		else {
 			$o = `where lib:$l 2>&1`;
 			$tool = 'where';
-			if($o =~ /($l)/) {
-				$o = $&;
-			}
+			#if($o =~ /($l)/) {
+				#$o = $&;
+			#}
+
+			print "$o\n";
 		}
 		checkDependency($lnames[$i], $o, $l, $tool, $systemfamily);
 		$i++;
@@ -265,7 +269,7 @@ sub checkDependency {
 	##
 	print "$_[0]:\n";
 	if($_[3] eq 'find') {
-		if($_[1] =~ /^($_[2])/) {
+		if($_[1] =~ /($_[2])/) {
 			print "\tFOUND.\n\n";
 		}
 		else {
@@ -317,7 +321,7 @@ sub requirementNotFound {
 				}
 			}
 		}
-		else {
+		elsif($nodeppage == 0) {
 			my @a = split(' ', $_[0]);
 			my $b = lc($a[0]);
 			my $wurl = "http://stpettersens.github.com/Gaudi/dependencies.html#$b";
