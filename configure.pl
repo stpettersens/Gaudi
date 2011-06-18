@@ -259,8 +259,8 @@ sub checkDependency {
 	##
 	print "$_[0]:\n";
 
-	if($_[3] eq 'find' || $_[3] eq 'where') {
-		if($_[1] =~ m/($_[2])/) {
+	if($_[3] eq 'find') {
+		if($_[1] =~ /^($_[2])/) {
 			print "\tFOUND.\n\n";
 		}
 		else {

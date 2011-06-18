@@ -288,13 +288,13 @@ def checkDependency(text, required, tomatch, osys, tool):
 	try:
 		print('{0}:'.format(text))
 
-		if tool == 'find' or tool == 'where':
-			if re.search(tomatch, required):
+		if tool == 'find':
+			if re.search('^{0}'.format(tomatch), required):
 				print('\tFOUND.\n')
 			else:
 				raise RequirementNotFound(text)
 
-		elif tool == 'whereis':
+		elif tool == 'whereis' or tool == 'where':
 			if re.search('/', required):
 				print('\tFOUND.\n')
 			else:
