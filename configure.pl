@@ -248,7 +248,7 @@ INFO
 		print "\nbuild.bat clean";
 		print "\nbuild.bat install";
 	}
-	print "\n\n";
+	print "\n";
 	saveLog()
 	# FIN!
 }

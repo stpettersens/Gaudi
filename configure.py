@@ -260,7 +260,7 @@ def configureBuild(args):
 
 			checkDependency(l_names[i], o, l, system_family, tool)	
 		except:
-			checkDependency(_names[i], o, l, system_family, tool)
+			checkDependency(l_names[i], o, l, system_family, tool)
 		i += 1
 
 	# Copy scala-library.jar from Scala installation to Gaudi lib folder.
@@ -278,7 +278,6 @@ def configureBuild(args):
 		print('build.bat')
 		print('build.bat clean')
 		print('build.bat install')
-	print('\n')
 	saveLog()
 	# FIN!
 
@@ -399,8 +398,8 @@ def writeExecutable(java, osys):
 		f.write('@rem Run Gaudi')
 		f.write('\r\n@{0} -jar Gaudi.jar "%*"\r\n'.format(java))
 		f.close()
-		if os.exists(exe + '.bat'):
-			os.delete(exe + '.bat')
+		if os.path.isfile(exe + '.bat'):
+			os.remove(exe + '.bat')
 		os.rename(exe, exe + '.bat')
 
 def saveLog():
