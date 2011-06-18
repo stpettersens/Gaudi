@@ -30,7 +30,7 @@ import webbrowser
 
 # Globals
 use_gnu = False
-use_gtk = True
+use_gtk = False
 use_groovy = True
 use_jython = True
 no_notify = False
@@ -259,13 +259,13 @@ def configureBuild(args):
 				stderr=subprocess.STDOUT)
 				tool = 'where'
 				m = re.findall(l, o)
-				o = m[0]
-
-				print o + "\n"
 
 			checkDependency(l_names[i], o, l, system_family, tool)	
 		except:
-			sys.exit(1)
+			if system_family == 'windows':
+				checkDependency(l_names[i], o, l, system_family, tool)	
+			else:
+				sys.exit(1)
 		i += 1
 
 	# Copy scala-library.jar from Scala installation to Gaudi lib folder.
@@ -338,7 +338,8 @@ def checkDependency(text, required, tomatch, osys, tool):
 				a = a[0].lower()
 				wurl = 'http://stpettersens.github.com/Gaudi/dependencies.html#{0}'.format(a)
 				webbrowser.open_new_tab(wurl)
-
+		
+		saveLog()
 		sys.exit(1)
 
 def writeEnvVar(var, value, osys):

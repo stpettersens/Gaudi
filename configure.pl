@@ -81,14 +81,14 @@ sub configureBuild {
 	my $bnonotify = toBool($nonotify);
 
 	print <<INFO;
--------------------------------------------
+---------------------------------------
 Build configuration for Gaudi
--------------------------------------------
+---------------------------------------
 Use GNU GCJ & GCJ: $busegnu
 Jython plug-in support disabled: $bnojython
 Groovy plug-in support disabled: $bnogroovy
 Notification support disabled: $bnonotify
--------------------------------------------
+---------------------------------------
 
 INFO
 
@@ -233,11 +233,6 @@ INFO
 		else {
 			$o = `where lib:$l 2>&1`;
 			$tool = 'where';
-			#if($o =~ /($l)/) {
-				#$o = $&;
-			#}
-
-			print "$o\n";
 		}
 		checkDependency($lnames[$i], $o, $l, $tool, $systemfamily);
 		$i++;
