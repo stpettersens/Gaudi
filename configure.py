@@ -31,6 +31,7 @@ import webbrowser
 # Globals
 use_gnu = False
 use_gtk = False
+use_growl = False
 use_groovy = True
 use_jython = True
 no_notify = False
@@ -61,7 +62,8 @@ def configureBuild(args):
 	Configure build; entry method.
 	"""
 	# Handle any command line arguments
-	doc = usegnu = nojython = nogroovy = nonotify = noplugins = minbuild = log = nodeppage = None
+	doc = usegnu = nojython = nogroovy = nonotify = usegrowl = None
+	noplugins = minbuild = log = nodeppage = None
 	parser = argparse.ArgumentParser(description='Configuration script for building Gaudi.')
 	parser.add_argument('--usegnu', action='store_true', dest=usegnu, 
 	help='Use GNU software - GCJ and GIJ')
@@ -73,6 +75,8 @@ def configureBuild(args):
 	help='Disable notification support')
 	parser.add_argument('--noplugins', action='store_true', dest=noplugins,
 	help='Disable all plug-in support')
+	parser.add_argument('--usegrowl', action='store_true', dest=usegrowl,
+	help='Use Growl as notification system over libnotify (GTK)')
 	parser.add_argument('--minbuild', action='store_true', dest=minbuild,
 	help='Use only core functionality; disable plug-ins, disable notifications')
 	parser.add_argument('--log', action='store_true', dest=log, 
@@ -84,11 +88,13 @@ def configureBuild(args):
 	results = parser.parse_args()
 
 	# Set and print configuration
-	global use_gnu, use_groovy, use_jython, no_notify, log_conf, logger, use_deppage
+	global use_gnu, use_groovy, use_jython, no_notify, use_growl
+	global log_conf, logger, use_deppage
 	use_gnu = results.usegnu
 	use_jython = results.nojython
 	use_groovy = results.nogroovy
 	no_notify = results.nonotify
+	use_growl = results.usegrowl
 	use_deppage = results.nodeppage
 	log_conf = results.log
 
@@ -121,13 +127,19 @@ def configureBuild(args):
 	# Detect operating system.
 	try:
 		uname = subprocess.check_output(['uname', '-s'])
-		if re.match('.*n[i|u]x|.*BSD|.*CYGWIN', uname):
+		if re.match('.*n[i|u]x|.*BSD', uname):
 			print('\nDetected system:\n\tLinux/Unix-like (not Mac OS X).\n')
 			system_family = '*nix'
 
 		elif re.match('.*Darwin', uname):
 			print('\nDetected system:\n\tDarwin/Mac OS X.\n')
 			system_family = 'darwin'
+			use_growl = True
+
+		elif re.match('.*CYGWIN', uname):
+			print('\nDetected system:\n\tCygwin.\n')
+			print('Cygwin is currently unsupported. Sorry.\n')
+			sys.exit(1)
 
 		else:
 			# In the event that Windows user has `uname` available:
@@ -144,19 +156,22 @@ def configureBuild(args):
 
 		if re.match('x.*', system_desktop):
 			system_desktop = 'Xfce'
-			use_gtk = True
+			if not use_growl:
+				use_gtk = True
 
 		elif system_desktop == 'default':
 			system_desktop = 'KDE'
+			use_growl = True
 
 		elif system_desktop == 'gnome':
 			system_desktop = system_desktop.upper() 
-			use_gtk = True
+			if not use_growl:
+				use_gtk = True
 
 		print('Detected desktop:\n\t{0}\n'.format(system_desktop))
 
 	# Check for txtrevise utility,
-	# if not found, prompt to download from code.google.com/p/sams-py 
+	# if not found, prompt to download from code.google.com/p/sams-py
 	# Subversion repository over HTTP - in checkDependency(-,-,-).
 	tool = None
 	try:
@@ -192,8 +207,7 @@ def configureBuild(args):
 
 	# On *nix, detect using `whereis`. On Windows, use `where`.
 	i = 0
-	scala_dir = None
-	tool = None
+	scala_dir = tool = None
 	for c in t_commands:
 		try:
 			if re.match('\*nix|darwin', system_family):
@@ -246,6 +260,12 @@ def configureBuild(args):
 		l_names.append('java-gnome')
 		l_jars.append('gtk.jar')
 
+	# When Growl is selected as notification system,
+	# add libgrowl to libraries list.
+	if use_growl and not no_notify:
+		l_names.append('libgrowl')
+		l_jars.append('libgrowl.jar')
+
 	# On *nix, detect using `find`. On Windows, use `where` again.
 	i = 0
 	for l in l_jars:
@@ -258,14 +278,11 @@ def configureBuild(args):
 				o = subprocess.check_output(['where', 'lib:{0}'.format(l)], 
 				stderr=subprocess.STDOUT)
 				tool = 'where'
-				m = re.findall(l, o)
 
 			checkDependency(l_names[i], o, l, system_family, tool)	
 		except:
-			if system_family == 'windows':
-				checkDependency(l_names[i], o, l, system_family, tool)	
-			else:
-				sys.exit(1)
+			checkDependency(l_names[i], o, l, system_family, tool)	
+
 		i += 1
 
 	# Copy scala-library.jar from Scala installation to Gaudi lib folder.
@@ -361,32 +378,6 @@ def writeEnvVar(var, value, osys):
 		f.write('@set {0}={1}\r\n@ant %1\r\n'.format(var, value))
 		f.close()
 
-def amendAntBld(line_num, new_line, osys):
-	"""
-	Amend Ant buildfile using txtrevise utility.
-	"""
-	# Copy _build.xml -> build.xml
-	shutil.copyfile('_build.xml', 'build.xml')
-	command = 'txtrevise.py -q -f build.xml -l {0} -m "<\!---->"'
-	+ ' -r "{1}"' .format(line_num, new_line)
-	if re.match('\*nix|darwin', osys):
-		os.system('./' + command)
-	else:
-		os.system(command)
-
-def amendManifest(new_lib):
-	"""
-	Amend Manifest.mf file, by adding new library for CLASSPATH.
-	"""
-	# Copy _Manifest.mf -> Manifest.mf
-	shutil.copyfile('_Manifest.mf', 'Manifest.mf')
-	command = 'txtrevise.py -q -f Manifest.mf -l 2 -m "#"'
-	+ ' -r "{0}"'.format(new_lib)
-	if re.match('\*nix|darwin', osys):
-		os.system('./' + command)
-	else:
-		os.system(command)
-
 def writeExecutable(java, osys):
 	"""
 	Write executable wrapper.
@@ -405,6 +396,32 @@ def writeExecutable(java, osys):
 		if os.path.isfile(exe + '.bat'):
 			os.remove(exe + '.bat')
 		os.rename(exe, exe + '.bat')
+
+def amendAntBld(line_num, new_line, osys):
+	"""
+	Amend Ant buildfile using txtrevise utility.
+	"""
+	# Copy _build.xml -> build.xml
+	shutil.copyfile('_build.xml', 'build.xml')
+	command = 'txtrevise.py -q -f build.xml -l {0} -m "<\!---->"'
+	+ ' -r "{1}"'.format(line_num, new_line)
+	execChange(command)
+
+def amendManifest(new_lib, osys):
+	"""
+	Amend Manifest.mf file by adding new library for CLASSPATH.
+	"""
+	# Copy _Manifest.mf -> Manifest.mf
+	shutil.copyfile('_Manifest.mf', 'Manifest.mf')
+	command = 'txtrevise.py -q -f Manifest.mf -l {0} -m #'
+	+ ' -r "{0}"'.format(new_lib)
+	execChange(command)
+
+def execChange(command, osys):
+	if re.match('\*nix|darwin', osys):
+		os.system('./' + command)
+	else:
+		os.system(command)
 
 def saveLog():
 	"""

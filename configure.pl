@@ -24,10 +24,12 @@ use warnings;
 use Getopt::Long;
 use LWP::Simple;
 use IO::Handle;
+use File::Copy;
 
 # Globals
 my $usegnu = 0;
 my $usegtk = 0;
+my $usegrowl = 0;
 my $nogroovy = 0;
 my $nojython = 0;
 my $nonotify = 0;
@@ -48,6 +50,7 @@ sub configureBuild {
 		'nogroovy' => \$nogroovy,
 		'nonotify' => \$nonotify,
 		'noplugins' => \$noplugins,
+		'usegrowl' => \$usegrowl,
 		'minbuild' => \$minbuild,
 		'log' => \$logconf,
 		'nodeppage' => \$nodeppage,
@@ -57,7 +60,7 @@ sub configureBuild {
 	if($logconf == 1) {
 		# Do not show dep page for any missing dependencies when logging.
 		$nodeppage = 1;
-		print "Saving output to log file.\n";
+		print "Saving output to log file...\n";
 		open OUTPUT, '>', 'configure.log' or die $!;
 		STDOUT->fdopen( \*OUTPUT, 'w') or die $!;
 	}
@@ -95,43 +98,53 @@ INFO
 	# Detect operating system.
 	my $systemfamily;
 	my $uname = `uname -s 2>&1`;
-	if($uname =~ /.*n[i|u]x|.*BSD|.*CYGWIN/) {
+	if($uname =~ /.*n[i|u]x|.*BSD/) {
 		print "Detected system:\n\tLinux/Unix-like (not Mac OS X).\n";
 		$systemfamily = '*nix';
 	}
 	elsif($uname =~ /.*Darwin/) {
 		print "Detected system:\n\tDarwin/Mac OS X.\n";
 		$systemfamily = 'darwin';
+		$usegrowl = 1;
+	}
+	elsif($uname =~ /.*CYGWIN/) {
+		print "Detected system:\n\tCygwin.\n";
+		print "\nCygwin is currently unsupported. Sorry.\n\n";
+		exit 1;
 	}
 	else {
 		print "Detected system:\n\tWindows.\n";
 		$systemfamily = 'windows';
 	}
-	print "\n";
 
 	# Detect desktop environment on Unix-likes (not Mac OS X).
-	my $systemdesktop;
+	my $systemdesktop = '';
 	if($systemfamily eq '*nix') {
 
 		$systemdesktop = $ENV{'DESKTOP_SESSION'};	
 			
 		if($systemdesktop =~ /x.*/) {
 			$systemdesktop = 'Xfce';
+			if($usegrowl == 0) {
+				$usegtk = 1;
+			}
+		}
+		print "\nDetected desktop:\n\t$systemdesktop\n"
+	}
+	elsif($systemdesktop eq 'default') {
+		$systemdesktop = 'KDE';
+		$usegrowl = 1;
+	}
+	elsif($systemdesktop eq 'gnome') {
+		$systemdesktop = uc($systemdesktop);
+		if($usegrowl == 0) {
 			$usegtk = 1;
 		}
-		print "Detected desktop:\n\t$systemdesktop\n"
-	}
-	elsif($systemfamily eq 'default') {
-		$systemdesktop = 'KDE';
-	}
-	elsif($systemfamily eq 'gnome') {
-		$systemdesktop = 'GNOME';
-		$usegtk = 1;
 	}
 	print "\n";
 	
 	# Check for txtrevise utility,
-	# if not found, prompt to download from github.com/stpettersens/txtrevise.
+	# if not found, prompt to download from code.google.com/p/sams-py
 	# On Unix-likes, detect using `find`. On Windows, use `where`.
 	my $txtrevise;
 	my $tool;
@@ -163,7 +176,7 @@ INFO
 
 	# On *nix, detect using `whereis`. On Windows, use `where'.
 	my $i = 0;
-	my $scaladir = '#';
+	my $scaladir;
 	my $o;
 	foreach(@tcommands) {
 		my $c = $_;
@@ -221,6 +234,13 @@ INFO
 		push(@lnames, 'java-gnome');
 		push(@ljars, 'gtk.jar');
 	}
+
+	# When Growl is selected as notification system,
+	# add libgrowl to libraries list.
+	if($usegrowl == 1 && $nonotify == 0) {
+		push(@lnames, 'libgrowl');
+		push(@ljars, 'libgrowl.jar');
+	}
 	
 	# On *nix, detect using `find`. On Windows, use `where' again.
 	$i = 0;
@@ -229,6 +249,7 @@ INFO
 		if($systemfamily =~ /\*nix|darwin/) {
 			$o = `find lib/$l 2>&1`;
 			$tool = 'find';
+			$l = 'lib/' . $l;
 		}
 		else {
 			$o = `where lib:$l 2>&1`;
@@ -255,6 +276,9 @@ INFO
 		print "\nbuild.bat install";
 	}
 	print "\n";
+	if($logconf) {
+		close(STDOUT);
+	}
 	# FIN!
 }
 
@@ -264,7 +288,7 @@ sub checkDependency {
 	##
 	print "$_[0]:\n";
 	if($_[3] eq 'find') {
-		if($_[1] =~ /($_[2])/) {
+		if($_[1] =~ /^($_[2])/) {
 			print "\tFOUND.\n\n";
 		}
 		else {
@@ -282,56 +306,59 @@ sub checkDependency {
 }
 
 sub requirementNotFound {
-		##
-		# requirmentNotFound.
-		# This mirrors the purpose of the exception in the Python script.
-		##
-		print "\tNOT FOUND.\n";
-		print "\nA requirement was not found. Please install it:";
-		print "\n$_[0].\n\n";
+	##
+	# requirmentNotFound.
+	# This mirrors the purpose of the exception in the Python script.
+	##
+	print "\tNOT FOUND.\n";
+	print "\nA requirement was not found. Please install it:";
+	print "\n$_[0].\n\n";
 		
-		if(substr($_[0], 0, 9) eq 'txtrevise') {
-			my $loop = 1;
-			my $choice;
-			while($loop == 1) {
-				print "Download and install it now? (y/n):\n";
-				$choice = <STDIN>;
-				if($choice =~ /y/i) {
-					my $url = 'http://pastebin.com/raw.php?i=a0xEqyeq';
-					my $util = 'txtrevise.pl';
+	if(substr($_[0], 0, 9) eq 'txtrevise') {
+		my $loop = 1;
+		my $choice;
+		while($loop == 1) {
+			print "Download and install it now? (y/n):\n";
+			$choice = <STDIN>;
+			if($choice =~ /y/i) {
+				my $url = 'http://sams-py.googlecode.com/svn/trunk/txtrevise/txtrevise.pl';
+				my $util = 'txtrevise.pl';
 	
-					# Download utility.
-					getstore($url, $util);
+				# Download utility.
+				getstore($url, $util);
 
-					# Mark as executable on *nix/darwin.
-					if($_[1] =~ /\*nix|darwin/) {
-						system("chmod +x $util");
-					}
+				# Mark as executable on *nix/darwin.
+				if($_[1] =~ /\*nix|darwin/) {
+					system("chmod +x $util");
+				}
 					
-					print "\nNow rerun this script.\n\n";
-					$loop = 0;
-				}
-				elsif($choice =~ /n/i) {
-					$loop = 0;
-				}
+				print "\nNow rerun this script.\n\n";
+				$loop = 0;
+			}
+			elsif($choice =~ /n/i) {
+				$loop = 0;
 			}
 		}
-		elsif($nodeppage == 0) {
-			my @a = split(' ', $_[0]);
-			my $b = lc($a[0]);
-			my $wurl = "http://stpettersens.github.com/Gaudi/dependencies.html#$b";
-			if($_[1] eq 'windows') {
-				system("start $wurl");
-			}
-			else {
-				my $pid = fork();
-				if($pid == 0) {
-					system("firefox $wurl");
-					exit;
-				}
+	}
+	elsif($nodeppage == 0) {
+		my @a = split(' ', $_[0]);
+		my $b = lc($a[0]);
+		my $wurl = "http://stpettersens.github.com/Gaudi/dependencies.html#$b";
+		if($_[1] eq 'windows') {
+			system("start $wurl");
+		}
+		else {
+			my $pid = fork();
+			if($pid == 0) {
+				system("firefox $wurl");
+				exit 0;
 			}
 		}
-		exit;
+	}
+	if($logconf) {
+		close(STDOUT);
+	}
+	exit 1;
 }
 
 sub writeEnvVar {
@@ -375,21 +402,50 @@ sub writeExecutable {
 	}
 }
 
+sub amendAntBld {
+	##
+	# Amend Ant buildfile using txtrevise utility.
+	##
+	# Copy _build.xml -> build.xml
+	copy('_build.xml', 'build.xml') || die "Copy failed: $!";
+	my $command = "txtrevise.pl -q -f build.xml -l $_[0] -m \"<\!---->\" -r \"$_[1]\"";
+	execChange($command, $_[3]);
+}
+
+sub amendManifest {
+	##
+	# Amend Manifest.mf file by adding new library for CLASSPATH.
+	##
+	# Copy _Manifest.mf -> Manifest.mf
+	copy('_Manifest.mf', 'Manifest.mf') || die "Copy failed: $!";
+	my $command = "txtrevise.pl -q -f build.xml -l 2 m # -r \"$_[0]\"";
+	execChange($command, $_[3]);
+}
+
+sub execChange {
+	if($_[1] =~ /\*nix|darwin/) {
+		system('./' . $_[0]);
+	}
+	else {
+		system($_[0]);
+	}
+}
+
 sub showUsage {
 	
 	print <<USAGE;
-usage: configure.pl [--help] [--usegnu] [--nojython] [--nogroovy] [--nonotify]
-                    [--noplugins] [--minbuild] [--log] [--nodeppage] [--doc]
+usage: configure.pl [-h] [--usegnu] [--nojython] [--nogroovy] ... etc.
 
 Configuration script for building Gaudi.
 
 optional arguments:
-  --help       Show this help message and exit
+  -h, --help   Show this help message and exit
   --usegnu     Use GNU software - GCJ and GIJ
   --nojython   Disable Jython plug-in support
   --nogroovy   Disable Groovy plug-in support
   --nonotify   Disable notification support
   --noplugins  Disable all plug-in support
+  --usegrowl   Use Growl as notification system over libnotify 
   --minbuild   Use only core functionality; disable plug-ins, disable
                notifications
   --log        Log output of script to file instead of terminal
@@ -397,13 +453,13 @@ optional arguments:
   --doc	       Show documentation for script and exit
 
 USAGE
-	exit;
+	exit 0;
 }
 
 sub toBool {
 	##
-	# Perl does not have booleans,
-	# convert 1 and 0 to "boolean strings", just for representation.
+	# Perl does not have booleans.
+	# Convert 1 and 0 to "boolean strings", just for representation.
 	##
 	my $bool;
 	if($_[0] == 1) {
