@@ -273,7 +273,7 @@ def configureBuild(args):
 			if re.match('\*nix|darwin', system_family):
 				o = subprocess.check_output(['find', 'lib/{0}'.format(l)],
 				stderr=subprocess.STDOUT)
-				tool = 'find'
+				tool = 'find'				
 			else:
 				o = subprocess.check_output(['where', 'lib:{0}'.format(l)], 
 				stderr=subprocess.STDOUT)
@@ -281,7 +281,7 @@ def configureBuild(args):
 
 			checkDependency(l_names[i], o, l, system_family, tool)	
 		except:
-			checkDependency(l_names[i], o, l, system_family, tool)	
+			checkDependency(l_names[i], '!', l, system_family, tool)	
 
 		i += 1
 
