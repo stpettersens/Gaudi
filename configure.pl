@@ -347,6 +347,13 @@ sub requirementNotFound {
 		if($_[1] eq 'windows') {
 			system("start $wurl");
 		}
+		elsif($_[1] eq 'darwin') {
+			my $pid = fork();
+			if($pid == 0) {
+				system("open -a safari $wurl");
+				exit 0;
+			}
+		}
 		else {
 			my $pid = fork();
 			if($pid == 0) {
