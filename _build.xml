@@ -2,6 +2,7 @@
 <!-- Apache Ant buildfile to build Gaudi, partially based on the example from:
 http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 -->
+<!---->
 <project name="Gaudi" default="build" basedir=".">
 	
 	<description>Gaudi buildfile for Ant</description>
@@ -34,10 +35,11 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<property name="dist.dir" location="${basedir}/dist/"/>
 		<property name="scala-library" location="${env.SCALA_HOME}/lib/scala-library.jar"/>
 		<property name="scala-compiler" location="${env.SCALA_HOME}/lib/scala-compiler.jar"/>
-		<property name="commons-io" location="${lib.dir}/commons-io-2.0.1.jar"/>
 		<property name="json-simple" location="${lib.dir}/json_simple-1.1.jar"/>
-		<property name="groovy-lib" location="${lib.dir}/groovy-all-1.8.0.jar"/>
-		<property name="jython-lib" location="${lib.dir}/jython.jar"/>
+		<property name="commons-io" location="${lib.dir}/commons-io-2.0.1.jar"/>
+		<!---->
+		<!---->
+		<!---->
 		<!---->
 		<property name="target.abs" value="Gaudi"/>
 		<property name="target.mf" location="${basedir}/Manifest.mf"/>
@@ -52,8 +54,9 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 			<pathelement location="${scala-library}"/>
 			<pathelement location="${commons-io}"/>
 			<pathelement location="${json-simple}"/>
-			<pathelement location="${groovy-lib}"/>
-			<pathelement location="${jython-lib}"/>
+			<!---->
+			<!---->
+			<!---->
 			<!---->
 		</path>
 
