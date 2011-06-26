@@ -38,6 +38,7 @@ no_notify = False
 log_conf = False
 logger = None
 use_deppage = True
+use_script = False
 
 class Logger:
 	"""
@@ -63,7 +64,7 @@ def configureBuild(args):
 	"""
 	# Handle any command line arguments
 	doc = usegnu = nojython = nogroovy = nonotify = usegrowl = None
-	noplugins = minbuild = log = nodeppage = None
+	noplugins = minbuild = log = nodeppage = usescript = None
 	parser = argparse.ArgumentParser(description='Configuration script for building Gaudi.')
 	parser.add_argument('--usegnu', action='store_true', dest=usegnu, 
 	help='Use GNU software - GCJ and GIJ')
@@ -83,19 +84,22 @@ def configureBuild(args):
 	help='Log output of script to file instead of terminal')
 	parser.add_argument('--nodeppage', action='store_false', dest=nodeppage,
 	help='Do not open dependencies web page for missing dependencies')
+	parser.add_argument('--usescript', action='store_true', dest=usescript,
+	help='Use txtrevise script in current directory')
 	parser.add_argument('--doc', action='store_true', dest=doc,
 	help='Show documentation for script and exit')
 	results = parser.parse_args()
 
 	# Set and print configuration
 	global use_gnu, use_groovy, use_jython, no_notify, use_growl
-	global log_conf, logger, use_deppage
+	global log_conf, logger, use_deppage, use_script
 	use_gnu = results.usegnu
 	use_jython = results.nojython
 	use_groovy = results.nogroovy
 	no_notify = results.nonotify
 	use_growl = results.usegrowl
 	use_deppage = results.nodeppage
+	use_script = results.usescript
 	log_conf = results.log
 
 	if results.doc:
@@ -171,20 +175,30 @@ def configureBuild(args):
 		print('Detected desktop:\n\t{0}\n'.format(system_desktop))
 
 	# Check for txtrevise utility,
-	# if not found, prompt to download from code.google.com/p/sams-py
+	# if not found, prompt to download script from code.google.com/p/sams-py
 	# Subversion repository over HTTP - in checkDependency(-,-,-).
 	tool = None
 	try:
+		util = 'txtrevise'
+		if re.match('\*nix|darwin', system_family):
+			tool = 'whereis'
+		else:
+			tool = 'where'
+			
+		if use_script: 
+			util = util + '.py'
+			if re.match('\*nix|darwin', system_family):
+				tool = 'find'
+			else:
+				tool = 'where'
+
 		# On Unix-likes, detect using `find`. On Windows, use `where`.
 		if re.match('\*nix|darwin', system_family):
-			txtrevise = subprocess.check_output(['find', 'txtrevise.py'],
+			txtrevise = subprocess.check_output([tool, util],
 			stderr=subprocess.STDOUT)
-			tool = 'find'
 		else:
-			txtrevise = subprocess.check_output(['where', 'txtrevise.py'],
+			txtrevise = subprocess.check_output([tool, util],
 			stderr=subprocess.STDOUT)
-			tool = 'where'
-
 	except:
 		txtrevise = '\W'
 
@@ -315,8 +329,13 @@ def checkDependency(text, required, tomatch, osys, tool):
 			else:
 				raise RequirementNotFound(text)
 
-		elif tool == 'whereis' or tool == 'where':
-			if re.search('\/', required) or re.search(tomatch, required):
+		elif tool == 'whereis':
+			if re.search('\/', required):
+				print('\tFOUND.\n')
+			else:
+				raise RequirementNotFound(text)
+		elif tool == 'where':
+			if re.search(tomatch, required):
 				print('\tFOUND.\n')
 			else:
 				raise RequirementNotFound(text)
@@ -328,7 +347,7 @@ def checkDependency(text, required, tomatch, osys, tool):
 		print("A requirement was not found. Please install it:")
 		print("{0}.\n".format(e.value))
 
-		if text[0:9] == 'txtrevise':
+		if use_script and text[0:9] == 'txtrevise':
 			y = re.compile('y', re.IGNORECASE)
 			n = re.compile('n', re.IGNORECASE)
 			choice = 'x'
@@ -403,8 +422,12 @@ def amendAntBld(line_num, new_line, osys):
 	"""
 	# Copy _build.xml -> build.xml
 	shutil.copyfile('_build.xml', 'build.xml')
-	command = 'txtrevise.py -q -f build.xml -l {0} -m "<\!---->"'
-	+ ' -r "{1}"'.format(line_num, new_line)
+	txtrevise = 'txtrevise'
+	global use_script
+	if use_script:
+		txtrevise = txtrevise + '.py'
+	command = '{2} -q -f build.xml -l {0} -m "<\!---->"'
+	+ ' -r "{1}"'.format(line_num, new_line, txtrevise)
 	execChange(command)
 
 def amendManifest(new_lib, osys):
@@ -413,6 +436,10 @@ def amendManifest(new_lib, osys):
 	"""
 	# Copy _Manifest.mf -> Manifest.mf
 	shutil.copyfile('_Manifest.mf', 'Manifest.mf')
+	txtrevise = 'txtrevise'
+	global use_script
+	if use_script:
+		txtrevise = txtrevise + '.py'
 	command = 'txtrevise.py -q -f Manifest.mf -l {0} -m #'
 	+ ' -r "{0}"'.format(new_lib)
 	execChange(command)

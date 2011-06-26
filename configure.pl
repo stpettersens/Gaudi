@@ -35,6 +35,7 @@ my $nojython = 0;
 my $nonotify = 0;
 my $logconf = 0;
 my $nodeppage = 0;
+my $usescript = 0;
 
 sub configureBuild {
 	##
@@ -54,6 +55,7 @@ sub configureBuild {
 		'minbuild' => \$minbuild,
 		'log' => \$logconf,
 		'nodeppage' => \$nodeppage,
+		'usescript' => \$usescript,
 		'help' => \$help
 	);
 
@@ -148,13 +150,28 @@ INFO
 	# On Unix-likes, detect using `find`. On Windows, use `where`.
 	my $txtrevise;
 	my $tool;
+	my $util = 'txtrevise';
 	if($systemfamily =~ /\*nix|darwin/) {
-	 	$txtrevise = `find txtrevise.pl 2>&1`;
-	 	$tool = 'find';
+		$tool = 'whereis';
 	}
 	else {
-		$txtrevise = `where txtrevise.pl 2>&1`;
 		$tool = 'where';
+	}
+	
+	if($usescript == 1) {
+		$util = $util . '.pl';
+		if($systemfamily =~ /\*nix|darwin/) {
+			$tool = 'find';
+		}
+		else {
+			$tool = 'where';
+		}
+	}
+	if($systemfamily =~ /\*nix|darwin/) {
+	 	$txtrevise = `$tool $util 2>&1`;
+	}
+	else {
+		$txtrevise = `$tool $util 2>&1`;
 	}
 	checkDependency('txtrevise utility', $txtrevise, 'txtrevise', $tool, $systemfamily);
 	
@@ -295,26 +312,37 @@ sub checkDependency {
 			requirementNotFound($_[0], $_[4]);
 		}
 	}
-	elsif($_[3] eq 'whereis' || $_[3] eq 'where') {
-		if($_[1] =~ /\// || $_[1] =~ /($_[2])/) {
+	elsif($_[3] eq 'whereis') {
+		if($_[1] =~ /\//) {
 			print "\tFOUND.\n\n";
 		}
 		else {
 			requirementNotFound($_[0], $_[4]);
 		}
 	}
+	elsif($_[3] eq 'where') {
+		if($_[1] =~ /($_[2])/) {
+			print "\tFOUND.\n\n";
+		}
+		else {
+			requirementNotFound($_[0], $_[4]);
+		}
+	}
+	else {
+		requirementNotFound($_[0], $_[4]);
+	}
 }
 
 sub requirementNotFound {
 	##
-	# requirmentNotFound.
+	# requirementNotFound.
 	# This mirrors the purpose of the exception in the Python script.
 	##
 	print "\tNOT FOUND.\n";
 	print "\nA requirement was not found. Please install it:";
 	print "\n$_[0].\n\n";
 		
-	if(substr($_[0], 0, 9) eq 'txtrevise') {
+	if($usescript == 1 && substr($_[0], 0, 9) eq 'txtrevise') {
 		my $loop = 1;
 		my $choice;
 		while($loop == 1) {
@@ -415,7 +443,11 @@ sub amendAntBld {
 	##
 	# Copy _build.xml -> build.xml
 	copy('_build.xml', 'build.xml') || die "Copy failed: $!";
-	my $command = "txtrevise.pl -q -f build.xml -l $_[0] -m \"<\!---->\" -r \"$_[1]\"";
+	my $txtrevise = 'txtrevise';
+	if($usescript == 1) {
+		$txtrevise = $txtrevise . '.pl';
+	}
+	my $command = "$txtrevise -q -f build.xml -l $_[0] -m \"<\!---->\" -r \"$_[1]\"";
 	execChange($command, $_[3]);
 }
 
@@ -425,7 +457,11 @@ sub amendManifest {
 	##
 	# Copy _Manifest.mf -> Manifest.mf
 	copy('_Manifest.mf', 'Manifest.mf') || die "Copy failed: $!";
-	my $command = "txtrevise.pl -q -f build.xml -l 2 m # -r \"$_[0]\"";
+	my $txtrevise = 'txtrevise';
+	if($usescript == 1) {
+		$txtrevise = $txtrevise . '.pl';
+	}
+	my $command = "$txtrevise -q -f build.xml -l 2 m # -r \"$_[0]\"";
 	execChange($command, $_[3]);
 }
 
@@ -457,6 +493,7 @@ optional arguments:
                notifications
   --log        Log output of script to file instead of terminal
   --nodeppage  Do not open dependencies web page for missing dependencies
+  --usescript  Use txtrevise script in current directory
   --doc	       Show documentation for script and exit
 
 USAGE
