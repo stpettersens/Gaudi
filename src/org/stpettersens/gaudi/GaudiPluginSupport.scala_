@@ -26,5 +26,10 @@ object GaudiPluginSupport {
 	// plug-in system properly.
 	// Gaudi can be built without plug-ins to allow
 	// it to work with other JVMs such as Apache Harmony or GNU GIJ.
+	//
 	final val Enabled: Boolean = true
+	//
+	/*
+	final val Enabled: Boolean = false
+	*/
 }
