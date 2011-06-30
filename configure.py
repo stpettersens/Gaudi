@@ -248,8 +248,7 @@ def configureBuild(args):
 			checkDependency(t_names[i], o, c, tool)
 
 		except:
-			sys.exit(1)
-			#checkDependency(t_names[i], o, c, tool)
+			checkDependency(t_names[i], o, c, tool)
 		i += 1
 
 	# Write environment variable to a build file.
@@ -302,7 +301,9 @@ def configureBuild(args):
 				winver = sys.getwindowsversion()
 				if winver[0] == '5': 
 					sys.exit(1)
-			except:
+				else:
+					raise Exception
+			except Exception:
 				checkDependency(l_names[i], '!', l, tool)	
 
 		i += 1
