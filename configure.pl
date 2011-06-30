@@ -339,7 +339,7 @@ INFO
 	if($systemfamily =~ /\*nix|darwin/) {
 		print "\n./build.sh";
 		print "\n./build.sh clean";
-		print "\n./build.sh install";
+		print "\nsudo build.sh install";
 	}
 	else {
 		print "\nbuild.bat";
@@ -524,7 +524,7 @@ sub amendSource {
 	}
 	if($_[4] == 1) {
 		# Copy {src}.scala_ -> {src}.scala
-		copy("$prefix$_[1].scala_", "$prefix$_[1].scala") || die "Copy failed: $!";
+		copy("$prefix$_[1]$ext\_", "$prefix$_[1]$ext") || die "Copy failed: $!";
 	}
 	my $src_file = $prefix . $_[1] . $ext;
 	my $txtrevise = useScript('txtrevise');

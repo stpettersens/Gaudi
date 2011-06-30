@@ -363,7 +363,7 @@ def configureBuild(args):
 	if re.match('\*nix|darwin', system_family):
 		print('./build.sh')
 		print('./build.sh clean')
-		print('./build.sh install')
+		print('sudo build.sh install')
 	else:
 		print('build.bat')
 		print('build.bat clean')
