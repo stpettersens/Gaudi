@@ -298,14 +298,7 @@ def configureBuild(args):
 
 			checkDependency(l_names[i], o, l, tool)	
 		except:
-			try:
-				winver = sys.getwindowsversion()
-				if winver[0] == '5': 
-					sys.exit(1)
-				else:
-					raise Exception
-			except Exception:
-				checkDependency(l_names[i], '!', l, tool)	
+			checkDependency(l_names[i], '!', l, tool)	
 
 		i += 1
 
