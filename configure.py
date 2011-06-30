@@ -248,7 +248,8 @@ def configureBuild(args):
 			checkDependency(t_names[i], o, c, tool)
 
 		except:
-			checkDependency(t_names[i], o, c, tool)
+			#checkDependency(t_names[i], o, c, tool)
+			sys.exit(1)
 		i += 1
 
 	# Write environment variable to a build file.
