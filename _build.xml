@@ -10,7 +10,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 	<!-- Targets -->
 	<target name="build" depends="package" description="Build complete project"/>
 	
-	<target name="clean" description="Clean up any built files">
+	<target name="clean" depends="init" description="Clean up any built files">
 		<delete dir="${build.dir}" includeemptydirs="true" quiet="true"/>
 		<delete file="${target.jar}" quiet="true"/>
 		<delete file="${target.cjar}" quiet="true"/>
@@ -20,6 +20,11 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<delete file="${dist.dir}/FindInVar.class" quiet="true"/>
 		<delete file="${basedir}/build.sh" quiet="true"/>
 		<delete file="${basedir}/build.bat" quiet="true"/>
+		<delete file="${pkg.dir}/GaudiPluginLoader.scala" quiet="true"/>
+		<delete file="${pkg.dir}/GaudiGroovyPlugin.java" quiet="true"/>
+		<delete file="${pkg.dir}/GaudiJythonPlugin.java" quiet="true"/>
+		<delete file="${pkg.dir}/IGaudiPlugin.java" quiet="true"/>
+		<delete file="${pkg.dir}/GaudiApp.scala" quiet="true"/>
 	</target>
 	
 	<target name="init">		
@@ -28,6 +33,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<fail unless="env.SCALA_HOME" message="Missing SCALA_HOME variable in OS environmental variables."/>
 		
 		<!-- Variables for paths and files -->
+		<property name="pkg.dir" location="${basedir}/src/org/stpettersens/gaudi"/>
 		<property name="src.dir" location="${basedir}/src"/>
 		<property name="lib.dir" location="${basedir}/lib"/>
 		<property name="plugins.dir" location="${basedir}/plugins"/>

@@ -91,7 +91,7 @@ def configureBuild(args):
 	help='Show documentation for script and exit')
 	results = parser.parse_args()
 
-	# Set and print configuration
+	# Set configuration.
 	global use_gnu, use_gtk, use_groovy, use_jython, no_notify, use_growl
 	global log_conf, logger, use_deppage, use_script, system_family
 	use_gnu = results.usegnu
@@ -121,6 +121,18 @@ def configureBuild(args):
 		use_deppage = False
 		sys.stdout = logger
 
+	# Define a dictionary of all libraries (potentially) used by Gaudi.
+	all_libs = { 
+	'json': 'json_simple-1.1.jar',
+	'io': 'commons-io-2.0.1.jar',
+	'groovy': 'groovy-all-1.8.0.jar',
+	'jython': 'jython.jar',
+	'gtk': 'gtk.jar',
+	'growl': 'libgrowl.jar',
+	'scala': 'scala-library.jar'
+	}
+
+	# Print configuration.
 	print('--------------------------------------')
 	print('Build configuration for Gaudi')
 	print('--------------------------------------')
@@ -177,7 +189,8 @@ def configureBuild(args):
 		print('Detected desktop:\n\t{0}\n'.format(system_desktop))
 
 	# Check for txtrevise utility,
-	# if not found, prompt to download script from code.google.com/p/sams-py
+	# if not found, prompt to download script (with --usecript option) 
+	# from code.google.com/p/sams-py
 	# Subversion repository over HTTP - in checkDependency(-,-,-).
 	tool = None
 	try:
@@ -260,28 +273,28 @@ def configureBuild(args):
 
 	# Find required JAR libraries necessary to build Gaudi on this system.
 	l_names = [ 'JSON.simple', 'Commons-IO' ]
-	l_jars = [ 'json_simple-1.1.jar', 'commons-io-2.0.1.jar' ]
+	l_jars = [ all_libs['json'], all_libs['io'] ]
 
 	# When enabled, use plug-in support for Groovy and Jython.
 	if use_groovy:
 		l_names.append('Groovy')
-		l_jars.append('groovy-all-1.8.0.jar')
+		l_jars.append(all_libs['groovy'])
 
 	if use_jython:
 		l_names.append('Jython')
-		l_jars.append('jython.jar')
+		l_jars.append(all_libs['jython'])
 
 	# When use GTK and use notifications are enabled, 
 	# add java-gnome [GTK] library to libraries list.
 	if use_gtk and not no_notify:
 		l_names.append('java-gnome')
-		l_jars.append('gtk.jar')
+		l_jars.append(all_libs['gtk'])
 
 	# When Growl is selected as notification system,
 	# add libgrowl to libraries list.
 	if use_growl and not no_notify:
 		l_names.append('libgrowl')
-		l_jars.append('libgrowl.jar')
+		l_jars.append(all_libs['growl'])
 
 	# On *nix, detect using `find`. On Windows, use `where` again.
 	i = 0
@@ -305,11 +318,11 @@ def configureBuild(args):
 	# Copy scala-library.jar from Scala installation to Gaudi lib folder
 	src = target = None
 	if re.match('\*nix|darwin', system_family):
-		src = '{0}/lib/scala-library.jar'.format(scala_dir)
-		target = 'lib/scala-library.jar'
+		src = '{0}/lib/{1}'.format(scala_dir, all_libs['scala'])
+		target = 'lib/' + all_libs['scala']
 	else:
-		src = '{0}\lib\scala-library.jar'.format(scala_dir)
-		target = 'lib\scala-library.jar'
+		src = '{0}\lib\{1}'.format(scala_dir, all_libs['scala'])
+		target = 'lib\\' + all_libs['scala']
 	shutil.copyfile(src, target)
 	print('Copied "{0}" -> "{1}".'.format(src, target))
 
@@ -327,32 +340,32 @@ def configureBuild(args):
 	if use_groovy:
 		amendSource(1, 'GaudiPluginLoader', '/\*', '/*', True, False)
 		amendSource(1, 'GaudiGroovyPlugin', '/\*', '/*', True, True)
-		amendAntBld(40, 
+		amendAntBld(46, 
 		"<property name='groovy-lib' location='\${lib.dir}/groovy-all-1.8.0.jar'/>", False)
-		amendAntBld(57,
+		amendAntBld(63,
 		"<pathelement location='\${groovy-lib}'/>", False)
 
 	if use_jython:
 		amendSource(1, 'GaudiPluginLoader', '/\*', '/*', True, False)
 		amendSource(1, 'GaudiJythonPlugin', '/\*', '/*', True, True)
-		amendAntBld(41,
+		amendAntBld(47,
 		"<property name='jython-lib' location='\${lib.dir}/jython.jar'/>", False)
-		amendAntBld(58,
+		amendAntBld(64,
 		"<pathelement location='\${jython-lib}'/>", False)
 
 	if use_gtk:
-		amendAntBld(42,
+		amendAntBld(48,
 		"<property name='gtk-lib' location='\${lib.dir}/gtk.jar'/>", False)
-		amendAntBld(59,
+		amendAntBld(65,
 		"<pathelement location='\${gtk-lib}'/>", False)
 		amendSource(24, 'GaudiApp', '//', 'import org.gnome.gtk.Gtk', False, False)
 		amendSource(52, 'GaudiApp', '/\*', '//', False, False)
 		amendSource(57, 'GaudiApp', '\*/', '//', False, False)
 
 	if use_growl:
-		amendAntBld(43,
+		amendAntBld(49,
 		"<property name='growl-lib' location='\${lib.dir}/libgrowl.jar'/>", False)
-		amendAntBld(60,
+		amendAntBld(66,
 		"<pathelement location='\${growl-lib}'/>", False)
 
 	print('Amended source code and wrote "build.xml".')

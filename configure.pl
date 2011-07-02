@@ -81,11 +81,24 @@ sub configureBuild {
 		$nonotify = 1;
 	}
 
+	# Use boolean notation for display, instead of 0 and 1.
 	my $busegnu = toBool($usegnu);
 	my $bnojython = toBool($nojython);
 	my $bnogroovy = toBool($nogroovy);
 	my $bnonotify = toBool($nonotify);
 
+	# Define a hash of all libraries (potentially) used by Gaudi.
+	my %alllibs = (
+	'json', 'json_simple-1.1.jar',
+	'io', 'commons-io-2.0.1.jar',
+	'groovy', 'groovy-all-1.8.0.jar',
+	'jython', 'jython.jar',
+	'gtk', 'gtk.jar',
+	'growl', 'libgrowl.jar',
+	'scala', 'scala-library.jar'
+	);
+
+	# Print configuration.
 	print <<INFO;
 ---------------------------------------
 Build configuration for Gaudi
@@ -145,7 +158,8 @@ INFO
 	print "\nDetected desktop:\n\t$systemdesktop\n\n";
 	
 	# Check for txtrevise utility,
-	# if not found, prompt to download from code.google.com/p/sams-py
+	# if not found, prompt to download script (with --usescript option)
+	# from code.google.com/p/sams-py
 	# On Unix-likes, detect using `find`. On Windows, use `where`.
 	my $txtrevise;
 	my $tool;
@@ -232,30 +246,30 @@ INFO
 	
 	# Find required JAR libraries necessary to build Gaudi on this system.
 	my @lnames = ( 'JSON.simple', 'Commons-IO' );
-	my @ljars = ( 'json_simple-1.1.jar', 'commons-io-2.0.1.jar' );
+	my @ljars = ( $alllibs{jython}, $alllibs{io} );
 	
 	# When enabled, use plug-in support for Groovy and Jython.
 	if($nogroovy == 0) {
 		push(@lnames, 'Groovy');
-		push(@ljars, 'groovy-all-1.8.0.jar');
+		push(@ljars, $alllibs{groovy});
 	}
 	if($nojython == 0) {
 		push(@lnames, 'Jython');
-		push(@ljars, 'jython.jar');
+		push(@ljars, $alllibs{jython});
 	}
 	
 	# When use GTK and use notifications are enabled,
 	# add java-gnome [GTK] library to libraries list.
 	if($usegtk == 1 && $nonotify == 0) {
 		push(@lnames, 'java-gnome');
-		push(@ljars, 'gtk.jar');
+		push(@ljars, $alllibs{gtk});
 	}
 
 	# When Growl is selected as notification system,
 	# add libgrowl to libraries list.
 	if($usegrowl == 1 && $nonotify == 0) {
 		push(@lnames, 'libgrowl');
-		push(@ljars, 'libgrowl.jar');
+		push(@ljars, $alllibs{growl});
 	}
 	
 	# On *nix, detect using `find`. On Windows, use `where' again.
@@ -279,12 +293,12 @@ INFO
 	my $src;
 	my $target;
 	if($systemfamily =~ /\*nix|darwin/) {
-		$src = "$scaladir/lib/scala-library.jar";
-		$target = 'lib/scala-library.jar';
+		$src = "$scaladir/lib/$alllibs{scala}";
+		$target = "lib/$alllibs{scala}";
 	}
 	else {
-		$src = "$scaladir\\lib\\scala-library.jar";
-		$target ='lib\scala-library.jar';
+		$src = "$scaladir" + "lib\\$alllibs{scala}";
+		$target ="lib\\$alllibs{scala}";
 	}
 	copy($src, $target) || die "Copy failed: $!";
 	print "Copied \"$src\" -> \"$target\".\n";
@@ -303,32 +317,32 @@ INFO
 	if($nogroovy == 0) {
 		amendSource(1, 'GaudiPluginLoader', '/\*', '/*', 1, 0);
 		amendSource(1, 'GaudiGroovyPlugin', '/\*', '/*', 1, 1);
-		amendAntBld(40, 
+		amendAntBld(46, 
 		'<property name=\'groovy-lib\' location=\'\${lib.dir}/groovy-all-1.8.0.jar\'/>', 0);
-		amendAntBld(57,
+		amendAntBld(63,
 		'<pathelement location=\'\${groovy-lib}\'/>', 0);
 	}
 	if($nojython == 0) {
 		amendSource(1, 'GaudiPluginLoader', '/\*', '/*', 1, 0);
 		amendSource(1, 'GaudiJythonPlugin', '/\*', '/*', 1, 1);
-		amendAntBld(41, 
+		amendAntBld(47, 
 		'<property name=\'jython-lib\' location=\'\${lib.dir}/jython.jar\'/>', 0);
-		amendAntBld(58,
+		amendAntBld(64,
 		'<pathelement location=\'\${jython-lib}\'/>', 0);
 	}
 	if($usegtk == 1) {
-		amendAntBld(42, 
+		amendAntBld(48, 
 		'<property name=\'gtk-lib\' location=\'\${lib.dir}/gtk.jar\'/>', 0);
-		amendAntBld(59,
+		amendAntBld(65,
 		'<pathelement location=\'\${gtk-lib}\'/>', 0);
 		amendSource(24, 'GaudiApp', '//', 'import org.gnome.gtk.Gtk', 0, 0);
 		amendSource(52, 'GaudiApp', '/\*', '//', 0, 0);
 		amendSource(57, 'GaudiApp', '\*/', '//', 0, 0);
 	}
 	if($usegrowl == 1) {
-		amendAntBld(43, 
+		amendAntBld(49, 
 		'<property name=\'growl-lib\' location=\'\${lib.dir}/libgrowl.jar\'/>', 0);
-		amendAntBld(60,
+		amendAntBld(66,
 		'<pathelement location=\'\${growl-lib}\'/>', 0);
 	}
 	print "Amended source code and wrote \"build.xml\".\n";
