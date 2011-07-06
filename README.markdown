@@ -4,10 +4,10 @@ Gaudi
 Overview
 --------
 Gaudi is a platform agnostic build tool
-written primarily in Scala (along with some Java) which runs on a Java virtual machine (JVM).
+written primarily in [Scala](http://www.scala-lang.org) (along with some Java) which runs on a Java virtual machine (JVM).
 
-As it is a build tool, it is named after an architect, *Antoni Gaudi*;
-the designer of the famous *Sagrada Familia*.
+As it is a build tool, it is named after an architect, [*Antoni Gaudi*](http://en.wikipedia.org/Antoni_Gaudi);
+the designer of the famous [*Sagrada Familia*](http://en.wikipedia.org/wiki/Sagrada_Familia].
 
 Gaudi can be thought of as being similar to [Apache Ant](http://ant.apache.org) in that it *too*
 also abstracts commands related to building software away from the operating system 
