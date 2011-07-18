@@ -29,7 +29,11 @@ function onLoad() {
 	$('div#footer').append('<p>Enhanced with '
 	+ '<a class="flink" href="http://jquery.com">jQuery</a> '
 	+ 'and <a class="flink" href="http://github.com/stpettersens/ClipboardApplet">'
-	+ 'ClipboardApplet</a>.</p><p><g:plusone></g:plusone></p>');
+	+ 'ClipboardApplet</a>.</p><p><g:plusone></g:plusone></p>'
+	+ '<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#'
+	+ 'appId=31398693222&amp;xfbml=1"></script>'
+	+ '<fb:like href="" send="false" layout="box_count" width="450"'
+	+ 'show_faces="true" font=""></fb:like>');
 
 	// Make all "extern" and "flink" class links open in new window (target="_blank").
 	$('a.extern').attr('target', '_blank');
