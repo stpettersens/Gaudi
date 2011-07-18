@@ -30,7 +30,7 @@ function onLoad() {
 	+ '<a class="flink" href="http://jquery.com">jQuery</a> '
 	+ 'and <a class="flink" href="http://github.com/stpettersens/ClipboardApplet">'
 	+ 'ClipboardApplet</a>.</p><p><span style="padding-left: 30%;"><g:plusone></g:plusone>'
-    + '</span>');
+    + '</span></p>');
 
 	// Make all "extern" and "flink" class links open in new window (target="_blank").
 	$('a.extern').attr('target', '_blank');
