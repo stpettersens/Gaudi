@@ -97,6 +97,14 @@ div#features, #compatibility, #license
 	padding: 1em;
 	width: 40.1em;
 }
+div#donate
+{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 10px;
+    padding-left: 42%;
+}
 div#footer
 {
 	display: table;
