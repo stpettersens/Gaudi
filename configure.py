@@ -261,7 +261,7 @@ def configureBuild(args):
 			checkDependency(t_names[i], o, c, tool)
 
 		except:
-			#checkDependency(t_names[i], o, c, tool)
+			if c == 'scala': checkDependency(t_names[i], o, c, tool)
 			sys.exit(1)
 		i += 1
 
