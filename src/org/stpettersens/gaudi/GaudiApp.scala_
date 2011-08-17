@@ -140,7 +140,7 @@ object GaudiApp {
   }
   // Handle a plug-in
   private def doPluginAction(plugin: String): Unit = {
-	  new GaudiPluginLoader(plugin, logging)
+	  //new GaudiPluginLoader(plugin, logging)
 	  System.exit(0)
   }
   // Display an error

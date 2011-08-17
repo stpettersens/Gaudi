@@ -19,3 +19,5 @@ build.xml
 Manifest.mf
 GaudiApp.scala
 GaudiPluginSupport.scala
+IGaudiPlugin.java
+gaudi
