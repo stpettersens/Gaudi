@@ -68,7 +68,7 @@ object GaudiApp {
 	 	 	 	  case "-v" => displayVersion()
 	 	 	 	  case "-l" => logging = true
 	 	 	 	  case "-s" => sSwitch = true
-	 	 	 	  case "-n" => generateBuildFile()
+	 	 	 	  case "-b" => generateBuildFile()
 	 	 	 	  case "-p" => {
 	 	 	 	 	  if(GaudiPluginSupport.Enabled) pSwitch = true
 	 	 	 	  }
@@ -173,7 +173,7 @@ object GaudiApp {
 	  println("-l: Enable logging of certain events.")
 	  println("-i: Display usage information and quit.")
 	  println("-v: Display version information and quit.")
-	  println("-n: Generate native Gaudi build file (build.json).")
+	  println("-b: Generate a Gaudi build file (build.json).")
 	  println("-p: Invoke <plug-in> action.")
 	  println("-q: Mute console output, except for :echo and errors (Quiet mode).")
 	  println("-f: Use <build file> instead of build.json.")
