@@ -103,7 +103,7 @@ sub configureBuild {
 ---------------------------------------
 Build configuration for Gaudi
 ---------------------------------------
-Use GNU GCJ & GCJ: $busegnu
+Use GNU GCJ & GIJ: $busegnu
 Jython plug-in support disabled: $bnojython
 Groovy plug-in support disabled: $bnogroovy
 Notification support disabled: $bnonotify
@@ -246,7 +246,7 @@ INFO
 	
 	# Find required JAR libraries necessary to build Gaudi on this system.
 	my @lnames = ( 'JSON.simple', 'Commons-IO' );
-	my @ljars = ( $alllibs{jython}, $alllibs{io} );
+	my @ljars = ( $alllibs{json}, $alllibs{io} );
 	
 	# When enabled, use plug-in support for Groovy and Jython.
 	if($nogroovy == 0) {
