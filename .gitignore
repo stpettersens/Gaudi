@@ -6,6 +6,7 @@ ant_build
 *.exe
 *.log
 *.html
+*.bat
 .project
 .pydevproject
 .classpath
