@@ -17,22 +17,20 @@ limitations under the License.
 For dependencies, please see LICENSE file.
 */
 package org.stpettersens.gaudi
-import java.util.Date
+import java.util.Calendar
 import java.text.{DateFormat,SimpleDateFormat}
 import java.io.{PrintWriter,FileOutputStream,IOException}
 
 class GaudiBase {
 
-	var logging: Boolean = false
-	var beVerbose: Boolean = true
-	val ErrCode: Int = -2
 	val LogFile: String = "gaudi.log"
 	
 	protected def logDump(message: String, isLogging: Boolean): Unit = {
-		val timestamp: DateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss")
+		val calendar: Calendar = Calendar.getInstance()
+		val sdf: SimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss")
+		val timeStamp: String = sdf.format(calendar.getTime())
 		if(isLogging) {
-			writeToFile(LogFile, 
-			String.format("[{0}]\n{1}", timestamp, message), true)
+			writeToFile(LogFile, String.format("[%s]\n%s", timeStamp, message), true)
 		}
 	}
 
@@ -53,16 +51,6 @@ class GaudiBase {
 
 	// Execute a process
 	protected def executeProcess(process: String, params: String, quiet: Boolean): Unit = {
-		
-		var p: Process = Runtime.getRuntime().exec(
-		String.format("%s %s", process, params));
-	}
-}
-
-object GaudiBase {
-	
-	protected def logDump(message: String, isLogging: Boolean): Unit = {
-		val gb = new GaudiBase()
-		gb.logDump(message, isLogging)
+		Runtime.getRuntime().exec(String.format("%s %s", process, params));
 	}
 }

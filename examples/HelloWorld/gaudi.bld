@@ -10,7 +10,8 @@
 
 		{ "echo": "Compiling Hello World program..." },
 		{ "exec": "g++ hw.cpp -o hw" },
-		
+		{ "echo": "Strip Hello World executable..." },
+		{ "exec": "strip hw" },
 		{ "echo": "Appending to log file..." },
 		{ "append": "output.log>>Built executable." }
 	],
@@ -18,7 +19,7 @@
 	"clean": [
 
 		{ "echo": "Erasing Hello World program and log file..." },
-		{ "erase": "hw.exe" },
+		{ "erase": "hw" },
 		{ "erase": "output.log" }
 	]
 }

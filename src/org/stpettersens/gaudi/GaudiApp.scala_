@@ -23,7 +23,7 @@ import java.io.IOException
 import org.json.simple.{JSONObject,JSONArray}
 //
 
-object GaudiApp {
+object GaudiApp extends GaudiBase {
 	
   //-------------------------------------------------------------
   val appVersion: String = "0.1"
@@ -33,7 +33,6 @@ object GaudiApp {
   var buildFile: String = "build.json" // Default build file
   var beVerbose: Boolean = true // Gaudi is verbose by default
   var logging: Boolean = false // Logging is disabled by default
-  val logger = new GaudiLogger(logging)
   var messenger = new GaudiMessenger(logging)
   var sSwitch: Boolean = false
 	  
@@ -146,13 +145,13 @@ object GaudiApp {
   // Display an error
   def displayError(ex: Exception): Unit = {
 	  println(String.format("\nError with: %s.", ex.getMessage))
-	  logger.dump(ex.getMessage)
+	  logDump(ex.getMessage, logging)
 	  displayUsage(errCode)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
 	  println(String.format("\nError with: %s.", ex))
-	  logger.dump(ex)
+	  logDump(ex, logging)
 	  displayUsage(errCode)
   }
   // Display version information and exit
