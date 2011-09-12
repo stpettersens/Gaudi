@@ -30,7 +30,7 @@ class GaudiBase {
 		val sdf: SimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss")
 		val timeStamp: String = sdf.format(calendar.getTime())
 		if(isLogging) {
-			writeToFile(LogFile, String.format("[%s]\n%s", timeStamp, message), true)
+			writeToFile(LogFile, String.format("[%s]\r\n%s", timeStamp, message), true)
 		}
 	}
 
