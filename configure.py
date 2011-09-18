@@ -170,8 +170,7 @@ def configureBuild(args):
 	# Detect desktop environment on Unix-likes (not Mac OS X).
 	if system_family == '*nix':
 		system_desktop = os.environ.get('DESKTOP_SESSION')
-
-		if re.match('x.*', system_desktop):
+		if re.match('x.*', str(system_desktop)):
 			system_desktop = 'Xfce'
 			if not no_notify and not use_growl:
 				use_gtk = True

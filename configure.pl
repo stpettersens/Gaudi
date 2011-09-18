@@ -20,7 +20,6 @@
 # ./configure.pl [arguments]
 
 use strict;
-use warnings;
 use Getopt::Long;
 use LWP::Simple;
 use IO::Handle;
@@ -133,9 +132,8 @@ INFO
 	}
 
 	# Detect desktop environment on Unix-likes (not Mac OS X).
-	my $systemdesktop = '';
+	my $systemdesktop = $ENV{'DESKTOP_SESSION'};
 	if($systemfamily eq '*nix') {
-		$systemdesktop = $ENV{'DESKTOP_SESSION'};	
 		if($systemdesktop =~ /x.*/) {
 			$systemdesktop = 'Xfce';
 			if($nonotify == 0 && $usegrowl == 0) {
