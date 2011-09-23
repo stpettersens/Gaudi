@@ -1,0 +1,15 @@
+<jnlp spec="6.0" href="ClipboardApplet.jnlp">
+	<information>
+       <title>ClipboardApplet</title>
+       <vendor>Sam Saint-Pettersen</vendor>
+       <description>This applet copies the specified website text to the system clipboard.</description>
+     </information>
+     <update check="background"/>
+     <resources>
+       <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+       <jar href="ClipboardApplet.jar"/>
+     </resources>
+     <applet-desc name="ClipboardApplet" 
+	 main-class="org.stpettersens.cbapplet.ClipboardApplet" 
+	 width="200" height="20" mayscript="true" />
+</jnlp>
