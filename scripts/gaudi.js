@@ -8,7 +8,7 @@
 */
 
 //
-// Function called on loading of page
+// Function called on loading of page.
 //
 function onLoad() {
 
@@ -20,14 +20,15 @@ function onLoad() {
 		$('div#description').css('width', '42em');
 	}
 
-	// Make dependencies anchor a link and hide dependencies
+	// Make dependencies anchor a link and hide dependencies.
 	$('a#deps_link').attr('href', 'javascript:toggleDependencies();');
 	$('a#dep_link').attr('href', 'javascript:jumpToDependencies();');
 	$('div#deps_box').hide();
 	
 	// Add a message crediting jQuery with link to project website to footer.
 	$('div#footer').append('<p>Enhanced with '
-	+ '<a class="flink" href="http://jquery.com">jQuery</a> '
+	+ '<a class="flink" href="http://jquery.com">jQuery</a>, '
+	+ '<a class="flink" href="http://headjs.com">headJS</a> '
 	+ 'and <a class="flink" href="http://github.com/stpettersens/ClipboardApplet">'
 	+ 'ClipboardApplet</a>.</p><p><span style="padding-left: 30%;"><g:plusone></g:plusone>'
     + '</span></p>');
@@ -38,20 +39,19 @@ function onLoad() {
 }
 
 //
-// Function to show message when Java is not enabled
+// Function to show message when Java is not enabled.
 //
 function showNoJava() {
 
-	// Show message when Java is not enabled in the browser
+	// Show message when Java is not enabled in the browser.
 	$('div#footer').prepend('<p><strong>Java is either unsupported or disabled in the browser,'
 	+ '<br/>so ClipboardApplet won\'t run.'
-	+ ' [<a class="flink" href="http://www.java.com/en/download/help/enable_browser.xml">'
 	+ ' [<a class="flink" href="http://www.java.com/en/download/help/enable_browser.xml">'
 	+ 'How do I fix this?</a>]</strong></p>');
 }
 
 //
-// Function to show/hide box with dependencies for Gaudi application
+// Function to show/hide box with dependencies for Gaudi application.
 //
 function toggleDependencies() {
 
