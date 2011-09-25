@@ -1,5 +1,5 @@
 /*
-    Break out of the gaudi-build.tk frame.
+    Break out of an iframe.
 */
 function breakoutFrame() {
     if(top.location != location) {
