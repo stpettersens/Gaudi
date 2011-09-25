@@ -24,30 +24,19 @@ function onLoad() {
 	$('a#deps_link').attr('href', 'javascript:toggleDependencies();');
 	$('a#dep_link').attr('href', 'javascript:jumpToDependencies();');
 	$('div#deps_box').hide();
-	
-	// Add a message crediting jQuery with link to project website to footer.
-	$('div#footer').append('<p>Enhanced with '
+
+
+	// Add extra material to page footer.
+	$('div#footer').append('<div><p>Enhanced with '
 	+ '<a class="flink" href="http://jquery.com">jQuery</a>, '
 	+ '<a class="flink" href="http://headjs.com">headJS</a> '
 	+ 'and <a class="flink" href="http://github.com/stpettersens/ClipboardApplet">'
 	+ 'ClipboardApplet</a>.</p><p><span style="padding-left: 30%;"><g:plusone></g:plusone>'
-    + '</span></p>');
+	+ '</p></div>');
 
 	// Make all "extern" and "flink" class links open in new window (target="_blank").
 	$('a.extern').attr('target', '_blank');
 	$('a.flink').attr('target', '_blank');
-}
-
-//
-// Function to show message when Java is not enabled.
-//
-function showNoJava() {
-
-	// Show message when Java is not enabled in the browser.
-	$('div#footer').prepend('<p><strong>Java is either unsupported or disabled in the browser,'
-	+ '<br/>so ClipboardApplet won\'t run.'
-	+ ' [<a class="flink" href="http://www.java.com/en/download/help/enable_browser.xml">'
-	+ 'How do I fix this?</a>]</strong></p>');
 }
 
 //
