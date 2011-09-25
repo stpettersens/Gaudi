@@ -24,8 +24,7 @@ function onLoad() {
 	$('a#deps_link').attr('href', 'javascript:toggleDependencies();');
 	$('a#dep_link').attr('href', 'javascript:jumpToDependencies();');
 	$('div#deps_box').hide();
-
-
+	
 	// Add extra material to page footer.
 	$('div#footer').append('<div><p>Enhanced with '
 	+ '<a class="flink" href="http://jquery.com">jQuery</a>, '
