@@ -1,3 +1,7 @@
+_Please note: This repository has been emptied temporarily as I have chosen to use Gaudi as part of my Individual Study 
+Project at University. To protect me, from claims of plagarism the project is for the time being closed-source._
+
+
 Gaudi
 =====
 
