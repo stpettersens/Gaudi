@@ -1,4 +1,4 @@
-__Please note: This repository has been emptied temporarily as I have chosen to use Gaudi as part of my Individual Study 
+*Please note*: This repository has been emptied temporarily as I have chosen to use Gaudi as part of my Individual Study 
 Project at University. To protect myself from claims of plagarism the project is for the time being closed-source
 
 I intend to make the source avilable to all again at a later date.*
