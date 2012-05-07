@@ -20,10 +20,7 @@ package org.stpettersens.gaudi
 import java.net._
 import java.io._
 
-class GaudiMessenger(logging: Boolean) {
-	
-	// Define global logger object
-	val logger = new GaudiLogger(logging)
+class GaudiMessenger(logging: Boolean)  {
 	
 	var port: Int = 3082
 	var serverSocket: ServerSocket = null
@@ -51,14 +48,12 @@ class GaudiMessenger(logging: Boolean) {
 		if(running) {
 			out.println(message)
 			out.flush()
-			logger.dump(message)
 		}
 	}
 	// Public method to end the connection between server and client
 	def end(): Unit = {
 		if(running) {
 			clientSocket.close()
-			logger.dump("Closed connection")
 		}
 	}
 }

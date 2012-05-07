@@ -20,6 +20,7 @@
 # ./configure.pl [arguments]
 
 use strict;
+use warnings;
 use Getopt::Long;
 use LWP::Simple;
 use IO::Handle;
@@ -89,7 +90,7 @@ sub configureBuild {
 	# Define a hash of all libraries (potentially) used by Gaudi.
 	my %alllibs = (
 	'json', 'json_simple-1.1.jar',
-	'io', 'commons-io-2.0.1.jar',
+	'io', 'commons-io-2.1.jar',
 	'groovy', 'groovy-all-1.8.0.jar',
 	'jython', 'jython.jar',
 	'gtk', 'gtk.jar',
@@ -132,8 +133,9 @@ INFO
 	}
 
 	# Detect desktop environment on Unix-likes (not Mac OS X).
-	my $systemdesktop = $ENV{'DESKTOP_SESSION'};
+	my $systemdesktop = '';
 	if($systemfamily eq '*nix') {
+		$systemdesktop = $ENV{'DESKTOP_SESSION'};	
 		if($systemdesktop =~ /x.*/) {
 			$systemdesktop = 'Xfce';
 			if($nonotify == 0 && $usegrowl == 0) {
@@ -236,8 +238,32 @@ INFO
 		$i++;
 	}
 
+	# Find location of One-Jar Ant task JAR.
+	my $onejar;
+	print "One-Jar Ant task JAR:\n";
+	if($systemfamily=~ /\*nix|darwin/) {
+		$onejar = `sudo find / -name one-jar-ant-task-0.97.jar 2>&1`;
+		chomp($onejar);
+		if($onejar ne " ") {
+			print "\tFOUND.\n\n";
+		}
+		else {
+			print "\tNOT FOUND.\n\n";
+		}
+	}
+	else {
+		$onejar = `where one-jar-ant-task-0.97.jar 2>&1`;
+		chomp($onejar);
+		if($onejar =~ /INFO/) {
+			print "\tNOT FOUND.\n\n";
+		}
+		else {
+			print "\tFOUND.\n\n";
+		}
+	}
+
 	# Write environment variable to a build file.
-	writeEnvVar('SCALA_HOME', $scaladir, $systemfamily);
+	writeEnvVars('SCALA_HOME', $scaladir, 'ONEJAR_TOOL', $onejar, $systemfamily);
 
 	# Write exectuable wrapper.
 	writeExecutable($tcommands[0], $systemfamily);
@@ -295,7 +321,7 @@ INFO
 		$target = "lib/$alllibs{scala}";
 	}
 	else {
-		$src = "$scaladir" + "lib\\$alllibs{scala}";
+		$src = "$scaladir" . "lib\\$alllibs{scala}";
 		$target ="lib\\$alllibs{scala}";
 	}
 	copy($src, $target) || die "Copy failed: $!";
@@ -462,15 +488,22 @@ sub requirementNotFound {
 	exit 1;
 }
 
-sub writeEnvVar {
+sub writeEnvVars {
 	##
 	# Write environment variables to build shell script
 	# or batch file.
 	##
 	# Generate shell script on Unix-likes / Mac OS X.
-	if($_[2] =~ /\*nix|darwin/) {
+	if($_[4] =~ /\*nix|darwin/) {
 		open(FILE, ">build.sh");
-		print FILE "#!/bin/sh\nexport $_[0]\=\"$_[1]\"\nant \$1\n";
+		print FILE "#!/bin/sh\nexport $_[0]\=\"$_[1]\"";
+		if($_[3] ne " ") {
+			print FILE "\nexport $_[2]\=\"$_[3]\"";
+		}
+		else {
+			system("export $_[2]=");
+		}
+		print FILE "\nant \$1\n";
 		close(FILE);
 		# Mark shell script as executable.
 		system('chmod +x build.sh');
@@ -478,7 +511,14 @@ sub writeEnvVar {
 	# Generate batch file on Windows.
 	else {
 		open(FILE, '>build.bat');
-		print FILE "\@set $_[0]\=$_[1]\r\n\@ant \%1\r\n";
+		print FILE "\@set $_[0]\=$_[1]";
+		if($_[3] =~ /INFO/)  {
+			system("set $_[2]=")	
+		}
+		else {
+			print FILE "\r\n\@set $_[2]\=$_[3]";
+		}
+		print FILE "\r\n\@ant \%1\r\n";
 		close(FILE);
 	}
 }
@@ -491,7 +531,7 @@ sub writeExecutable {
 	open(FILE, ">$exe");
 	if($_[1] =~ /\*nix|darwin/) {
 		print FILE "#!/bin/sh\n# Run Gaudi";
-		print FILE "\n$_[0] -jar Gaudi.jar \"\$\@\"";
+		print FILE "\n$_[0] -jar Gaudi.jar \"\$\@\"\n";
 		close(FILE);
 		system("chmod +x $exe");
 	}

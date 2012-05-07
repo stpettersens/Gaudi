@@ -26,12 +26,12 @@ public class GaudiPlugin implements IGaudiPlugin {
 	public static String Version = "Unspecified version"; // Plug-in version 
 	public static String Author = "Unspecified author"; // Plug-in author
 	public static String Url = "Unspecified URL"; // Plug-in URL
-	public static boolean Initable = false;
+	public static boolean Initiable = false;
 	public GaudiBuilder builder = new GaudiBuilder(null, false, true, false);
 	
 	// Initalize method does *not* need to be redefined in derived plug-ins
 	public final boolean initialize() {
-		return Initable;
+		return Initiable;
 	} 
 	// Non-redefinable method to return plug-in name
 	public final String getName() {

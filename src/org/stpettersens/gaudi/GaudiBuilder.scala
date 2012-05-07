@@ -1,6 +1,6 @@
 /*
 Gaudi platform agnostic build tool
-Copyright 2010-2011 Sam Saint-Pettersen.
+Copyright 2010-2012 Sam Saint-Pettersen.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -93,6 +93,12 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			}
 		}
 	}
+	private def eraseFile(file: String, isExe: Boolean): Unit = {
+		if(isExe && GaudiHabitat.getOSFamily() == 0) {
+			new File(file.concat(".exe")).delete()
+		}
+		else new File(file).delete()
+	}
 	// Execute a command in the action
 	def doCommand(command: String, param: String): Unit = {
 		// Handle any potential wildcards in parameters
@@ -113,7 +119,15 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			}
 			case "list" => println(String.format("\t-> %s", wcc_param))
 			case "echo" => println(String.format("\t# %s", param))
-			case "erase" => new File(wcc_param).delete() // Add support for wildcards
+			case "erase" => eraseFile(wcc_param, false) // Support wildcards
+			case "erasex" => eraseFile(wcc_param, true)
+			case "xstrip" => {
+				var p: String = wcc_param;
+				if(GaudiHabitat.getOSFamily() == 0) {
+					p = wcc_param.concat(".exe")
+				}
+				execExtern(String.format("strip %s", p)) // Relies on strip command.
+			}
 			case "copy" => {
 				// Explicit the first time about this being a string array
 				val srcDest: Array[String] = param.split("->")
@@ -135,31 +149,40 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 				val fileMsg = param.split(">>")
 				writeToFile(fileMsg(0), fileMsg(1), true)
 			}
-			// Invoke Scala compiler (scalac)
-			case "scalac" => {
-				execExtern(String.format("scalac %s", param))
-			}
-			// Invoke JDK jar tool to pack a jar
-			case "jar" => {
-				var jarSrcs = param.split("<<")
-				execExtern(
-				String.format("jar cfm %s Manifest.mf %s", jarSrcs(0), jarSrcs(1))
-				)
-			}
-			// Invoke JDK jar tool to unpack a jar
-			case "unjar" => {
-				var jar = param
-				execExtern(String.format("jar xf %s", jar))
+			case "clobber" => {
+				val fileMsg = param.split(">>")
+				writeToFile(fileMsg(0), fileMsg(1), false)
 			}
 			case "notify" => {
-				GaudiHabitat.sendOSNotif("null");
+				GaudiHabitat.sendOSNotif("null")
+			}
+
+			case "encode" => {
+
+				val fileMsg = param.split(">>")
+				writeToFile(fileMsg(0), encodeText(fileMsg(1)), true)
+			}
+
+			case "decode" => {
+
+				val fileMsg = param.split("<<")
+
+				writeToFile(fileMsg(0), decodeText(fileMsg(1)), true)
+			}
+
+			case "help" => {
+
+				val onCmd = param.split(" ")
+				// TODO!
+				// 
 			}
 			case _ => {
-				// Implement extendable commands
+				// Implement extendable commands	
 				printError(String.format("%s is an invalid command", command))
 			}
 		}
 	}
+
 	// Execute an action 
 	def doAction(action: JSONArray): Unit = {
 		try {
@@ -177,4 +200,4 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			}
 		}
 	}
-}
+}	

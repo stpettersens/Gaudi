@@ -93,7 +93,7 @@ object GaudiHabitat {
 		(null, null)
 	}
 
-	def sendOSNotif(message: String) {
+	def sendOSNotif(message: String): Unit = {
 		
 		val base = new GaudiBase()
 		// TO IMPLEMENT...

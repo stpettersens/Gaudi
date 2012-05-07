@@ -1,2 +1,2 @@
 Main-Class: org.stpettersens.gaudi.GaudiApp
-Class-Path: lib/scala-library.jar lib/commons-io-2.0.1.jar lib/json_simple-1.1.jar lib/groovy-all-1.8.0.jar lib/jython.jar /usr/local/share/java/gtk.jar
+Class-Path: lib/scala-library.jar lib/commons-io-2.1.jar lib/json_simple-1.1.jar lib/groovy-all-1.8.0.jar lib/jython.jar <!---->

@@ -1,6 +1,6 @@
 /*
  Java version checker.
- @author Sam Saint-Pettersen, 2010
+ Author: Sam Saint-Pettersen, 2010
  Released into the public domain.
 	
  Originally written for use with 

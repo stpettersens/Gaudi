@@ -1,6 +1,6 @@
 /*
  Find a value in a system variable.
- @author Sam Saint-Pettersen, 2010-2011.
+ Author: Sam Saint-Pettersen, 2010-2011.
  Released into the public domain.
 	
  Originally written for use with 

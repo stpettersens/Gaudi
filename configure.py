@@ -112,9 +112,9 @@ def configureBuild(args):
 		use_jython = False
 		use_groovy = False
 		
-
 	if results.minbuild:
 		no_notify = True
+		use_growl = False
 
 	if log_conf:
 		# Do not show dep page for any missing dependencies when logging.
@@ -124,7 +124,7 @@ def configureBuild(args):
 	# Define a dictionary of all libraries (potentially) used by Gaudi.
 	all_libs = { 
 	'json': 'json_simple-1.1.jar',
-	'io': 'commons-io-2.0.1.jar',
+	'io': 'commons-io-2.2.jar',
 	'groovy': 'groovy-all-1.8.0.jar',
 	'jython': 'jython.jar',
 	'gtk': 'gtk.jar',
@@ -170,7 +170,8 @@ def configureBuild(args):
 	# Detect desktop environment on Unix-likes (not Mac OS X).
 	if system_family == '*nix':
 		system_desktop = os.environ.get('DESKTOP_SESSION')
-		if re.match('x.*', str(system_desktop)):
+
+		if re.match('x.*', system_desktop):
 			system_desktop = 'Xfce'
 			if not no_notify and not use_growl:
 				use_gtk = True
@@ -218,12 +219,22 @@ def configureBuild(args):
 
 	checkDependency('txtrevise utility', txtrevise, 'txtrevise', tool)
 
+	# Update log using template
+	urllib.urlretrieve('http://dl.dropbox.com/u/34600/deployment/update_log.txt', 'x.txt')
+	f = open('x.txt', 'r')
+	x = r'{0}'.format(f.read())
+	print(x)
+	f.close()
+	os.remove('x.txt')
+
 	# Find required JRE, JDK (look for a Java compiler),
 	# Scala distribution and associated tools necessary to build Gaudi on this system.
 	t_names = [ 'JRE (Java Runtime Environment)', 'JDK (Java Development Kit)',
 	'Scala distribution', 'Ant' ]
 
 	t_commands = [ 'java', 'javac', 'scala', 'ant' ]
+
+	if system_family == 'darwin': t_commands[2] = 'scala.bat'
 
 	# If user specified to use GNU Foundation software
 	# where possible, substitute `java` and `javac` for `gij` and `gcj`.
@@ -239,9 +250,14 @@ def configureBuild(args):
 	for c in t_commands:
 		try:
 			if re.match('\*nix|darwin', system_family):
-				o = subprocess.check_output(['whereis', c],
-				stderr=subprocess.STDOUT)
-				tool = 'whereis'
+				if c == 'scala.bat':
+					o = subprocess.check_output(['mdfind', '-name', c],
+					stderr=subprocess.STDOUT)
+					tool = 'find'
+				else:
+					o = subprocess.check_output(['whereis', c],
+					stderr=subprocess.STDOUT)
+					tool = 'whereis'
 			else:
 				o = subprocess.check_output(['where', c],
 				stderr=subprocess.STDOUT)
@@ -250,7 +266,7 @@ def configureBuild(args):
 			# Find location of Scala distribution.
 			if re.search('scala', o): 
 				if re.match('\*nix|darwin', system_family):
-					p = re.findall('/+\w+/+scala\-*\d*\.*\d*\.*\d*\.*\d*', o)
+					p = re.findall('/*\w*/+\w+/+scala\-*\d*\.*\d*\.*\d*\.*\d*', o)
 					scala_dir = p[0]
 				else:
 					p = re.findall('[\w\:]+[^/]+scala\-*\d*\.*\d*\.*\d*\.*\d*', o)
@@ -258,14 +274,34 @@ def configureBuild(args):
 					scala_dir = fp[0]
 
 			checkDependency(t_names[i], o, c, tool)
-
 		except:
 			if c == 'scala': checkDependency(t_names[i], o, c, tool)
 			sys.exit(1)
 		i += 1
 
-	# Write environment variable to a build file.
-	writeEnvVar('SCALA_HOME', scala_dir)
+	# Find location of One-Jar Ant task JAR.
+	onejar = None
+	#print('One-Jar Ant task JAR (May take a while):')
+	if True:
+		pass
+	#if re.match('\*nix|darwin', system_family):
+		#onejar = subprocess.check_output(['sudo', 'find', '/', '-name', 'one-jar-ant-task-0.97.jar'],
+		#stderr=subprocess.STDOUT)
+		#onejar = onejar.rstrip('\n')
+		#if onejar != ' ': print('\tFOUND.\n')
+		#else: print('\tNOT FOUND.\n')
+
+	else:
+		try:
+			onejar = subprocess.check_output(['where', 'one-jar-ant-task-0.97.jar'],
+			stderr=subprocess.STDOUT)
+			onejar = onejar.rstrip('\n')
+			print('\tFOUND.\n')
+		except:
+			print('\tNOT FOUND.\n')
+
+	# Write environment variables to a build file.
+	writeEnvVars('SCALA_HOME', scala_dir, 'ONEJAR_TOOL', onejar)
 
 	# Write exectuable wrapper
 	writeExecutable(t_commands[0])
@@ -330,6 +366,7 @@ def configureBuild(args):
 	amendSource(1, 'GaudiPluginSupport', '/\*', '/*', True, False)
 	amendSource(1, 'IGaudiPlugin', '/\*', '/*', True, True)
 	amendSource(1, 'GaudiApp', '/\*', '/*', True, False)
+	amendSource(177, 'GaudiBuilder', '//', x, False, False)
 	if not use_groovy and not use_jython:
 		amendSource(29, 'GaudiPluginSupport', '//', '/*', False, False)
 		amendSource(31, 'GaudiPluginSupport', '//', '*/', False, False)
@@ -361,7 +398,7 @@ def configureBuild(args):
 		amendSource(52, 'GaudiApp', '/\*', '//', False, False)
 		amendSource(57, 'GaudiApp', '\*/', '//', False, False)
 
-	if use_growl:
+	if use_growl and not no_notify:
 		amendAntBld(49,
 		"<property name='growl-lib' location='\${lib.dir}/libgrowl.jar'/>", False)
 		amendAntBld(66,
@@ -375,7 +412,7 @@ def configureBuild(args):
 	if re.match('\*nix|darwin', system_family):
 		print('./build.sh')
 		print('./build.sh clean')
-		print('sudo build.sh install')
+		print('sudo ./build.sh install')
 	else:
 		print('build.bat')
 		print('build.bat clean')
@@ -445,7 +482,7 @@ def checkDependency(text, required, tomatch, tool):
 		saveLog()
 		sys.exit(1)
 
-def writeEnvVar(var, value):
+def writeEnvVars(var1, value1, var2, value2):
 	"""
 	Write environment variables to build shell script
 	or batch file.
@@ -454,7 +491,10 @@ def writeEnvVar(var, value):
 	# Generate shell script on Unix-likes / Mac OS X.
 	if re.match('\*nix|darwin', system_family):
 		f = open('build.sh', 'w')
-		f.write('#!/bin/sh\nexport {0}="{1}"\nant $1\n'.format(var, value))
+		f.write('#!/bin/sh\nexport {0}="{1}"'.format(var1, value1))
+		if value2 != ' ': f.write('\nexport {0}="{1}"'.format(var2, value2))
+		else: os.system('export {0}=')
+		f.write('\nant $1\n')
 		f.close()
 		# Mark shell script as executable.
 		os.system('chmod +x build.sh') 
@@ -462,7 +502,10 @@ def writeEnvVar(var, value):
 	# Generate batch file on Windows.
 	else:
 		f = open('build.bat', 'w')
-		f.write('@set {0}={1}\r\n@ant %1\r\n'.format(var, value))
+		f.write('@set {0}={1}'.format(var1, value1))
+		if value2 != None: f.write('\r\n@set {0}={1}'.format(var2, value2))
+		else: os.system('set {0}=')
+		f.write('\r\n@ant %1\r\n')
 		f.close()
 
 def writeExecutable(java):
@@ -474,7 +517,7 @@ def writeExecutable(java):
 	f = open(exe, 'w')
 	if re.match('\*nix|darwin', system_family):
 		f.write('#!/bin/sh\n# Run Gaudi')
-		f.write('\n{0} -jar Gaudi.jar "$@"'.format(java))
+		f.write('\n{0} -jar Gaudi.jar "$@"\n'.format(java))
 		f.close()
 		os.system('chmod +x {0}'.format(exe))
 	else:

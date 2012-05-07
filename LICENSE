@@ -1,5 +1,5 @@
 Gaudi platform agnostic build tool
-Copyright 2010-2011 Sam Saint-Pettersen.
+Copyright 2010-2012 Sam Saint-Pettersen.
 http://github.com/stpettersens/Gaudi
 
 JSON.simple (simple Java toolkit for JSON)
@@ -7,11 +7,11 @@ Copyright 2010 Yidong Fang et al.
 http://code.google.com/p/json-simple
 
 Apache Commons IO library
-Copyright 2002-2008 The Apache Software Foundation.
+Copyright 2002-2012 The Apache Software Foundation.
 http://commons.apache.org/io
 
 Scala library
-Copyright 2002-2010 EPFL, Lausanne, unless otherwise specified. 
+Copyright 2002-2012 EPFL, Lausanne, unless otherwise specified. 
 All rights reserved. 
 Licensed under a BSD-style license - http://www.scala-lang.org/node/146
 http://www.scala-lang.org

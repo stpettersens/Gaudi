@@ -23,6 +23,7 @@ import java.io.{PrintWriter,FileOutputStream,IOException}
 
 class GaudiBase {
 
+	val caesarOffset: Array[Int] = Array(0x22, 0x1C, 0xA, 0x1F, 0x8, 0x2, 0x24, 0xF, 0x13, 0x25, 0x40, 0x10)
 	val LogFile: String = "gaudi.log"
 	
 	protected def logDump(message: String, isLogging: Boolean): Unit = {
@@ -49,8 +50,36 @@ class GaudiBase {
 		}
 	}
 
-	// Execute a process
-	protected def executeProcess(process: String, params: String, quiet: Boolean): Unit = {
-		Runtime.getRuntime().exec(String.format("%s %s", process, params));
+	// Encode a message in a simple Caesar cipher
+	protected def encodeText(message: String) : String = {
+
+		var emessage: String = "";
+		var x: Int = 0;
+		for(s <- message) {
+			
+			if(x == caesarOffset.length - 1) x = 0;
+			var cv: Int = message.charAt(x).asInstanceOf[Int] - caesarOffset(x);
+			var ca: Char = cv.asInstanceOf[Char];
+			emessage += ca
+			x += 1
+		}
+		emessage
+	}
+
+
+	// Decode a message in a simpole Caesar cipher
+	protected def decodeText(message: String) : String = {
+
+		var umessage: String = "";
+		var x: Int = 0;
+		for(s <- message) {
+			
+			if(x == caesarOffset.length - 1) x = 0;
+			var cv: Int = message.charAt(x).asInstanceOf[Int] + caesarOffset(x);
+			var ca: Char = cv.asInstanceOf[Char];
+			umessage += ca
+			x += 1
+		}
+		umessage
 	}
 }

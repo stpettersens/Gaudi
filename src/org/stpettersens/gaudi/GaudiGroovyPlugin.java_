@@ -27,7 +27,7 @@ public class GaudiGroovyPlugin {
 	@SuppressWarnings("unchecked")
 	GaudiGroovyPlugin(String plugin, boolean logging) throws Exception {
 		
-		GaudiLogger logger = new GaudiLogger(logging);
+		//GaudiLogger logger = new GaudiLogger(logging);
 		
 		try {
 			GroovyClassLoader gcl = new GroovyClassLoader();
@@ -42,7 +42,7 @@ public class GaudiGroovyPlugin {
 				String name = gPlugin.getName().toString();
 				String action = gPlugin.getAction().toString();
 				System.out.println("Initialized Groovy-based plug-in.\n");
-				logger.dump(String.format("Initialized Groovy-based plug-in -> %s.", name));
+				//logger.dump(String.format("Initialized Groovy-based plug-in -> %s.", name));
 				System.out.println(String.format("[ %s => %s ]", name, action));
 				gPlugin.run();
 			
@@ -50,12 +50,12 @@ public class GaudiGroovyPlugin {
 			else {
 				// Otherwise, display the standard did not load feedback
 				System.out.println("Error with: Groovy-based Plug-in (Failed to load).");
-				logger.dump("Failed to load plug-in.");
+				//logger.dump("Failed to load plug-in.");
 			}
 		}
 		catch(Exception e) {
 			System.out.println("\n\tError in plug-in code:\n\t\t" + e);
-			logger.dump("Error in plug-in code.");
+			//logger.dump("Error in plug-in code.");
 		}
 	}
 }

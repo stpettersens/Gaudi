@@ -30,7 +30,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 	<target name="init">		
 		<!-- Check for required tools, i.e. Scala compiler and library --> 
 		<property environment="env"/>
-		<fail unless="env.SCALA_HOME" message="Missing SCALA_HOME variable in OS environmental variables."/>
+		<fail unless="env.SCALA_HOME" message="Missing SCALA_HOME variable in OS environment variables."/>
 		
 		<!-- Variables for paths and files -->
 		<property name="pkg.dir" location="${basedir}/src/org/stpettersens/gaudi"/>
@@ -42,7 +42,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<property name="scala-library" location="${env.SCALA_HOME}/lib/scala-library.jar"/>
 		<property name="scala-compiler" location="${env.SCALA_HOME}/lib/scala-compiler.jar"/>
 		<property name="json-simple" location="${lib.dir}/json_simple-1.1.jar"/>
-		<property name="commons-io" location="${lib.dir}/commons-io-2.0.1.jar"/>
+		<property name="commons-io" location="${lib.dir}/commons-io-2.2.jar"/>
 		<!---->
 		<!---->
 		<!---->
@@ -66,7 +66,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 			<!---->
 		</path>
 
-		<!-- Load Scala's Ant tasks -->
+		<!-- Load Scala's Ant task -->
 		<taskdef resource="scala/tools/ant/antlib.xml">
 			<classpath>
 				<pathelement location="${scala-compiler}"/>
@@ -76,6 +76,9 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		
 		<!-- Print where this project will get Scala from -->
 		<echo message="Using Scala dir -> ${env.SCALA_HOME}"/>
+
+		<!-- Print where this project will get One-Jar Ant task JAR from -->
+		<echo message="Using One-Jar Ant task JAR -> ${env.ONEJAR_TOOL}"/>
 		
 		<!-- Scan folders for changes since last build and store status in variable -->
 		<uptodate property="build.uptodate" targetfile="${build.dir}/build.done">
@@ -103,7 +106,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 	
 	<target name="cjar" description="Create self-contained Jar" depends="package">
 		<echo message="Packaging Gaudi (self-contained Jar)..."/>
-		<fail unless="env.ONEJAR_TOOL" message="Missing ONEJAR_TOOL variable in OS environmental variables."/>
+		<fail unless="env.ONEJAR_TOOL" message="Missing ONEJAR_TOOL variable in OS environment variables."/>
 		<!-- Load One Jar task -->
 		<taskdef resource="antlib.xml">
 			<classpath>
@@ -141,11 +144,28 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<exec executable="${l4j}"><arg value="${exe.mf}"/></exec>
 		<delete file="${target.cjar}" quiet="true"/>
 	</target>
-	
+
+	<target name="install" description="Install application">
+		<echo message="Installing application..."/>
+		<mkdir dir="/opt/gaudi"/>
+		<copy file="dist/Gaudi.jar" todir="/opt/gaudi"/>
+		<echo file="/usr/bin/gaudi" append="false">
+		#!/bin/sh${line.separator}$JAVA -jar /opt/gaudi/Gaudi.jar $@${line.separator}
+		</echo>
+		<exec executable="chmod">
+			<arg value="+x"/>
+			<arg value="/usr/bin/gaudi"/>
+		</exec>
+	</target>
+
+	<target name="uninstall" description="Remove application">
+
+	</target>
+
 	<target name="sapps" description="Compile supporting applications for NSIS installer"
 	 depends="exe">
 	 	<echo message="Compiling supporting programs for NSIS installer..."/>
-	 	<javac includeantruntime="false" srcdir="${dist.dir}" destdir="${dist.dir}"/>
+	 	<javac target="1.4" source="1.4" includeantruntime="false" srcdir="${dist.dir}" destdir="${dist.dir}"/>
 	 	<uptodate property="buildsapps.uptodate" targetfile="${build.dir}/buildsapps.done">
 			<srcfiles dir="${src.dir}" includes="**"/>
 		</uptodate>

@@ -14,9 +14,9 @@ Name Gaudi
 !define REGKEY "SOFTWARE\$(^Name)"
 !define VERSION 0.1.0.0
 !define COMPANY "Sam Saint-Pettersen"
-!define URL http://stpettersens.github.com/Gaudi
+!define URL http://gaudi-build.tk
 !define DESC "Gaudi platform agnostic build tool"
-!define COPYRIGHT "(c) 2010 Sam Saint-Pettersen"
+!define COPYRIGHT "(c) 2010-2012 Sam Saint-Pettersen"
 
 # MUI Symbol Definitions
 !define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange.bmp" ; Change later to custom
@@ -36,7 +36,7 @@ Name Gaudi
 !include MUI2.nsh
 !include LogicLib.nsh
 !include StrFunc.nsh
-; " " Quoted includes do not ship with NSIS by default
+; Quoted ("") includes do not ship with NSIS by default
 !include "EnvVarUpdate.nsh" 
 !include "NSISArray.nsh"
 
@@ -94,8 +94,8 @@ Section
     ${libsRedun->Init}
     ${libs->Write} 0 "scala-library.jar"
     ${libs->Write} 1 "json_simple-1.1.jar"
-    ${libs->Write} 2 "commons-io-2.0.1.jar"
-    ${libs->Write} 3 "groovy-all-1.7.8.jar"
+    ${libs->Write} 2 "commons-io-2.2.jar"
+    ${libs->Write} 3 "groovy-all-1.8.0.jar"
     ${libs->Write} 4 "jython.jar"
     ${libs->FreeUnusedMem}
     ${libsRedun->FreeUnusedMem}
@@ -127,11 +127,11 @@ Function detectJVM
         ${EndIf}
     ${EndIf}
     DetailPrint "Detected JVM version: $1" ; Display detected version 
-    # Check this JVM meets minimum version requirement (1.5.x)
+    # Check this JVM meets minimum version requirement (1.6.x)
     ${If} $0 == "1"
-        DetailPrint "Pass: JVM reports suitable version (1.5+)"
+        DetailPrint "Pass: JVM reports suitable version (1.6+)"
     ${ElseIf} $0 == "0"
-        DetailPrint "Fail: JVM reports unsuitable version (< 1.5)"
+        DetailPrint "Fail: JVM reports unsuitable version (< 1.6)"
         DetailPrint "Please update it."
         GoTo downloadJVM
         badJVM: ; Done with JVM checks; failed
@@ -149,14 +149,16 @@ Function detectJVM
     StrCpy $R9 "Sun Microsystems Inc."
     DetailPrint "Detected JVM vendor: $1"
     StrCmp $1 $R9 goodJVM
+    StrCpy $R9 "Oracle Corporation"
+    StrCmp $1 $R9 goodJVM
     DetailPrint "Fail: JVM vendor is $1, unsupported."
     DetailPrint "-----------------------------------------------------------------------------------------"
     DetailPrint "Unfortunately, for the Windows executable version of Gaudi,"
-    DetailPrint "only the Sun Microsystems Inc. vended JVM will work."
+    DetailPrint "only the Oracle Corp./Sun Microsystems Inc. vended JVM will work."
     DetailPrint "-----------------------------------------------------------------------------------------"
     GoTo badJVM
     goodJVM:
-    DetailPrint "Pass: JVM reports suitable vendor (Sun Microsystems Inc.)"
+    DetailPrint "Pass: JVM reports suitable vendor (Oracle Corp./Sun Microsystems Inc.)"
     Delete JavaCheck.class ; Done with the checker program, delete it
 FunctionEnd
 
@@ -211,8 +213,7 @@ Section -Main SEC0000
     SetOverwrite on
 SectionEnd
 
-# Component selection:
-# Core program 
+# Component selection: Core program 
 InstType /COMPONENTSONLYONCUSTOM
 Section "Gaudi" GaudiTool
     SectionIn 1 RO
@@ -248,9 +249,9 @@ Section "Third-party libraries" TPLibs
     ${EndIf}
     File "lib\scala-library.jar"
     File "lib\json_simple-1.1.jar"
-    File "lib\commons-io-2.0.1.jar"
-    File "lib\groovy-all-1.7.10.jar"
-    File "lib\jython.jar"
+    File "lib\commons-io-2.2.jar"
+    ;File "lib\groovy-all-1.8.0.jar"
+    ;File "lib\jython.jar"
     StrCmpS $R8 "true" 0 skip
     ;Call removeDuplicates
     skip:
@@ -320,7 +321,9 @@ Section -un.post UNSEC0001
     RmDir $INSTDIR\lib
     RmDir $INSTDIR\plugins
     RmDir $INSTDIR
-    ${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" $INSTDIR ; Remove from PATH
+    ; There is a problem below meaning the PATH variable can become erased,
+    ; so the offending code has been disabled.
+    ;${un.EnvVarUpdate} $0 "PATH" "R" "HKLM" $INSTDIR ; Remove from PATH
 SectionEnd
 
 # Installer functions

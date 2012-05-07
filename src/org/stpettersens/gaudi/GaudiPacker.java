@@ -34,11 +34,11 @@ public class GaudiPacker {
 	Enumeration entries;
 	ZipFile zipFile;
 	String archive;
-	GaudiLogger logger;
+	//GaudiLogger logger;
 
 	GaudiPacker(String arch, boolean logging) {
 		archive = arch;
-		logger = new GaudiLogger(logging);
+		//logger = new GaudiLogger(logging);
 	}
 	
 	private void copyStream(InputStream in, OutputStream out) throws IOException {
@@ -59,7 +59,7 @@ public class GaudiPacker {
 			
 			while(entries.hasMoreElements()) {
 				entry = (ZipEntry) entries.nextElement();
-				logger.dump(String.format("Extracted file <%s>/%s", archive, entry.getName()));
+				//logger.dump(String.format("Extracted file <%s>/%s", archive, entry.getName()));
 				copyStream(zipFile.getInputStream(entry), new BufferedOutputStream
 				(new FileOutputStream(entry.getName())));
 			}

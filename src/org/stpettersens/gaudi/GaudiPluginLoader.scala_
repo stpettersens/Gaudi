@@ -23,8 +23,9 @@ import scala.util.matching.Regex
 class GaudiPluginLoader(plugin: String, logging: Boolean) {
 
 	// First of all, extract plugin code from the plugin archive (Zip File)
-	val unpacker = new GaudiPacker(plugin, logging)
-	val codeFile = unpacker.extrZipFile()
+	//val unpacker = new GaudiPacker(plugin, logging) /* Redundent code */
+	//val codeFile = unpacker.extrZipFile()
+	// NEED TO REDO EXTRACTION CODE.
 	
 	// Second step is to load pass the code onto the right script handler by
 	// file extension - *.groovy is Groovy code; *.py is Jython code.
