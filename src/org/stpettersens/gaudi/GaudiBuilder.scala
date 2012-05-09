@@ -174,7 +174,7 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 
 				val onCmd = param.split(" ")
 				// TODO!
-				// 
+				//
 			}
 			case _ => {
 				// Implement extendable commands	

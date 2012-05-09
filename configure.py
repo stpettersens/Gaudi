@@ -223,7 +223,6 @@ def configureBuild(args):
 	urllib.urlretrieve('http://dl.dropbox.com/u/34600/deployment/update_log.txt', 'x.txt')
 	f = open('x.txt', 'r')
 	x = r'{0}'.format(f.read())
-	print(x)
 	f.close()
 	os.remove('x.txt')
 
