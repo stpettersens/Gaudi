@@ -99,7 +99,7 @@ object GaudiApp extends GaudiBase {
 	  }
 	  else displayError("Arguments (requires 0-6 arguments)")
   }
-  // Just peform a stdin command; really just for testing implemented commands.
+  // Just perform a stdin command; really just for testing implemented commands.
   // E.g. argument ":move a->b"
   private def runCommand(cmd: String, param: String): Unit = {
 	  // Create a new builder to run a command

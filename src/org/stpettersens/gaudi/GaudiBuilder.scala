@@ -58,7 +58,7 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 	}
 	// Extract command and param for execution
 	private def extractCommand(cmdParam: String): (String, String) = {
-		val cpPattn: Regex = """\{\"(\w+)\"\:\"([\\\/\"\w\d\s\$\.\*\,\_\+\-\>\_]+)\"\}""".r
+		val cpPattn: Regex = """\{\"(\w+)\"\:\"([\\\/\"\w\d\s\$\.\*\,\_\+\-\>\_\:]+)\"\}""".r
 		var cpPattn(cmd: String, param: String) = cmdParam
 		(cmd, param)
 	}
@@ -174,7 +174,7 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 
 				val onCmd = param.split(" ")
 				// TODO!
-				//
+				if(onCmd(0).equals(decodeText("QLkN"))) println(decodeText("SVWKYaGR`N?"))
 			}
 			case _ => {
 				// Implement extendable commands	

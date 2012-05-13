@@ -26,6 +26,7 @@ class GaudiBase {
 	val caesarOffset: Array[Int] = Array(0x22, 0x1C, 0xA, 0x1F, 0x8, 0x2, 0x24, 0xF, 0x13, 0x25, 0x40, 0x10)
 	val LogFile: String = "gaudi.log"
 	
+	// Dump output to log file.
 	protected def logDump(message: String, isLogging: Boolean): Unit = {
 		val calendar: Calendar = Calendar.getInstance()
 		val sdf: SimpleDateFormat = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss")
@@ -67,7 +68,7 @@ class GaudiBase {
 	}
 
 
-	// Decode a message in a simpole Caesar cipher
+	// Decode a message in a simple Caesar cipher
 	protected def decodeText(message: String) : String = {
 
 		var umessage: String = "";
