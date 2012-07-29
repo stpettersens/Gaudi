@@ -53,7 +53,6 @@ class GaudiBase {
 
 	// Encode a message in a simple Caesar cipher
 	protected def encodeText(message: String) : String = {
-
 		var emessage: String = "";
 		var x: Int = 0;
 		for(s <- message) {
@@ -70,7 +69,6 @@ class GaudiBase {
 
 	// Decode a message in a simple Caesar cipher
 	protected def decodeText(message: String) : String = {
-
 		var umessage: String = "";
 		var x: Int = 0;
 		for(s <- message) {
