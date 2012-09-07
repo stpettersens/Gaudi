@@ -90,7 +90,7 @@ sub configureBuild {
 	# Define a hash of all libraries (potentially) used by Gaudi.
 	my %alllibs = (
 	'json', 'json_simple-1.1.jar',
-	'io', 'commons-io-2.1.jar',
+	'io', 'commons-io-2.2.jar',
 	'groovy', 'groovy-all-1.8.0.jar',
 	'jython', 'jython.jar',
 	'gtk', 'gtk.jar',
