@@ -16,7 +16,6 @@ This script depends on the txtrevise utility - which it
 may download & install when prompted.
 
 Usage:
-\t sh mark-exec.sh
 \t./configure.py [arguments]
 """
 import sys
@@ -521,7 +520,7 @@ def writeExecutable(java):
 		os.system('chmod +x {0}'.format(exe))
 	else:
 		f.write('@rem Run Gaudi')
-		f.write('\r\n@{0} -jar Gaudi.jar "%*"\r\n'.format(java))
+		f.write('\r\n@{0} -jar Gaudi.jar %*\r\n'.format(java))
 		f.close()
 		if os.path.isfile(exe + '.bat'):
 			os.remove(exe + '.bat')

@@ -173,8 +173,7 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			case "help" => {
 
 				val onCmd = param.split(" ")
-				// TODO!
-				if(onCmd(0).equals(decodeText("QLkN"))) println(decodeText("SVWKYaGR`N?"))
+				// TODO.
 			}
 			case _ => {
 				// Implement extendable commands	

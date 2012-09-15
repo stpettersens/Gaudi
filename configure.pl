@@ -16,7 +16,6 @@
 # may download & install when prompted.
 #
 # Usage:
-# sh mark-exec.sh
 # ./configure.pl [arguments]
 
 use strict;
@@ -537,7 +536,7 @@ sub writeExecutable {
 	}
 	else {
 		print FILE "\@rem Run Gaudi";
-		print FILE "\r\n\@$_[0] -jar Gaudi.jar \"\%*\"\r\n";
+		print FILE "\r\n\@$_[0] -jar Gaudi.jar %*\r\n";
 		close(FILE);
 		rename($exe, $exe . '.bat');
 	}
@@ -602,8 +601,7 @@ sub execChange {
 	}
 }
 
-sub showUsage {
-	
+sub showUsage {	
 	print <<USAGE;
 usage: configure.pl [-h] [--usegnu] [--nojython] [--nogroovy] ... etc.
 
