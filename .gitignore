@@ -8,6 +8,9 @@ ant_build
 *.log
 *.html
 *.bat
+*.pdf
+*.docx
+*.url
 .project
 .pydevproject
 .classpath
