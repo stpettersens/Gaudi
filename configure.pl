@@ -153,8 +153,9 @@ INFO
 				$usegtk = 1;
 			}
 		}
+		print "\nDetected desktop:\n\t$systemdesktop\n\n";
 	}
-	print "\nDetected desktop:\n\t$systemdesktop\n\n";
+	print "\n";
 	
 	# Check for txtrevise utility,
 	# if not found, prompt to download script (with --usescript option)
@@ -237,10 +238,10 @@ INFO
 		$i++;
 	}
 
-	# Find location of One-Jar Ant task JAR.
-	my $onejar;
-	print "One-Jar Ant task JAR:\n";
+	# Find location of One-Jar Ant task JAR [only on *nix].
+	my $onejar = "";
 	if($systemfamily=~ /\*nix|darwin/) {
+		print "One-Jar Ant task JAR:\n";
 		$onejar = `sudo find / -name one-jar-ant-task-0.97.jar 2>&1`;
 		chomp($onejar);
 		if($onejar ne " ") {
@@ -250,21 +251,11 @@ INFO
 			print "\tNOT FOUND.\n\n";
 		}
 	}
-	else {
-		$onejar = `where one-jar-ant-task-0.97.jar 2>&1`;
-		chomp($onejar);
-		if($onejar =~ /INFO/) {
-			print "\tNOT FOUND.\n\n";
-		}
-		else {
-			print "\tFOUND.\n\n";
-		}
-	}
 
 	# Write environment variable to a build file.
 	writeEnvVars('SCALA_HOME', $scaladir, 'ONEJAR_TOOL', $onejar, $systemfamily);
 
-	# Write exectuable wrapper.
+	# Write executable wrapper.
 	writeExecutable($tcommands[0], $systemfamily);
 	
 	# Find required JAR libraries necessary to build Gaudi on this system.

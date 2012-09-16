@@ -277,31 +277,20 @@ def configureBuild(args):
 			sys.exit(1)
 		i += 1
 
-	# Find location of One-Jar Ant task JAR.
+	# Find location of One-Jar Ant task JAR [only on *nix].
 	onejar = None
-	#print('One-Jar Ant task JAR (May take a while):')
-	if True:
-		pass
-	#if re.match('\*nix|darwin', system_family):
-		#onejar = subprocess.check_output(['sudo', 'find', '/', '-name', 'one-jar-ant-task-0.97.jar'],
-		#stderr=subprocess.STDOUT)
-		#onejar = onejar.rstrip('\n')
-		#if onejar != ' ': print('\tFOUND.\n')
-		#else: print('\tNOT FOUND.\n')
-
-	else:
-		try:
-			onejar = subprocess.check_output(['where', 'one-jar-ant-task-0.97.jar'],
-			stderr=subprocess.STDOUT)
-			onejar = onejar.rstrip('\n')
-			print('\tFOUND.\n')
-		except:
-			print('\tNOT FOUND.\n')
+	if re.match('\*nix|darwin', system_family):
+		print('One-Jar Ant task JAR (May take a while):')
+		onejar = subprocess.check_output(['sudo', 'find', '/', '-name', 'one-jar-ant-task-0.97.jar'],
+		stderr=subprocess.STDOUT)
+		onejar = onejar.rstrip('\n')
+		if onejar != ' ': print('\tFOUND.\n')
+		else: print('\tNOT FOUND.\n')
 
 	# Write environment variables to a build file.
 	writeEnvVars('SCALA_HOME', scala_dir, 'ONEJAR_TOOL', onejar)
 
-	# Write exectuable wrapper
+	# Write executable wrapper.
 	writeExecutable(t_commands[0])
 
 	# Find required JAR libraries necessary to build Gaudi on this system.

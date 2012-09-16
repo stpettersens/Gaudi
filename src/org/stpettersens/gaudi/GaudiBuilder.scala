@@ -156,22 +156,15 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			case "notify" => {
 				GaudiHabitat.sendOSNotif("null")
 			}
-
 			case "encode" => {
-
 				val fileMsg = param.split(">>")
 				writeToFile(fileMsg(0), encodeText(fileMsg(1)), true)
 			}
-
 			case "decode" => {
-
 				val fileMsg = param.split("<<")
-
 				writeToFile(fileMsg(0), decodeText(fileMsg(1)), true)
 			}
-
 			case "help" => {
-
 				val onCmd = param.split(" ")
 				// TODO.
 			}
@@ -181,8 +174,7 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			}
 		}
 	}
-
-	// Execute an action 
+	// :| :| :| :| :| :| :| :| :| :| :| Execute an action 
 	def doAction(action: JSONArray): Unit = {
 		try {
 			val actionArray = action.toArray()
