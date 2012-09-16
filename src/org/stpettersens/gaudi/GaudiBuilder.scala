@@ -27,11 +27,11 @@ class GaudiBuilder(preamble: JSONObject, sSwitch: Boolean,
 beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 	
 	// Define global messenger object
-	var messenger = new GaudiMessenger(logging)
+	/*var messenger = new GaudiMessenger(logging)
 	
 	if(sSwitch) {
 		messenger.start()
-	}
+	}*/
 	
 	// Substitute variables for values
 	private def substituteVars(action: Array[Object]): Unit = {
@@ -119,7 +119,7 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			}
 			case "list" => println(String.format("\t-> %s", wcc_param))
 			case "echo" => println(String.format("\t# %s", param))
-			case "erase" => eraseFile(wcc_param, false) // Support wildcards
+			case "erase" => eraseFile(wcc_param, false) // Support wildcards.
 			case "erasex" => eraseFile(wcc_param, true)
 			case "xstrip" => {
 				var p: String = wcc_param;
@@ -174,7 +174,7 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			}
 		}
 	}
-	// :| :| :| :| :| :| :| :| :| :| :| Execute an action 
+	// Execute an action.
 	def doAction(action: JSONArray): Unit = {
 		try {
 			val actionArray = action.toArray()
@@ -191,4 +191,4 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			}
 		}
 	}
-}	
+}
