@@ -23,22 +23,27 @@ import org.apache.commons.io.filefilter.WildcardFileFilter
 import scala.util.matching.Regex
 import java.io._
 
-class GaudiBuilder(preamble: JSONObject, sSwitch: Boolean, 
-beVerbose: Boolean, logging: Boolean) extends GaudiBase {
+class GaudiBuilder(preamble: JSONObject, sSwitch: Boolean, beVerbose: Boolean,
+logging: Boolean) extends GaudiBase {
 	
 	// Define global messenger object
-	/*var messenger = new GaudiMessenger(logging)
-	
+	var messenger = new GaudiMessenger(logging)	
 	if(sSwitch) {
 		messenger.start()
-	}*/
-	
-	// Substitute variables for values
-	private def substituteVars(action: Array[Object]): Unit = {
-		println(preamble)
+	}
+	// Substitute variables for values.
+	private def substituteVars(action: Array[Object]): List[String] = {
+		var vaction: Array[String] = Array()
+		var laction: List[String] = List()
+		val varPattn: Regex = """(\$[\w\d]+)""".r
+		for(command <- action) {
+			laction ::= String.format("%s", command)
+		}
+		laction = laction.reverse
+		return laction
 	}
 	// Handle wild cards in parameters such as *.scala, *.cpp,
-	// for example, to compile all Scala or C++ files in the specified dir
+	// for example, to compile all Scala or C++ files in the specified dir.
 	private def handleWildcards(param: String): String = {
 		if(param.contains("*")) {
 		    val rawParamPattn: Regex = """[\w\d]*\s*(.*)""".r
@@ -56,7 +61,7 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 		}
 		param
 	}
-	// Extract command and param for execution
+	// Extract command and param for execution.
 	private def extractCommand(cmdParam: String): (String, String) = {
 		val cpPattn: Regex = """\{\"(\w+)\"\:\"([\\\/\"\w\d\s\$\.\*\,\_\+\-\>\_\:]+)\"\}""".r
 		var cpPattn(cmd: String, param: String) = cmdParam
@@ -83,7 +88,8 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 		logging)
 		// -----------------------------------------------------------------
 		if(exe._1 != null) {
-			var p: Process = Runtime.getRuntime().exec(String.format("%s %s", exe._1, handleWildcards(exe._2)))
+			var p: Process = Runtime.getRuntime()
+			.exec(String.format("%s %s", exe._1, handleWildcards(exe._2)))
 			val reader = new BufferedReader(new InputStreamReader(p.getErrorStream()))
 			var line: String = reader.readLine()
 			if(line != null) {
@@ -122,7 +128,7 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			case "erase" => eraseFile(wcc_param, false) // Support wildcards.
 			case "erasex" => eraseFile(wcc_param, true)
 			case "xstrip" => {
-				var p: String = wcc_param;
+				var p: String = wcc_param
 				if(GaudiHabitat.getOSFamily() == 0) {
 					p = wcc_param.concat(".exe")
 				}
@@ -131,7 +137,7 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			case "copy" => {
 				// Explicit the first time about this being a string array
 				val srcDest: Array[String] = param.split("->")
-				copyFile(new File(srcDest(0)), new File(srcDest(1))) // Via Apache Commons IO
+				copyFile(new File(srcDest(0)), new File(srcDest(1))) // Via Apache Commons IO.
 			}
 			case "rcopy" => {
 				// Implicit...
@@ -140,11 +146,11 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 			case "move" => {
 				// Et cetera...
 				val srcDest = param.split("->") 
-				moveFile(new File(srcDest(0)), new File(srcDest(1))) // Via Apache Commons IO
+				moveFile(new File(srcDest(0)), new File(srcDest(1))) // Via Apache Commons IO.
 			}
 			// Append message to a file
 			// Usage in buildfile: { "append": file>>message" }
-			// Equivalent to *nix's echo "message" >> file
+			// Equivalent to *nix's echo "message" >> file.
 			case "append" => {
 				val fileMsg = param.split(">>")
 				writeToFile(fileMsg(0), fileMsg(1), true)
@@ -169,7 +175,7 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 				// TODO.
 			}
 			case _ => {
-				// Implement extendable commands	
+				// Implement extendable commands.	
 				printError(String.format("%s is an invalid command", command))
 			}
 		}
@@ -178,8 +184,8 @@ beVerbose: Boolean, logging: Boolean) extends GaudiBase {
 	def doAction(action: JSONArray): Unit = {
 		try {
 			val actionArray = action.toArray()
-			//substituteVars(actionArray)
-			for(cmdParam <- actionArray) {
+			val actionList = substituteVars(actionArray)
+			for(cmdParam <- actionList) {
 				val cpPair = extractCommand(cmdParam.toString)
 				doCommand(cpPair._1, cpPair._2)
 			}
