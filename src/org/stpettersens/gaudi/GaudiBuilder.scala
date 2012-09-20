@@ -23,24 +23,23 @@ import org.apache.commons.io.filefilter.WildcardFileFilter
 import scala.util.matching.Regex
 import java.io._
 
-class GaudiBuilder(preamble: JSONObject, sSwitch: Boolean, beVerbose: Boolean,
+class GaudiBuilder(buildConf: String, preamble: JSONObject, sSwitch: Boolean, beVerbose: Boolean,
 logging: Boolean) extends GaudiBase {
-	
-	// Define global messenger object
+	// Define global messenger object.
 	var messenger = new GaudiMessenger(logging)	
 	if(sSwitch) {
 		messenger.start()
 	}
+	var foreman = new GaudiForeman(buildConf);
+
 	// Substitute variables for values.
 	private def substituteVars(action: Array[Object]): List[String] = {
-		var vaction: Array[String] = Array()
 		var laction: List[String] = List()
-		val varPattn: Regex = """(\$[\w\d]+)""".r
 		for(command <- action) {
-			laction ::= String.format("%s", command)
+			val cmd = String.format("%s", command).replaceFirst("\\$[\\w\\d]+", "subed")
+			laction ::= cmd
 		}
 		laction = laction.reverse
-		return laction
 	}
 	// Handle wild cards in parameters such as *.scala, *.cpp,
 	// for example, to compile all Scala or C++ files in the specified dir.
@@ -172,7 +171,7 @@ logging: Boolean) extends GaudiBase {
 			}
 			case "help" => {
 				val onCmd = param.split(" ")
-				// TODO.
+				// :| :| :| TODO.
 			}
 			case _ => {
 				// Implement extendable commands.	

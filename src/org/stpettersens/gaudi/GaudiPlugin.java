@@ -27,7 +27,7 @@ public class GaudiPlugin implements IGaudiPlugin {
 	public static String Author = "Unspecified author"; // Plug-in author
 	public static String Url = "Unspecified URL"; // Plug-in URL
 	public static boolean Initiable = false;
-	public GaudiBuilder builder = new GaudiBuilder(null, false, true, false);
+	public GaudiBuilder builder = new GaudiBuilder(null, null, false, true, false);
 	
 	// Initalize method does *not* need to be redefined in derived plug-ins
 	public final boolean initialize() {

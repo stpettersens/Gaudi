@@ -103,7 +103,7 @@ object GaudiApp extends GaudiBase {
   // E.g. argument ":move a->b"
   private def runCommand(cmd: String, param: String): Unit = {
 	  // Create a new builder to run a command
-	  val builder = new GaudiBuilder(null, sSwitch, beVerbose, logging)
+	  val builder = new GaudiBuilder(null, null, sSwitch, beVerbose, logging)
 	  builder.doCommand(cmd, param)
 	  System.exit(0)
   }
@@ -125,7 +125,7 @@ object GaudiApp extends GaudiBase {
 	  finally {   
 	 	  // Delegate to the foreman and builder
 	 	  val foreman = new GaudiForeman(buildConf)
-	 	  val builder = new GaudiBuilder(foreman.getPreamble, sSwitch, beVerbose, logging)
+	 	  val builder = new GaudiBuilder(buildConf, foreman.getPreamble, sSwitch, beVerbose, logging)
 	 	  if(beVerbose) {
 	 	 	  println(String.format("[ %s => %s ]", foreman.getTarget, action))
 	 	  }	  

@@ -9,7 +9,7 @@
 	"build": [
 
 		{ "echo": "Compiling Hello World program..." },
-		{ "exec": "g++ hw.cpp -o hw" },
+		{ "exec": "$cc hw.cpp -o hw" },
 		{ "echo": "Strip Hello World executable..." },
 		{ "xstrip": "hw" },
 		{ "echo": "Appending to log file..." },

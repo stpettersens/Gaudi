@@ -21,7 +21,6 @@ import org.json.simple.{JSONValue,JSONObject,JSONArray}
 import scala.util.matching.Regex
 
 class GaudiForeman(buildConf: String) {
-	
 	// Parse build config into build JSON object on initialization
 	val buildJson: JSONObject = parseBuildJSON()
 	
@@ -44,10 +43,14 @@ class GaudiForeman(buildConf: String) {
 		}
 		JSONValue.parse(shardStr)
 	}
+	// Get [part] from parsed preamble
+	def getPart(part: String) = {
+		val partStr = JSONValue.toJSONString(getPreamble().get(part))
+		partStr.replaceAll("\"", "")
+	}
 	// Get target from parsed preamble
 	def getTarget(): String  = {
-		val targetStr = JSONValue.toJSONString(getPreamble().get("target"))
-		targetStr.replaceAll("\"", "")
+		getPart("target")
 	}
 	// Get the preamble from build object
 	def getPreamble(): JSONObject = {
