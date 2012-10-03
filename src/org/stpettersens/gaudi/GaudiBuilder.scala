@@ -40,6 +40,7 @@ logging: Boolean) extends GaudiBase {
 			laction ::= cmd
 		}
 		laction = laction.reverse
+		return laction
 	}
 	// Handle wild cards in parameters such as *.scala, *.cpp,
 	// for example, to compile all Scala or C++ files in the specified dir.
@@ -68,7 +69,7 @@ logging: Boolean) extends GaudiBase {
 	}
 	// Print an error related to action or command and exit
 	private def printError(error: String): Unit = {
-		println(String.format("\tAborting: %s.", error))
+		//println(String.format("\tAborting: %s.", error))
 		logDump(error, logging) // Also log it
 		System.exit(-2) // Exit application with error code
 	}
@@ -171,11 +172,11 @@ logging: Boolean) extends GaudiBase {
 			}
 			case "help" => {
 				val onCmd = param.split(" ")
-				// :| :| :| TODO.
+				// TODO.
 			}
 			case _ => {
 				// Implement extendable commands.	
-				printError(String.format("%s is an invalid command", command))
+				printError("%s is an invalid command".format(command))
 			}
 		}
 	}
@@ -183,16 +184,21 @@ logging: Boolean) extends GaudiBase {
 	def doAction(action: JSONArray): Unit = {
 		try {
 			val actionArray = action.toArray()
-			val actionList = substituteVars(actionArray)
+			//val actionList = substituteVars(actionArray)
+			val actionList = actionArray
 			for(cmdParam <- actionList) {
 				val cpPair = extractCommand(cmdParam.toString)
 				doCommand(cpPair._1, cpPair._2)
 			}
+			val timer: Int = 1
+			println("\nCompleted successfully in %d seconds.".format(timer))
 		}
 		catch {
 			case ex: Exception => {
 				println(String.format("\t[%s]", ex.getMessage))
-				printError("Encounted an invalid action or command")
+				println("\n\tEncounted an invalid action or command")
+				val timer: Int = 1
+				printError("\nFailed in %d seconds".format(timer))
 			}
 		}
 	}
