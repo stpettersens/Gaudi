@@ -27,6 +27,12 @@ class GaudiBuilder(buildConf: String, preamble: JSONObject, sSwitch: Boolean, be
 logging: Boolean) extends GaudiBase {
 	// Define global messenger object.
 	var messenger = new GaudiMessenger(logging)	
+
+	// Define start time and elapsed time
+	var stTime: Long = 0
+	var elTime: Long = 0
+	var period: String = "";
+
 	if(sSwitch) {
 		messenger.start()
 	}
@@ -38,9 +44,8 @@ logging: Boolean) extends GaudiBase {
 		for(command <- action) {
 			val cmd = String.format("%s", command).replaceFirst("\\$[\\w\\d]+", "subed")
 			laction ::= cmd
-		}
-		laction = laction.reverse
-		return laction
+		} 
+		laction.reverse
 	}
 	// Handle wild cards in parameters such as *.scala, *.cpp,
 	// for example, to compile all Scala or C++ files in the specified dir.
@@ -69,31 +74,31 @@ logging: Boolean) extends GaudiBase {
 	}
 	// Print an error related to action or command and exit
 	private def printError(error: String): Unit = {
-		//println(String.format("\tAborting: %s.", error))
+		println(error)
 		logDump(error, logging) // Also log it
 		System.exit(-2) // Exit application with error code
 	}
 	// Print executed command
 	private def printCommand(command: String, param: String): Unit = {
 		if(beVerbose && command != "echo") {
-			println(String.format("\t:%s %s", command, param))
+			println("\t:%s %s".format(command, param))
 		}
 	}
 	// Execute an external program or process
 	private def execExtern(param: String): Unit = {
 		val exe: (String, String) = GaudiHabitat.getExeWithExt(param)
 		// -----------------------------------------------------------------
-		logDump(String.format("Executed -> %s %s\n" +
-		"Wildcard matched -> %s", exe._1, exe._2, handleWildcards(exe._2)),
+		logDump("Executed -> %s %s\n" +
+		"Wildcard matched -> %s".format(exe._1, exe._2, handleWildcards(exe._2)),
 		logging)
 		// -----------------------------------------------------------------
 		if(exe._1 != null) {
 			var p: Process = Runtime.getRuntime()
-			.exec(String.format("%s %s", exe._1, handleWildcards(exe._2)))
+			.exec("%s %s".format(exe._1, handleWildcards(exe._2)))
 			val reader = new BufferedReader(new InputStreamReader(p.getErrorStream()))
 			var line: String = reader.readLine()
 			if(line != null) {
-				val msg = String.format("\t~ %s", line)
+				val msg = "\t~ %s".format(line)
 				println(msg)
 				messenger.report(msg)
 			}
@@ -104,6 +109,20 @@ logging: Boolean) extends GaudiBase {
 			new File(file.concat(".exe")).delete()
 		}
 		else new File(file).delete()
+	}
+	// Start timer (m/s) for build action.
+	private def startTimer(): Unit = {
+		stTime = System.currentTimeMillis()
+	}
+	// Get time elapsed in seconds for build action.
+	private def getTimeElapsed(): String = {
+		period = "millisecond"
+		elTime = System.currentTimeMillis() - stTime
+		if(elTime > 999) {
+			elTime = elTime / 1000
+			period = "second"
+		}
+		period
 	}
 	// Execute a command in the action
 	def doCommand(command: String, param: String): Unit = {
@@ -120,11 +139,11 @@ logging: Boolean) extends GaudiBase {
 			case "mkdir" => {
 				val aDir: Boolean = new File(param).mkdir()
 				if(!aDir) {
-					printError(String.format("Problem making dir -> %s", param))
+					printError("Problem making dir -> %s".format(param))
 				}
 			}
-			case "list" => println(String.format("\t-> %s", wcc_param))
-			case "echo" => println(String.format("\t# %s", param))
+			case "list" => println("\t-> %s".format(wcc_param))
+			case "echo" => println("\t# %s".format(param))
 			case "erase" => eraseFile(wcc_param, false) // Support wildcards.
 			case "erasex" => eraseFile(wcc_param, true)
 			case "xstrip" => {
@@ -132,7 +151,7 @@ logging: Boolean) extends GaudiBase {
 				if(GaudiHabitat.getOSFamily() == 0) {
 					p = wcc_param.concat(".exe")
 				}
-				execExtern(String.format("strip %s", p)) // Relies on strip command.
+				execExtern("strip %s".format(p)) // Relies on strip command.
 			}
 			case "copy" => {
 				// Explicit the first time about this being a string array
@@ -183,6 +202,7 @@ logging: Boolean) extends GaudiBase {
 	// Execute an action.
 	def doAction(action: JSONArray): Unit = {
 		try {
+			startTimer()
 			val actionArray = action.toArray()
 			//val actionList = substituteVars(actionArray)
 			val actionList = actionArray
@@ -190,15 +210,15 @@ logging: Boolean) extends GaudiBase {
 				val cpPair = extractCommand(cmdParam.toString)
 				doCommand(cpPair._1, cpPair._2)
 			}
-			val timer: Int = 1
-			println("\nCompleted successfully in %d seconds.".format(timer))
+			getTimeElapsed()
+			println("\nSUCCESSFUL in %d %s(s).".format(elTime, period))
 		}
 		catch {
 			case ex: Exception => {
-				println(String.format("\t[%s]", ex.getMessage))
+				getTimeElapsed()
+				println("\t[%s]".format(ex.getMessage))
 				println("\n\tEncounted an invalid action or command")
-				val timer: Int = 1
-				printError("\nFailed in %d seconds".format(timer))
+				printError("\nFAILED in %d %s(s)".format(elTime, period))
 			}
 		}
 	}
