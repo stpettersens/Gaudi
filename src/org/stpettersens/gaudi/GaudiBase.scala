@@ -44,7 +44,7 @@ class GaudiBase {
 			out.println(message)
 		}
 		catch {
-			case ioe: IOException =>  println(ioe.getMessage) // ! //printError(ioe.getMessage)
+			case ioe: IOException =>  println(ioe.getMessage)
 		}
 		finally {
 			out.close()
@@ -65,7 +65,6 @@ class GaudiBase {
 		}
 		emessage
 	}
-
 
 	// Decode a message in a simple Caesar cipher
 	protected def decodeText(message: String) : String = {

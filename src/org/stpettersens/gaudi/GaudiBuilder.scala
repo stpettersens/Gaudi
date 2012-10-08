@@ -31,7 +31,7 @@ logging: Boolean) extends GaudiBase {
 	// Define start time and elapsed time
 	var stTime: Long = 0
 	var elTime: Long = 0
-	var period: String = "";
+	var period: String = ""
 
 	if(sSwitch) {
 		messenger.start()
@@ -104,17 +104,18 @@ logging: Boolean) extends GaudiBase {
 			}
 		}
 	}
+	// Erase a file.
 	private def eraseFile(file: String, isExe: Boolean): Unit = {
 		if(isExe && GaudiHabitat.getOSFamily() == 0) {
 			new File(file.concat(".exe")).delete()
 		}
 		else new File(file).delete()
 	}
-	// Start timer (m/s) for build action.
+	// Start timer (m/s) for action.
 	private def startTimer(): Unit = {
 		stTime = System.currentTimeMillis()
 	}
-	// Get time elapsed in seconds for build action.
+	// Get time elapsed in seconds for action.
 	private def getTimeElapsed(): String = {
 		period = "millisecond"
 		elTime = System.currentTimeMillis() - stTime

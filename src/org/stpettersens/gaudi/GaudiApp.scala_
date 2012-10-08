@@ -85,7 +85,7 @@ object GaudiApp extends GaudiBase {
 	 	 	 	 	  param = p
 	 	 	 	  }
 	 	 	 	  case _ => {
-	 	 	 	 	  displayError(String.format("Argument (%s is invalid)", arg)) 	 	  
+	 	 	 	 	  displayError("Argument (%s is invalid)".format(arg)) 	  
 	 	 	 	  }
 	 	 	  }
 	 	  }
@@ -144,19 +144,19 @@ object GaudiApp extends GaudiBase {
   }
   // Display an error
   def displayError(ex: Exception): Unit = {
-	  println(String.format("\nError with: %s.", ex.getMessage))
+	  println("\nError with: %s.".format(ex.getMessage))
 	  logDump(ex.getMessage, logging)
 	  displayUsage(errCode)
   }
   // Overloaded for String parameter
   def displayError(ex: String): Unit = {
-	  println(String.format("\nError with: %s.", ex))
+	  println("\nError with: %s.".format(ex))
 	  logDump(ex, logging)
 	  displayUsage(errCode)
   }
   // Display version information and exit
   private def displayVersion(): Unit = {
-	  println(String.format("Gaudi v.%s [%s (%s)]", appVersion, env._1, env._2))
+	  println("Gaudi v.%s [%s (%s)]".format(appVersion, env._1, env._2))
 	  if(GaudiPluginSupport.Enabled) println("Plug-in support.")
 	  else println("No plug-in support (-noplugins).")
 	  System.exit(0)
