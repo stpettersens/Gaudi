@@ -1,8 +1,6 @@
 Gaudi
 =====
 
-Overview
---------
 Gaudi is a platform agnostic build tool
 written primarily in [Scala](http://www.scala-lang.org) (along with some Java) which runs on a Java virtual machine (JVM).
 
