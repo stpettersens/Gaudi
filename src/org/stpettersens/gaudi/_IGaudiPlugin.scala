@@ -21,7 +21,7 @@ package org.stpettersens.gaudi
 // NOTE: Interface for interoperability between GaudiPlugin
 // written in Scala and derived plugins written in Groovy or Jython.
 trait IGaudiPlugin {
-	def initialize(): Unit
+	def initialize(): Boolean
 	def getName(): String
 	def getAction(): String
 	def run(): Unit
