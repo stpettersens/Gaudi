@@ -218,13 +218,6 @@ def configureBuild(args):
 
 	checkDependency('txtrevise utility', txtrevise, 'txtrevise', tool)
 
-	# Update log using template
-	urllib.urlretrieve('http://dl.dropbox.com/u/34600/deployment/update_log.txt', 'x.txt')
-	f = open('x.txt', 'r')
-	x = r'{0}'.format(f.read())
-	f.close()
-	os.remove('x.txt')
-
 	# Find required JRE, JDK (look for a Java compiler),
 	# Scala distribution and associated tools necessary to build Gaudi on this system.
 	t_names = [ 'JRE (Java Runtime Environment)', 'JDK (Java Development Kit)',
@@ -353,7 +346,7 @@ def configureBuild(args):
 	amendSource(1, 'GaudiPluginSupport', '/\*', '/*', True, False)
 	#amendSource(1, 'IGaudiPlugin', '/\*', '/*', True, True)
 	amendSource(1, 'GaudiApp', '/\*', '/*', True, False)
-	amendSource(177, 'GaudiBuilder', '//', x, False, False)
+	#amendSource(177, 'GaudiBuilder', '//', False, False)
 	if not use_groovy and not use_jython:
 		amendSource(29, 'GaudiPluginSupport', '//', '/*', False, False)
 		amendSource(31, 'GaudiPluginSupport', '//', '*/', False, False)
