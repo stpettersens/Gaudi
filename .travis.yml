@@ -1,7 +1,7 @@
 language: java
 
 # Command to install dependencies
-install: "mvn install -DskipTests=true"
+install: "ant"
 
 # Command to build with `rake`
 script: rake default

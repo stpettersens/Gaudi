@@ -5,7 +5,11 @@
 #
 app="gaudi"
 
-task :default => [:configure, :build, :test]
+task :default => [ :deps, :configure, :build, :test]
+
+task :deps do
+	sh "mvn install -DskipTests=true"
+end
 
 task :configure do
 	sh "python configure.py --minbuild"
