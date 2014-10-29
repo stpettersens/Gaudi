@@ -11,6 +11,7 @@ ant_build
 *.pdf
 *.docx
 *.url
+*.tgz
 .project
 .pydevproject
 .classpath

@@ -40,6 +40,7 @@ use_deppage = True
 use_script = False
 system_family = None
 skiponejar = False
+skipdesktop = False
 
 class Logger:
 	"""
@@ -65,7 +66,7 @@ def configureBuild(args):
 	"""
 	# Handle any command line arguments
 	doc = usegnu = nojython = nogroovy = nonotify = usegrowl = None
-	noplugins = minbuild = log = nodeppage = usescript = skiponejar = None
+	noplugins = minbuild = log = nodeppage = usescript = skiponejar = skipdesktop = None
 	parser = argparse.ArgumentParser(description='Configuration script for building Gaudi.')
 	parser.add_argument('--usegnu', action='store_true', dest=usegnu, 
 	help='Use GNU software - GCJ and GIJ')
@@ -88,14 +89,16 @@ def configureBuild(args):
 	parser.add_argument('--usescript', action='store_true', dest=usescript,
 	help='Use txtrevise script in current directory')
 	parser.add_argument('--skiponejar', action='store_true', dest=skiponejar,
-	help='Skip OneJar tool usage')
+	help='Skip OneJar tool detection')
+	parser.add_argument('--skipdesktop', action='store_true', dest=skipdesktop,
+	help='Skip desktop detection')
 	parser.add_argument('--doc', action='store_true', dest=doc,
 	help='Show documentation for script and exit')
 	results = parser.parse_args()
 
 	# Set configuration.
 	global use_gnu, use_gtk, use_groovy, use_jython, no_notify, use_growl
-	global log_conf, logger, use_deppage, use_script, system_family,skiponejar
+	global log_conf, logger, use_deppage, use_script, system_family
 	use_gnu = results.usegnu
 	use_jython = results.nojython
 	use_groovy = results.nogroovy
@@ -104,6 +107,7 @@ def configureBuild(args):
 	use_deppage = results.nodeppage
 	use_script = results.usescript
 	skiponejar = results.skiponejar
+	skipdesktop = results.skipdesktop
 	log_conf = results.log
 
 	if results.doc:
@@ -171,7 +175,9 @@ def configureBuild(args):
 			system_family = 'windows'
 
 	# Detect desktop environment on Unix-likes (not Mac OS X).
-	if system_family == '*nix':
+	if skipdesktop == True:
+		pass
+	elif system_family == '*nix':
 		system_desktop = os.environ.get('DESKTOP_SESSION')
 
 		if re.match('x.*', system_desktop):
@@ -276,7 +282,7 @@ def configureBuild(args):
 
 	# Find location of One-Jar Ant task JAR [only on *nix].
 	onejar = None
-	global skiponejar
+	#global skiponejar
 	if skiponejar == True:
 		pass
 	elif re.match('\*nix|darwin', system_family):

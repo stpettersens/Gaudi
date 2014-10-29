@@ -1,17 +1,17 @@
 # 
 # Rakefile to build Gaudi on Travis CI or local system.
-# Use `rake default` to first get dependencies, configure, build and test.
+# Use `rake default` to first get dependencies, configure, build, install and test.
 # Use `rake travis` to do the same with Travis CI 
 # (first installs Scala distribution).
-# Use `rake all` to configure, build and test.
+# Use `rake all` to configure, build, install and test.
 #
 
-task :default => [:deps, :configure, :build, :test]
-task :travis => [ :deps_travis, :configure, :build, :test]
-task :all => [:configure, :build, :test]
+task :default => [:deps, :configure, :build, :install, :test]
+task :travis => [ :deps_travis, :configure_travis, :build, :install, :test]
+task :all => [:configure, :build, :install, :test]
 
 task :deps do
-	sh "python contrib/getDependencies.py null"
+	sh "python contrib/getDependencies.py local"
 end
 
 task :deps_travis do
@@ -19,11 +19,19 @@ task :deps_travis do
 end
 
 task :configure do
-	sh "python contrib/configure.py --minbuild --nodeppage --skiponejar"
+	sh "python contrib/configure.py --minbuild --skiponejar"
+end
+
+task :configure_travis do 
+	sh "python contrib/configure.py --minbuild --nodeppage --skiponejar --skipdesktop"
 end
 
 task :build do
 	sh "./build.sh"
+end
+
+task :install do
+	sh "sudo ./build.sh install"
 end
 
 task :test do

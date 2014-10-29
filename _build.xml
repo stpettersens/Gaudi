@@ -148,9 +148,13 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 	<target name="install" description="Install application">
 		<echo message="Installing application..."/>
 		<mkdir dir="/opt/gaudi"/>
-		<copy file="dist/Gaudi.jar" todir="/opt/gaudi"/>
+		<mkdir dir="/opt/gaudi/lib"/>
+		<copy file="Gaudi.jar" todir="/opt/gaudi"/>
+		<copy file="lib/commons-io-2.2.jar" todir="/opt/gaudi/lib"/>
+		<copy file="lib/json_simple-1.1.jar" todir="/opt/gaudi/lib"/>
+		<copy file="lib/scala-library.jar" todir="/opt/gaudi/lib"/>
 		<echo file="/usr/bin/gaudi" append="false">
-		#!/bin/sh${line.separator}$JAVA -jar /opt/gaudi/Gaudi.jar $@${line.separator}
+		#!/bin/sh${line.separator}java -jar /opt/gaudi/Gaudi.jar $@${line.separator}
 		</echo>
 		<exec executable="chmod">
 			<arg value="+x"/>
