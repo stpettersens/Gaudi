@@ -1,4 +1,4 @@
-Gaudi
+Gaudi [![Build Status](https://travis-ci.org/stpettersens/Gaudi.png?branch=master)](https://travis-ci.org/stpettersens/Gaudi)
 =====
 
 Gaudi is a platform agnostic build tool

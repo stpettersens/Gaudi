@@ -1,0 +1,48 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.stpettersens.gaudi</groupId>
+  <artifactId>gaudi-app</artifactId>
+  <version>0.1</version>
+  <packaging>jar</packaging>
+  <name>Gaudi</name>
+  <description>Gaudi platform agnostic build tool</description>
+  <url>http://github.com/stpettersens/Gaudi</url>
+  <licenses>
+  	<license>
+  		<name>The Apache Software License, Version 2.0</name>
+  		<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+  	</license>
+  </licenses>
+  <developers>
+  	<developer>
+  		<id>stpettersens</id>
+  		<name>Sam Saint-Pettersen</name>
+  		<roles>
+  			<role>architect</role>
+  			<role>developer</role>
+  		</roles>
+  		<timezone>+0</timezone>
+  	</developer>
+  </developers>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.apache.directory.studio</groupId>
+  		<artifactId>commons-io</artifactId>
+  		<version>2.4</version>
+  		<scope>test</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.googlecode.json-simple</groupId>
+  		<artifactId>json-simple</artifactId>
+  		<version>1.1</version>
+  		<scope>test</scope>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.scala-lang</groupId>
+  		<artifactId>scala-library-all</artifactId>
+  		<version>2.11.4</version>
+  		<scope>test</scope>
+  	</dependency>
+  </dependencies>
+</project>
