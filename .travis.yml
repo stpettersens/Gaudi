@@ -1,7 +1,15 @@
+#
+# Travis CI configuration for Gaudi.
+#
+
+# This is a Java + Scala project.
 language: java
 
-# Command to install dependencies
+# Command to install/test `ant`.
 install: "ant -version"
 
-# Command to build with `rake`
+# Command to build with `rake default`.
 script: rake default
+
+# Command to clean up build with `rake clean`.
+after_script: rake clean
