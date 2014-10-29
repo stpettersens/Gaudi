@@ -16,7 +16,7 @@ This script depends on the txtrevise utility - which it
 may download & install when prompted.
 
 Usage:
-\t./configure.py [arguments]
+\t./contrib/configure.py [arguments]
 """
 import sys
 import re
@@ -39,6 +39,7 @@ logger = None
 use_deppage = True
 use_script = False
 system_family = None
+skiponejar = False
 
 class Logger:
 	"""
@@ -64,7 +65,7 @@ def configureBuild(args):
 	"""
 	# Handle any command line arguments
 	doc = usegnu = nojython = nogroovy = nonotify = usegrowl = None
-	noplugins = minbuild = log = nodeppage = usescript = None
+	noplugins = minbuild = log = nodeppage = usescript = skiponejar = None
 	parser = argparse.ArgumentParser(description='Configuration script for building Gaudi.')
 	parser.add_argument('--usegnu', action='store_true', dest=usegnu, 
 	help='Use GNU software - GCJ and GIJ')
@@ -86,13 +87,15 @@ def configureBuild(args):
 	help='Do not open dependencies web page for missing dependencies')
 	parser.add_argument('--usescript', action='store_true', dest=usescript,
 	help='Use txtrevise script in current directory')
+	parser.add_argument('--skiponejar', action='store_true', dest=skiponejar,
+	help='Skip OneJar tool usage')
 	parser.add_argument('--doc', action='store_true', dest=doc,
 	help='Show documentation for script and exit')
 	results = parser.parse_args()
 
 	# Set configuration.
 	global use_gnu, use_gtk, use_groovy, use_jython, no_notify, use_growl
-	global log_conf, logger, use_deppage, use_script, system_family
+	global log_conf, logger, use_deppage, use_script, system_family,skiponejar
 	use_gnu = results.usegnu
 	use_jython = results.nojython
 	use_groovy = results.nogroovy
@@ -100,6 +103,7 @@ def configureBuild(args):
 	use_growl = results.usegrowl
 	use_deppage = results.nodeppage
 	use_script = results.usescript
+	skiponejar = results.skiponejar
 	log_conf = results.log
 
 	if results.doc:
@@ -272,7 +276,10 @@ def configureBuild(args):
 
 	# Find location of One-Jar Ant task JAR [only on *nix].
 	onejar = None
-	if re.match('\*nix|darwin', system_family):
+	global skiponejar
+	if skiponejar == True:
+		pass
+	elif re.match('\*nix|darwin', system_family):
 		print('One-Jar Ant task JAR (May take a while):')
 		onejar = subprocess.check_output(['sudo', 'find', '/', '-name', 'one-jar-ant-task-0.97.jar'],
 		stderr=subprocess.STDOUT)

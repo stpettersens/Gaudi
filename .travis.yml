@@ -5,11 +5,14 @@
 # This is a Java + Scala project.
 language: java
 
+# Compiler for C++ code in examples/HelloWorld
+compiler: g++
+
 # Command to install/test `ant`.
 install: "ant -version"
 
-# Command to build with `rake default`.
-script: rake default
+# Command to build with `rake travis`.
+script: rake travis
 
 # Command to clean up build with `rake clean`.
 after_script: rake clean
