@@ -27,10 +27,12 @@ end
 
 task :build do
 	sh "./build.sh"
+	puts ""
 end
 
 task :install do
 	sh "sudo ./build.sh install"
+	puts ""
 end
 
 task :test do
