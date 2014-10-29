@@ -1,8 +1,7 @@
 # 
 # Rakefile to build Gaudi on Travis CI or local system.
 # Use `rake default` to first get dependencies, configure, build, install and test.
-# Use `rake travis` to do the same with Travis CI 
-# (first installs Scala distribution).
+# Use `rake travis` to do the same with Travis CI (first installs Scala distribution).
 # Use `rake all` to configure, build, install and test.
 #
 
