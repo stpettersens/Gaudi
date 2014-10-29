@@ -1,7 +1,7 @@
 language: java
 
 # Command to install dependencies
-install: "ant --version"
+install: "ant -version"
 
 # Command to build with `rake`
 script: rake default
