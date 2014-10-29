@@ -12,7 +12,7 @@ task :configure do
 end
 
 task :build do
-	sh "build.sh"
+	sh "./build.sh"
 end
 
 task :test do
