@@ -16,7 +16,7 @@ This script depends on the txtrevise utility - which it
 may download & install when prompted.
 
 Usage:
-\t./contrib/configure.py [arguments]
+\tpython contrib/configure.py [arguments]
 """
 import sys
 import re

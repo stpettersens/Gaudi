@@ -3,6 +3,7 @@
 # Use `rake default` to first get dependencies, configure, build, install and test.
 # Use `rake travis` to do the same with Travis CI (first installs Scala distribution).
 # Use `rake all` to configure, build, install and test.
+# Use `rake clean` to clean up.
 #
 
 task :default => [:deps, :configure, :build, :install, :test]
