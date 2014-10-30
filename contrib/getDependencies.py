@@ -20,16 +20,16 @@ from subprocess import call
 
 def getDependencies(client):
 
-	deps = ["Scala 2.9.3", "txtrevise utility", "JSON.simple 1.1", "Apache Commons IO 2.2", "Google Guava 18.0"]
+	deps = ["Scala 2.9.3", "txtrevise utility", "JSON.simple 1.1", "Apache Commons IO 2.2"] #, "Google Guava 18.0"]
 
 	urls = [
 	"http://www.scala-lang.org/files/archive/scala-2.9.3.tgz", 
 	"https://raw.githubusercontent.com/stpettersens/txtrevise/master/python/txtrevise.py",
 	"http://json-simple.googlecode.com/files/json_simple-1.1.jar",
-	"http://mirror.gopotato.co.uk/apache//commons/io/binaries/commons-io-2.4-bin.zip",
-	 "http://search.maven.org/remotecontent?filepath=com/google/guava/guava/18.0/guava-18.0.jar"]
+	"http://mirror.gopotato.co.uk/apache//commons/io/binaries/commons-io-2.4-bin.zip"] #,
+	 #"http://search.maven.org/remotecontent?filepath=com/google/guava/guava/18.0/guava-18.0.jar"]
 
-	dests = ["scala-2.9.3.tgz", "txtrevise.py", "json_simple-1.1.jar", "commons-2.4.bin.zip", "guava-18.0.jar"]
+	dests = ["scala-2.9.3.tgz", "txtrevise.py", "json_simple-1.1.jar", "commons-2.4.bin.zip"] #, "guava-18.0.jar"]
 
 	if client == "travis":
 		pass
@@ -37,9 +37,6 @@ def getDependencies(client):
 		deps.pop(0)
 		urls.pop(0)
 		dests.pop(0)
-		deps.pop(1)
-		urls.pop(1)
-		dests.pop(1)
 
 	while len(deps) > 0:
 		current =  dests.pop(0)
