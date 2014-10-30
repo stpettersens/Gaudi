@@ -1,0 +1,24 @@
+{
+	"preamble": {
+	
+		"source": "hw.cpp",
+		"target": "hw",
+		"cc": "g++"
+	},
+
+	"build": [
+
+		{ "echo": "Create a directory: src" },
+		{ "mkdir": "src" },
+		{ "echo": "Create a text file: blah.txt" },
+		{ "append": "blah.txt>>Created a directory." }
+	],
+	
+	"clean": [
+
+		{ "echo": "Remove directory: src" },
+		{ "erase": "src" },
+		{ "echo": "Remove file: blah.txt" },
+		{ "erase": "blah.txt" }
+	]
+}

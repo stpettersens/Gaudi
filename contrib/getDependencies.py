@@ -20,15 +20,16 @@ from subprocess import call
 
 def getDependencies(client):
 
-	deps = ["Scala 2.9.3", "txtrevise utility", "JSON.simple 1.1", "Apache Commons IO 2.2"]
+	deps = ["Scala 2.9.3", "txtrevise utility", "JSON.simple 1.1", "Apache Commons IO 2.2", "Google Guava 18.0"]
 
 	urls = [
 	"http://www.scala-lang.org/files/archive/scala-2.9.3.tgz", 
 	"https://raw.githubusercontent.com/stpettersens/txtrevise/master/python/txtrevise.py",
 	"http://json-simple.googlecode.com/files/json_simple-1.1.jar",
-	"http://mirror.gopotato.co.uk/apache//commons/io/binaries/commons-io-2.4-bin.zip"]
+	"http://mirror.gopotato.co.uk/apache//commons/io/binaries/commons-io-2.4-bin.zip",
+	 "http://search.maven.org/remotecontent?filepath=com/google/guava/guava/18.0/guava-18.0.jar"]
 
-	dests = ["scala-2.9.3.tgz", "txtrevise.py", "json_simple-1.1.jar", "commons-2.4.bin.zip"]
+	dests = ["scala-2.9.3.tgz", "txtrevise.py", "json_simple-1.1.jar", "commons-2.4.bin.zip", "guava-18.0.jar"]
 
 	if client == "travis":
 		pass
@@ -50,7 +51,7 @@ def getDependencies(client):
 			call(["tar", "xfvz", current])
 			call(["mv", "scala-2.9.3", "scala"])
 			call(["sudo", "cp", "-r", "scala", "/opt"])
-			call(["rm", "-f", "-r", "scala"])
+			call(["rm", "-f", "-r", "scala", current])
 
 		# Extract ZIP files.
 		if current.find(".zip") != -1:
@@ -72,3 +73,4 @@ def getDependencies(client):
 
 if __name__ == '__main__':
 	getDependencies(sys.argv[1])
+	

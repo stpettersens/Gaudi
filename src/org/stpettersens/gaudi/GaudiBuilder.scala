@@ -21,6 +21,7 @@ import org.json.simple.{JSONObject,JSONArray}
 import org.apache.commons.io.FileUtils._
 import org.apache.commons.io.filefilter.WildcardFileFilter
 import scala.util.matching.Regex
+import java.nio.file._
 import java.io._
 
 class GaudiBuilder(buildConf: String, preamble: JSONObject, sSwitch: Boolean, beVerbose: Boolean,
@@ -195,7 +196,8 @@ logging: Boolean) extends GaudiBase {
 				// TODO.
 			}
 			case _ => {
-				// Implement extendable commands.	
+				// Implement extendable commands here via plug-ins.
+				// Catch unimplement commands here.
 				printError("%s is an invalid command".format(command))
 			}
 		}
