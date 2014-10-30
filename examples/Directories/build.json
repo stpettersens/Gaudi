@@ -1,9 +1,8 @@
 {
 	"preamble": {
 	
-		"source": "hw.cpp",
-		"target": "hw",
-		"cc": "g++"
+		"source": "-",
+		"target": "directories"
 	},
 
 	"build": [

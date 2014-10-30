@@ -1,7 +1,7 @@
-Building with Gaudi example #1
+Building with Gaudi example #2
 ------------------------------
-Simple example Hello World program
-written in C++ and the Gaudi build file to build it.
+Simple example to write out a text file
+and create a directory.
 
 Here you will see that `gaudi` is invoked in a very 
 similar manner to the traditional `make` tool.
@@ -11,7 +11,7 @@ run:
 
 > `gaudi`
 
-To remove the compiled program, invoke the `clean` action with:
+To remove the generated file and directory, invoke the `clean` action with:
 
 > `gaudi clean`
 
