@@ -50,7 +50,7 @@ task :test do
 	end
 	Dir.chdir('examples/Directories') do 
 		puts ""
-		sh "gaudi -f build.json"
+		sh "gaudi -f build.json build"
 		puts ""
 		sh "cat blah.txt"
 		puts ""
