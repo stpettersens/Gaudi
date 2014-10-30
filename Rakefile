@@ -4,7 +4,6 @@
 # Use `rake travis` to do the same with Travis CI (first installs Scala distribution).
 # Use `rake all` to configure, build, install and test.
 #
-require 'fileutils'
 
 task :default => [:deps, :configure, :build, :install, :test]
 task :travis => [ :deps_travis, :configure_travis, :build, :install, :test]
