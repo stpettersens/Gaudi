@@ -1,6 +1,6 @@
 /*
 Gaudi platform agnostic build tool
-Copyright 2010-2012 Sam Saint-Pettersen.
+Copyright 2010-2014 Sam Saint-Pettersen.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ object GaudiApp extends GaudiBase {
 	  builder.doCommand(cmd, param)
 	  System.exit(0)
   }
-  // Load and delegate parse and execution of build file
+  // Load and delegate parse and execution of build file.
   private def loadBuild(action: String): Unit = {
 	  var buildConf: String = ""
 	  try {
@@ -115,10 +115,10 @@ object GaudiApp extends GaudiBase {
 	 	 	  buildConf += line
 	 	  }
 	 	  // Shrink string, by replacing tabs with spaces;
-	 	  // Gaudi build files should be written using tabs
+	 	  // Gaudi build files should be written using tabs.
 	 	  buildConf = buildConf.replaceAll("\t","")
 	  }
-	  catch { // Catch I/O and general exceptions
+	  catch { // Catch  any I/O and general exceptions.
 	 	  case ioe: IOException => displayError(ioe)
 	 	  case e: Exception => displayError(e)
 	  }
@@ -164,7 +164,7 @@ object GaudiApp extends GaudiBase {
   // Display usage information and exit
   private def displayUsage(exitCode: Int): Unit = {
 	  println("\nGaudi platform agnostic build tool")
-	  println("Copyright (c) 2010-2012 Sam Saint-Pettersen")
+	  println("Copyright (c) 2010-2014 Sam Saint-Pettersen")
 	  println("\nReleased under the Apache License v2.")
 	  println("\nUsage: gaudi [-s <port>][-l][-i|-v|-n|-m][-q]")
 	  println("[-p <plug-in>][-f <build file>][<action>|\"<:command>\"]")

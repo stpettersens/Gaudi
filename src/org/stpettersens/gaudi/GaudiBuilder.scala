@@ -1,6 +1,6 @@
 /*
 Gaudi platform agnostic build tool
-Copyright 2010-2012 Sam Saint-Pettersen.
+Copyright 2010-2014 Sam Saint-Pettersen.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ package org.stpettersens.gaudi
 import org.json.simple.{JSONObject,JSONArray}
 import org.apache.commons.io.FileUtils._
 import org.apache.commons.io.filefilter.WildcardFileFilter
+import scala.io.Source
 import scala.util.matching.Regex
 import java.nio.file._
 import java.io._
@@ -79,6 +80,13 @@ logging: Boolean) extends GaudiBase {
 		logDump(error, logging) // Also log it
 		System.exit(-2) // Exit application with error code
 	}
+	// Print an error... (overloaded for an exception)
+	private def printError(error: Exception): Unit = {
+		println(error.getMessage)
+		logDump(error.getMessage, logging) // Also log it
+		System.exit(-2) // Exit application with error code
+	}
+
 	// Print executed command
 	private def printCommand(command: String, param: String): Unit = {
 		if(beVerbose && command != "echo") {
@@ -103,6 +111,19 @@ logging: Boolean) extends GaudiBase {
 				println(msg)
 				messenger.report(msg)
 			}
+		}
+	}
+	// Concaternate a file.
+	private def concaternateFile(file: String): Unit = {
+		try { // Open file and print lines to console.
+			println("\n")
+			for(line <- Source.fromFile(file).getLines) {
+				println(line)
+			}
+		}
+		catch { // Catch any I/O or general exceptions.
+			case ioe: IOException => printError(ioe)
+			case e: Exception => printError(e)
 		}
 	}
 	// Erase a file.
@@ -155,6 +176,7 @@ logging: Boolean) extends GaudiBase {
 				}
 				execExtern("strip %s".format(p)) // Relies on strip command.
 			}
+			case "cat" => concaternateFile(param)
 			case "copy" => {
 				// Explicit the first time about this being a string array
 				val srcDest: Array[String] = param.split("->")

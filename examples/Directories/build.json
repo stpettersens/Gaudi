@@ -11,6 +11,8 @@
 		{ "mkdir": "src" },
 		{ "echo": "Create a text file: blah.txt" },
 		{ "append": "blah.txt>>Created a directory." }
+		{ "echo": "Display text file contents..." },
+		{ "cat": "blah.txt" }
 	],
 	
 	"clean": [

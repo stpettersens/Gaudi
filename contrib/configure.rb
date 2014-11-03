@@ -35,7 +35,7 @@ class ConfigureBuild
 
 		opts.on("-h") do |help|
 			options.help = true
-		end
+		end	
 	end
 
 		opt_parser.parse!(args)
