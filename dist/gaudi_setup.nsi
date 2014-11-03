@@ -14,9 +14,9 @@ Name Gaudi
 !define REGKEY "SOFTWARE\$(^Name)"
 !define VERSION 0.1.0.0
 !define COMPANY "Sam Saint-Pettersen"
-!define URL http://gaudi-build.tk
+!define URL http://github.com/stpettersens/Gaudi
 !define DESC "Gaudi platform agnostic build tool"
-!define COPYRIGHT "(c) 2010-2012 Sam Saint-Pettersen"
+!define COPYRIGHT "(c) 2010-2014 Sam Saint-Pettersen"
 
 # MUI Symbol Definitions
 !define MUI_WELCOMEFINISHPAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\orange.bmp" ; Change later to custom

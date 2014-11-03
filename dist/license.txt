@@ -1,5 +1,5 @@
 Gaudi platform agnostic build tool
-Copyright 2010-2012 Sam Saint-Pettersen.
+Copyright 2010-2014 Sam Saint-Pettersen.
 http://github.com/stpettersens/Gaudi
 
 JSON.simple (simple Java toolkit for JSON)
