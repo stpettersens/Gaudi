@@ -29,7 +29,7 @@
     <fileVersion>0.1.0.0</fileVersion>
     <txtFileVersion>0.1.0.0</txtFileVersion>
     <fileDescription>Gaudi platform agnostic build tool</fileDescription>
-    <copyright>(c) 2010-2012 Sam Saint-Pettersen</copyright>
+    <copyright>(c) 2010-2014 Sam Saint-Pettersen</copyright>
     <productVersion>0.1.0.0</productVersion>
     <txtProductVersion>0.1.0.0</txtProductVersion>
     <productName>Gaudi</productName>
