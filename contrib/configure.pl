@@ -16,7 +16,7 @@
 # may download & install when prompted.
 #
 # Usage:
-# ./contrib/configure.pl [arguments]
+# perl contrib/configure.pl [arguments]
 use strict;
 use warnings;
 use Getopt::Long;
