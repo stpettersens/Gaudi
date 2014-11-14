@@ -78,13 +78,13 @@ logging: Boolean) extends GaudiBase {
 	private def printError(error: String): Unit = {
 		println(error)
 		logDump(error, logging) // Also log it
-		System.exit(-2) // Exit application with error code
+		System.exit(-1) // Exit application with error code
 	}
 	// Print an error... (overloaded for an exception)
 	private def printError(error: Exception): Unit = {
 		println(error.getMessage)
 		logDump(error.getMessage, logging) // Also log it
-		System.exit(-2) // Exit application with error code
+		System.exit(-1) // Exit application with error code
 	}
 
 	// Print executed command
