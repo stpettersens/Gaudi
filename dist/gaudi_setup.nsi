@@ -111,7 +111,7 @@ Function detectJVM
     File JavaCheck.class ; Extract small Java version checker program
     ; Attempt to execute Java version checker program to get version
     ; Also does 'java' even exist?
-    nsExec::ExecToStack `java -classpath . JavaCheck 1.5` 
+    nsExec::ExecToStack `java -classpath . JavaCheck 1.6` 
     Pop $0 ; Pop return code from program from stack
     Pop $1 ; Pop stdout from program from stack
     ${If} $0 == "error" ; Error occurs when a JVM cannot be found...
