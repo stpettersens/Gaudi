@@ -45,7 +45,7 @@ def getDependencies(client):
 
 		# Extract TAR files.
 		if current.find(".tgz") != -1 or current.find("tar.gz") != -1:
-			call(["tar", "xfvz", current])
+			call(["tar", "xfz", current])
 			call(["mv", "scala-2.9.3", "scala"])
 			call(["sudo", "cp", "-r", "scala", "/opt"])
 			call(["rm", "-f", "-r", "scala", current])
