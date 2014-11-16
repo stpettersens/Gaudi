@@ -5,13 +5,16 @@
 # Use `rake travis` to do the same with Travis CI (first installs Scala distribution).
 # Use `rake all` to configure, build, install and test.
 # Use `rake bit` to build, install and test.
+# Use `rake exe` to build Windows executable.
+# Use `rake nsis` to build  Windows executable, NSIS setup program and supporting Java apps.
 # Use `rake clean` to clean up.
 #
-
 task :default => [:deps, :configure, :build, :install, :test]
 task :travis => [ :deps_travis, :configure_travis, :build, :install, :test]
 task :all => [:configure, :build, :install, :test]
 task :bit => [:build, :install, :test]
+task :exe => [:configure, :winbuild, :winexe]
+task :nsis => [:exe, :setupnsis]
 
 task :deps do
 	sh "python contrib/getDependencies.py local"
@@ -31,6 +34,21 @@ end
 
 task :build do
 	sh "./build.sh"
+	puts ""
+end
+
+task :winbuild do
+	sh "build.bat"
+	puts ""
+end
+
+task :winexe do
+	sh "build.bat exe"
+	puts ""
+end
+
+task :setupnsis do
+	sh "build.bat nsis"
 	puts ""
 end
 
@@ -62,4 +80,8 @@ end
 
 task :clean do
 	sh "./build.sh clean"
+end
+
+task :winclean do
+	sh "build.bat clean"
 end
