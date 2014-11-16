@@ -12,7 +12,7 @@
 # This script requires Python 2.7+.
 #
 # Usage:
-# \t./contrib/getDependencies.py local|travis
+# python /contrib/getDependencies.py local|travis
 #
 
 import sys
