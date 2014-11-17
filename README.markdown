@@ -23,13 +23,6 @@ in the [Groovy](http://groovy.codehaus.org) or [Jython](http://www.jython.org) p
 Gaudi's implementation has been inspired by
 both Ant (command agnosticism) and [GNU Make](http://www.gnu.org/software/make) (task notation).
 
-Status
-------
-Gaudi is still in the *earlier* stages of development.
-If you are curious, please feel free to look at the [source code](/stpettersens/Gaudi/tree/master/src/org/stpettersens/gaudi).
-Though, as-is in this repository Gaudi is *not yet ready* for general
-use.
-
 License
 -------
 Gaudi and its dependencies, except the [Scala Library](http://www.scala-lang.org/node/146) and [Jython](http://www.jython.org/license.html), are licensed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
