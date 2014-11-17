@@ -1,0 +1,45 @@
+{
+  "name": "Gaudi",
+  "version": "1.0.0",
+  "description": "Platform agnostic build tool written (mostly) in Scala which runs on a Java virtual machine (JVM)",
+  "bin": {
+    "gaudi": "./gaudi"
+  },
+  "preferGlobal": true,
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "rake bit"
+  },
+  "engines": {
+    "node": ">= 0.10.0",
+    "postinstall": "//TODO"
+  },
+  "files": [
+    "gaudi",
+    "Gaudi.jar"
+    "lib/scala-library.jar",
+    "lib/json_simple-1.1.jar",
+    "lib/commons-io-2.2.jar"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stpettersens/Gaudi.git"
+  },
+  "keywords": [
+    "platform",
+    "agnostic",
+    "build",
+    "tool",
+    "cli",
+    "tools",
+    "jvm"
+  ],
+  "author": "Sam Saint-Pettersen <s.stpettersen+github@gmail.com> (http://github.com/stpettersens)",
+  "license": "Apache v2",
+  "bugs": {
+    "url": "https://github.com/stpettersens/Gaudi/issues"
+  },
+  "homepage": "https://github.com/stpettersens/Gaudi"
+}

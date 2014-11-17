@@ -24,6 +24,10 @@ task :deps_travis do
 	sh "python contrib/getDependencies.py travis"
 end
 
+task :deps_with_npm do
+	# TODO
+end
+
 task :configure do
 	sh "python contrib/configure.py --minbuild --skiponejar"
 end
