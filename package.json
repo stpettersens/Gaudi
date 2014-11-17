@@ -18,7 +18,7 @@
   },
   "files": [
     "gaudi",
-    "Gaudi.jar"
+    "Gaudi.jar",
     "lib/scala-library.jar",
     "lib/json_simple-1.1.jar",
     "lib/commons-io-2.2.jar"
