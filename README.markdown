@@ -23,15 +23,15 @@ in the [Groovy](http://groovy.codehaus.org) or [Jython](http://www.jython.org) p
 Gaudi's implementation has been inspired by
 both Ant (command agnosticism) and [GNU Make](http://www.gnu.org/software/make) (task notation).
 
-#### Dissertation paper
+##### Dissertation paper
 
 Saint-Pettersen, S. (2012) *Gaudi: A platform agnostic build tool for the JVM.*  BSc Dissertation, University of Worcester.
 
-#### Copyright
+##### Copyright
 
 &copy; 2010-2014 Sam Saint-Pettersen. 
 
-#### License
+##### License
 
 Gaudi and its dependencies, except the [Scala Library](http://www.scala-lang.org/node/146) and [Jython](http://www.jython.org/license.html), are licensed under the [Apache License Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 For the summary of the license, please see the [LICENSE](http://github.com/stpettersens/Gaudi/blob/master/LICENSE) file.
