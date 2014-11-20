@@ -5,6 +5,13 @@
 # This is a Java + Scala project.
 language: java
 
+# Test against various JDKs
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk7
+  - openjdk6
+
 # Compiler for C++ code in examples/HelloWorld
 compiler: g++
 
