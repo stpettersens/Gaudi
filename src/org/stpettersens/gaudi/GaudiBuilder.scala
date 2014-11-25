@@ -28,7 +28,7 @@ import java.io._
 class GaudiBuilder(buildConf: String, preamble: JSONObject, sSwitch: Boolean, beVerbose: Boolean,
 logging: Boolean) extends GaudiBase {
 	// Define global messenger object.
-	var messenger = new GaudiMessenger(logging)	
+	var messenger = new GaudiMessenger(logging)
 
 	// Define start time and elapsed time
 	var stTime: Long = 0
@@ -46,7 +46,7 @@ logging: Boolean) extends GaudiBase {
 		for(command <- action) {
 			val cmd = String.format("%s", command).replaceFirst("\\$[\\w\\d]+", "subed")
 			laction ::= cmd
-		} 
+		}
 		laction.reverse
 	}
 	// Handle wild cards in parameters such as *.scala, *.cpp,
@@ -147,6 +147,11 @@ logging: Boolean) extends GaudiBase {
 		}
 		period
 	}
+	private def printCurrentWorkingDir(): Unit = {
+		val currentRelPath: Path = Paths.get("")
+		val s: String = currentRelPath.toAbsolutePath().toString()
+		println(String.format("\t~ CWD: %s", s))
+	}
 	// Execute a command in the action
 	def doCommand(command: String, param: String): Unit = {
 		// Handle any potential wildcards in parameters
@@ -165,6 +170,7 @@ logging: Boolean) extends GaudiBase {
 					printError("Problem making dir -> %s".format(param))
 				}
 			}
+			case "pwd" => printCurrentWorkingDir()
 			case "list" => println("\t-> %s".format(wcc_param))
 			case "echo" => println("\t# %s".format(param))
 			case "erase" => eraseFile(wcc_param, false) // Support wildcards.
@@ -188,7 +194,7 @@ logging: Boolean) extends GaudiBase {
 			}
 			case "move" => {
 				// Et cetera...
-				val srcDest = param.split("->") 
+				val srcDest = param.split("->")
 				moveFile(new File(srcDest(0)), new File(srcDest(1))) // Via Apache Commons IO.
 			}
 			// Append message to a file
