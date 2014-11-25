@@ -68,7 +68,7 @@ def configureBuild(args):
 	doc = usegnu = nojython = nogroovy = nonotify = usegrowl = None
 	noplugins = minbuild = log = nodeppage = usescript = skiponejar = skipdesktop = None
 	parser = argparse.ArgumentParser(description='Configuration script for building Gaudi.')
-	parser.add_argument('--usegnu', action='store_true', dest=usegnu, 
+	parser.add_argument('--usegnu', action='store_true', dest=usegnu,
 	help='Use GNU software - GCJ and GIJ')
 	parser.add_argument('--nojython', action='store_false', dest=nojython,
 	help='Disable Jython plug-in support')
@@ -82,7 +82,7 @@ def configureBuild(args):
 	help='Use Growl as notification system over libnotify (GTK)')
 	parser.add_argument('--minbuild', action='store_true', dest=minbuild,
 	help='Use only core functionality; disable plug-ins, disable notifications')
-	parser.add_argument('--log', action='store_true', dest=log, 
+	parser.add_argument('--log', action='store_true', dest=log,
 	help='Log output of script to file instead of terminal')
 	parser.add_argument('--nodeppage', action='store_false', dest=nodeppage,
 	help='Do not open dependencies web page for missing dependencies')
@@ -118,7 +118,7 @@ def configureBuild(args):
 	if results.noplugins or results.minbuild:
 		use_jython = False
 		use_groovy = False
-		
+
 	if results.minbuild:
 		no_notify = True
 		use_growl = False
@@ -129,9 +129,10 @@ def configureBuild(args):
 		sys.stdout = logger
 
 	# Define a dictionary of all libraries (potentially) used by Gaudi.
-	all_libs = { 
+	all_libs = {
 	'json': 'json_simple-1.1.jar',
 	'io': 'commons-io-2.2.jar',
+	'jnr': 'jnr-posix-3.0.7.jar',
 	'groovy': 'groovy-all-1.8.0.jar',
 	'jython': 'jython.jar',
 	'gtk': 'gtk.jar',
@@ -191,14 +192,14 @@ def configureBuild(args):
 				use_growl = True
 
 		elif system_desktop == 'gnome':
-			system_desktop = system_desktop.upper() 
+			system_desktop = system_desktop.upper()
 			if not no_notify and not use_growl:
 				use_gtk = True
 
 		print('Detected desktop:\n\t{0}\n'.format(system_desktop))
 
 	# Check for txtrevise utility,
-	# if not found, prompt to download script (with --usecript option) 
+	# if not found, prompt to download script (with --usecript option)
 	# from code.google.com/p/sams-py
 	# Subversion repository over HTTP - in checkDependency(-,-,-).
 	tool = None
@@ -208,8 +209,8 @@ def configureBuild(args):
 			tool = 'whereis'
 		else:
 			tool = 'where'
-			
-		if use_script: 
+
+		if use_script:
 			util = util + '.py'
 			if re.match('\*nix|darwin', system_family):
 				tool = 'find'
@@ -239,7 +240,7 @@ def configureBuild(args):
 
 	# If user specified to use GNU Foundation software
 	# where possible, substitute `java` and `javac` for `gij` and `gcj`.
-	if use_gnu: 
+	if use_gnu:
 		t_names[0] = 'JRE (GNU GIJ)'
 		t_names[1] = 'JDK (GNU GCJ)'
 		t_commands[0] = 'gij'
@@ -263,9 +264,9 @@ def configureBuild(args):
 				o = subprocess.check_output(['where', c],
 				stderr=subprocess.STDOUT)
 				tool = 'where'
-					
+
 			# Find location of Scala distribution.
-			if re.search('scala', o): 
+			if re.search('scala', o):
 				if re.match('\*nix|darwin', system_family):
 					p = re.findall('/*\w*/+\w+/+scala\-*\d*\.*\d*\.*\d*\.*\d*', o)
 					scala_dir = p[0]
@@ -300,8 +301,8 @@ def configureBuild(args):
 	writeExecutable(t_commands[0])
 
 	# Find required JAR libraries necessary to build Gaudi on this system.
-	l_names = [ 'JSON.simple', 'Commons-IO' ]
-	l_jars = [ all_libs['json'], all_libs['io'] ]
+	l_names = [ 'JSON.simple', 'Commons-IO', 'jnr-posix' ]
+	l_jars = [ all_libs['json'], all_libs['io'], all_libs['jnr'] ]
 
 	# When enabled, use plug-in support for Groovy and Jython.
 	if use_groovy:
@@ -312,7 +313,7 @@ def configureBuild(args):
 		l_names.append('Jython')
 		l_jars.append(all_libs['jython'])
 
-	# When use GTK and use notifications are enabled, 
+	# When use GTK and use notifications are enabled,
 	# add java-gnome [GTK] library to libraries list.
 	if use_gtk and not no_notify:
 		l_names.append('java-gnome')
@@ -331,15 +332,15 @@ def configureBuild(args):
 			if re.match('\*nix|darwin', system_family):
 				o = subprocess.check_output(['find', 'lib/{0}'.format(l)],
 				stderr=subprocess.STDOUT)
-				tool = 'find'				
+				tool = 'find'
 			else:
-				o = subprocess.check_output(['where', 'lib:{0}'.format(l)], 
+				o = subprocess.check_output(['where', 'lib:{0}'.format(l)],
 				stderr=subprocess.STDOUT)
 				tool = 'where'
 
-			checkDependency(l_names[i], o, l, tool)	
+			checkDependency(l_names[i], o, l, tool)
 		except:
-			checkDependency(l_names[i], '!', l, tool)	
+			checkDependency(l_names[i], '!', l, tool)
 
 		i += 1
 
@@ -369,7 +370,7 @@ def configureBuild(args):
 	if use_groovy:
 		amendSource(1, 'GaudiPluginLoader', '/\*', '/*', True, False)
 		amendSource(1, 'GaudiGroovyPlugin', '/\*', '/*', True, True)
-		amendAntBld(46, 
+		amendAntBld(46,
 		"<property name='groovy-lib' location='\${lib.dir}/groovy-all-1.8.0.jar'/>", False)
 		amendAntBld(63,
 		"<pathelement location='\${groovy-lib}'/>", False)
@@ -438,7 +439,7 @@ def checkDependency(text, required, tomatch, tool):
 				raise RequirementNotFound(text)
 		else:
 			raise RequirementNotFound(text)
-			
+
 	except RequirementNotFound as e:
 		print('\tNOT FOUND.\n')
 		print("A requirement was not found. Please install it:")
@@ -458,7 +459,7 @@ def checkDependency(text, required, tomatch, tool):
 					# Mark txtrevise utility as executable.
 					if re.match('\*nix|darwin', osys):
 						os.system('chmod +x {0}'.format(util))
-					
+
 					print('\nNow rerun this script.')
 					break
 
@@ -471,7 +472,7 @@ def checkDependency(text, required, tomatch, tool):
 				a = a[0].lower()
 				wurl = 'http://stpettersens.github.com/Gaudi/dependencies.html#{0}'.format(a)
 				webbrowser.open_new_tab(wurl)
-		
+
 		saveLog()
 		sys.exit(1)
 
@@ -490,7 +491,7 @@ def writeEnvVars(var1, value1, var2, value2):
 		f.write('\nant $1\n')
 		f.close()
 		# Mark shell script as executable.
-		os.system('chmod +x build.sh') 
+		os.system('chmod +x build.sh')
 
 	# Generate batch file on Windows.
 	else:

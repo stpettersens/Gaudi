@@ -8,6 +8,7 @@ ant_build
 *.log
 *.html
 *.bat
+*.cmd
 *.pdf
 *.docx
 *.url
@@ -27,4 +28,3 @@ Manifest.mf
 GaudiApp.scala
 GaudiPluginSupport.scala
 IGaudiPlugin.scala
-gaudi

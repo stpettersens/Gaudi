@@ -4,12 +4,12 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 -->
 <!---->
 <project name="Gaudi" default="build" basedir=".">
-	
+
 	<description>Gaudi buildfile for Ant</description>
-	
+
 	<!-- Targets -->
 	<target name="build" depends="package" description="Build complete project"/>
-	
+
 	<target name="clean" depends="init" description="Clean up any built files">
 		<delete dir="${build.dir}" includeemptydirs="true" quiet="true"/>
 		<delete file="${target.jar}" quiet="true"/>
@@ -26,12 +26,12 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<delete file="${pkg.dir}/IGaudiPlugin.java" quiet="true"/>
 		<delete file="${pkg.dir}/GaudiApp.scala" quiet="true"/>
 	</target>
-	
-	<target name="init">		
-		<!-- Check for required tools, i.e. Scala compiler and library --> 
+
+	<target name="init">
+		<!-- Check for required tools, i.e. Scala compiler and library -->
 		<property environment="env"/>
 		<fail unless="env.SCALA_HOME" message="Missing SCALA_HOME variable in OS environment variables."/>
-		
+
 		<!-- Variables for paths and files -->
 		<property name="pkg.dir" location="${basedir}/src/org/stpettersens/gaudi"/>
 		<property name="src.dir" location="${basedir}/src"/>
@@ -43,6 +43,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<property name="scala-compiler" location="${env.SCALA_HOME}/lib/scala-compiler.jar"/>
 		<property name="json-simple" location="${lib.dir}/json_simple-1.1.jar"/>
 		<property name="commons-io" location="${lib.dir}/commons-io-2.2.jar"/>
+		<property name="jnr-posix" location="${lib.dir}/jnr-posix-3.0.7.jar"/>
 		<!---->
 		<!---->
 		<!---->
@@ -54,12 +55,13 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<property name="cjar.mf" value="org.stpettersens.gaudi.GaudiApp"/>
 		<property name="exe.mf" location="${dist.dir}/gaudi_exe.xml"/>
 		<property name="nsis.mf" location="${dist.dir}/gaudi_setup.nsi"/>
-		
+
 		<!-- Add libraries used by project to classpath -->
 		<path id="project.cp">
 			<pathelement location="${scala-library}"/>
 			<pathelement location="${commons-io}"/>
 			<pathelement location="${json-simple}"/>
+			<pathelement location="${jnr-posix}"/>
 			<!---->
 			<!---->
 			<!---->
@@ -73,28 +75,28 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 				<pathelement location="${scala-library}"/>
 			</classpath>
 		</taskdef>
-		
+
 		<!-- Print where this project will get Scala from -->
 		<echo message="Using Scala dir -> ${env.SCALA_HOME}"/>
 
 		<!-- Print where this project will get One-Jar Ant task JAR from -->
 		<echo message="Using One-Jar Ant task JAR -> ${env.ONEJAR_TOOL}"/>
-		
+
 		<!-- Scan folders for changes since last build and store status in variable -->
 		<uptodate property="build.uptodate" targetfile="${build.dir}/build.done">
 			<srcfiles dir="${src.dir}" includes="**"/>
 		</uptodate>
 	</target>
-	
-	<target name="compile" description="Compile source code to classes" depends="init" 
+
+	<target name="compile" description="Compile source code to classes" depends="init"
 	 unless="build.uptodate">
 		<echo message="Compiling Gaudi..."/>
 		<mkdir dir="${build.dir}"/>
 		<scalac classpath="${toString:project.cp}" srcdir="${src.dir}" destdir="${build.dir}"/>
-		<javac includeantruntime="false" classpath="${toString:project.cp}" srcdir="${src.dir}" 
+		<javac includeantruntime="false" classpath="${toString:project.cp}" srcdir="${src.dir}"
 		destdir="${build.dir}"/>
 	</target>
-	
+
 	<target name="package" description="Package the Gaudi classes into a Jar" depends="compile"
 	 unless="build.uptodate">
 	 	<echo message="Packaging Gaudi (std Jar)..."/>
@@ -103,7 +105,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 	 	</jar>
 	 	<touch file="${build.dir}/build.done"/><!-- Mark build as up-to-date -->
 	</target>
-	
+
 	<target name="cjar" description="Create self-contained Jar" depends="package">
 		<echo message="Packaging Gaudi (self-contained Jar)..."/>
 		<fail unless="env.ONEJAR_TOOL" message="Missing ONEJAR_TOOL variable in OS environment variables."/>
@@ -129,8 +131,8 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		</uptodate>
 		<touch file="${build.dir}/buildcpkg.done"/><!-- Mark that cpackage has been built -->
 	</target>
-	
-	<target name="exe" description="Create Windows executable" depends="package" 
+
+	<target name="exe" description="Create Windows executable" depends="package"
 	 unless="buildcpkg.uptodate">
 	 	<echo message="Generating Windows executable..."/>
 		<copy file="${target.jar}" todir="${dist.dir}"/>
@@ -150,9 +152,10 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<mkdir dir="/opt/gaudi"/>
 		<mkdir dir="/opt/gaudi/lib"/>
 		<copy file="Gaudi.jar" todir="/opt/gaudi"/>
-		<copy file="lib/commons-io-2.2.jar" todir="/opt/gaudi/lib"/>
-		<copy file="lib/json_simple-1.1.jar" todir="/opt/gaudi/lib"/>
-		<copy file="lib/scala-library.jar" todir="/opt/gaudi/lib"/>
+		<copy file="${json-simple}" todir="/opt/gaudi/lib"/>
+		<copy file="${commons-io}" todir="/opt/gaudi/lib"/>
+		<copy file="${scala-library}" todir="/opt/gaudi/lib"/>
+		<copy file="${jnr-posix}" todir="/opt/gaudi/lib"/>
 		<echo file="/usr/bin/gaudi" append="false">
 		#!/bin/sh${line.separator}java -jar /opt/gaudi/Gaudi.jar $@${line.separator}
 		</echo>
@@ -174,7 +177,7 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 			<srcfiles dir="${src.dir}" includes="**"/>
 		</uptodate>
 	</target>
-	
+
 	<target name="nsis" description="Generate NSIS installer program" depends="sapps">
 		<echo message="Generating NSIS installer program..."/>
 		<mkdir dir="${dist.dir}/lib"/>
@@ -184,12 +187,12 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<condition property="mnsis" value="makensis">
 			<os family="windows"/>
 		</condition>
-		<fail unless="mnsis" 
+		<fail unless="mnsis"
 		 message="NSIS installer must be built on Windows. Or try with Wine."/>
 		<exec executable="${mnsis}"><arg value="${nsis.mf}"/></exec>
 		<delete dir="${dist.dir}/lib"/>
 		<delete dir="${dist.dir}/plugins"/>
 		<delete><fileset dir="." includes="**/*.class"/></delete>
 	</target>
-	 
+
 </project>

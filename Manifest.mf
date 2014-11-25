@@ -1,2 +1,2 @@
 Main-Class: org.stpettersens.gaudi.GaudiApp
-Class-Path: lib/scala-library.jar lib/commons-io-2.2.jar lib/json_simple-1.1.jar
+Class-Path: lib/scala-library.jar lib/commons-io-2.2.jar lib/json_simple-1.1.jar lib/jna-posix-1.0.3.jar

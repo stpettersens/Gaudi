@@ -24,6 +24,7 @@ import scala.io.Source
 import scala.util.matching.Regex
 import java.nio.file._
 import java.io._
+import jnr.posix._
 
 class GaudiBuilder(buildConf: String, preamble: JSONObject, sSwitch: Boolean, beVerbose: Boolean,
 logging: Boolean) extends GaudiBase {
@@ -169,6 +170,10 @@ logging: Boolean) extends GaudiBase {
 				if(!aDir) {
 					printError("Problem making dir -> %s".format(param))
 				}
+			}
+			case "chdir" => {
+				//val posix = new LazyPOSIX()
+				//posix.chdir(param)
 			}
 			case "pwd" => printCurrentWorkingDir()
 			case "list" => println("\t-> %s".format(wcc_param))
