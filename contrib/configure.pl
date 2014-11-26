@@ -69,12 +69,12 @@ sub configureBuild {
 	if($help == 1) {
 		showUsage();
 	}
-	
+
 	if($noplugins == 1 || $minbuild == 1) {
 		$nojython = 1;
 		$nogroovy = 1;
 	}
-	
+
 	if($minbuild == 1) {
 		$nonotify = 1;
 	}
@@ -89,6 +89,7 @@ sub configureBuild {
 	my %alllibs = (
 	'json', 'json_simple-1.1.jar',
 	'io', 'commons-io-2.2.jar',
+	'jnr', 'jnr-posix-3.0.7.jar',
 	'groovy', 'groovy-all-1.8.0.jar',
 	'jython', 'jython.jar',
 	'gtk', 'gtk.jar',
@@ -133,7 +134,7 @@ INFO
 	# Detect desktop environment on Unix-likes (not Mac OS X).
 	my $systemdesktop = '';
 	if($systemfamily eq '*nix') {
-		$systemdesktop = $ENV{'DESKTOP_SESSION'};	
+		$systemdesktop = $ENV{'DESKTOP_SESSION'};
 		if($systemdesktop =~ /x.*/) {
 			$systemdesktop = 'Xfce';
 			if($nonotify == 0 && $usegrowl == 0) {
@@ -155,7 +156,7 @@ INFO
 		print "\nDetected desktop:\n\t$systemdesktop\n\n";
 	}
 	print "\n";
-	
+
 	# Check for txtrevise utility,
 	# if not found, prompt to download script (with --usescript option)
 	# from code.google.com/p/sams-py
@@ -169,7 +170,7 @@ INFO
 	else {
 		$tool = 'where';
 	}
-	
+
 	if($usescript == 1) {
 		$util = $util . '.pl';
 		if($systemfamily =~ /\*nix|darwin/) {
@@ -186,14 +187,14 @@ INFO
 		$txtrevise = `$tool $util 2>&1`;
 	}
 	checkDependency('txtrevise utility', $txtrevise, 'txtrevise', $tool, $systemfamily);
-	
+
 	# Find required JRE, JDK (look for a Java compiler),
 	# Scala distribution and associated tools necessary to build Gaudi on this system.
-	my @tnames = ( 'JRE (Java Runtime Environment)', 'JDK (Java Development Kit)', 
+	my @tnames = ( 'JRE (Java Runtime Environment)', 'JDK (Java Development Kit)',
 	'Scala distribution', 'Ant' );
-	
+
 	my @tcommands = ( 'java', 'javac', 'scala', 'ant' );
-	
+
 	# If user specified to use GNU Foundation software
 	# where possible, substitute `java` and `javac` for `gij` and `gcj`.
 	if($usegnu == 1) {
@@ -217,7 +218,7 @@ INFO
 			$o = `where $c 2>&1`;
 			$tool = 'where';
 		}
-		
+
 		# Find location of Scala distribution.
 		if($o =~ /scala/) {
 			if($systemfamily =~ /\*nix|darwin/) {
@@ -256,11 +257,11 @@ INFO
 
 	# Write executable wrapper.
 	writeExecutable($tcommands[0], $systemfamily);
-	
+
 	# Find required JAR libraries necessary to build Gaudi on this system.
-	my @lnames = ( 'JSON.simple', 'Commons-IO' );
-	my @ljars = ( $alllibs{json}, $alllibs{io} );
-	
+	my @lnames = ( 'JSON.simple', 'Commons-IO', 'JNR POSIX' );
+	my @ljars = ( $alllibs{json}, $alllibs{io}, $alllibs{jnr} );
+
 	# When enabled, use plug-in support for Groovy and Jython.
 	if($nogroovy == 0) {
 		push(@lnames, 'Groovy');
@@ -270,7 +271,7 @@ INFO
 		push(@lnames, 'Jython');
 		push(@ljars, $alllibs{jython});
 	}
-	
+
 	# When use GTK and use notifications are enabled,
 	# add java-gnome [GTK] library to libraries list.
 	if($usegtk == 1 && $nonotify == 0) {
@@ -284,7 +285,7 @@ INFO
 		push(@lnames, 'libgrowl');
 		push(@ljars, $alllibs{growl});
 	}
-	
+
 	# On *nix, detect using `find`. On Windows, use `where' again.
 	$i = 0;
 	foreach(@ljars) {
@@ -301,7 +302,7 @@ INFO
 		checkDependency($lnames[$i], $o, $l, $tool, $systemfamily);
 		$i++;
 	}
-	
+
 	# Copy scala-library.jar from Scala installation to Gaudi lib folder.
 	my $src;
 	my $target;
@@ -330,7 +331,7 @@ INFO
 	if($nogroovy == 0) {
 		amendSource(1, 'GaudiPluginLoader', '/\*', '/*', 1, 0);
 		amendSource(1, 'GaudiGroovyPlugin', '/\*', '/*', 1, 1);
-		amendAntBld(46, 
+		amendAntBld(46,
 		'<property name=\'groovy-lib\' location=\'\${lib.dir}/groovy-all-1.8.0.jar\'/>', 0);
 		amendAntBld(63,
 		'<pathelement location=\'\${groovy-lib}\'/>', 0);
@@ -338,13 +339,13 @@ INFO
 	if($nojython == 0) {
 		amendSource(1, 'GaudiPluginLoader', '/\*', '/*', 1, 0);
 		amendSource(1, 'GaudiJythonPlugin', '/\*', '/*', 1, 1);
-		amendAntBld(47, 
+		amendAntBld(47,
 		'<property name=\'jython-lib\' location=\'\${lib.dir}/jython.jar\'/>', 0);
 		amendAntBld(64,
 		'<pathelement location=\'\${jython-lib}\'/>', 0);
 	}
 	if($usegtk == 1) {
-		amendAntBld(48, 
+		amendAntBld(48,
 		'<property name=\'gtk-lib\' location=\'\${lib.dir}/gtk.jar\'/>', 0);
 		amendAntBld(65,
 		'<pathelement location=\'\${gtk-lib}\'/>', 0);
@@ -353,7 +354,7 @@ INFO
 		amendSource(57, 'GaudiApp', '\*/', '//', 0, 0);
 	}
 	if($usegrowl == 1) {
-		amendAntBld(49, 
+		amendAntBld(49,
 		'<property name=\'growl-lib\' location=\'\${lib.dir}/libgrowl.jar\'/>', 0);
 		amendAntBld(66,
 		'<pathelement location=\'\${growl-lib}\'/>', 0);
@@ -381,7 +382,7 @@ INFO
 }
 
 sub checkDependency {
-	## 
+	##
 	# Check for a dependency.
 	##
 	print "$_[0]:\n";
@@ -422,7 +423,7 @@ sub requirementNotFound {
 	print "\tNOT FOUND.\n";
 	print "\nA requirement was not found. Please install it:";
 	print "\n$_[0].\n\n";
-		
+
 	if($usescript == 1 && substr($_[0], 0, 9) eq 'txtrevise') {
 		my $loop = 1;
 		my $choice;
@@ -432,7 +433,7 @@ sub requirementNotFound {
 			if($choice =~ /y/i) {
 				my $url = 'http://sams-py.googlecode.com/svn/trunk/txtrevise/txtrevise.pl';
 				my $util = 'txtrevise.pl';
-	
+
 				# Download utility.
 				getstore($url, $util);
 
@@ -440,7 +441,7 @@ sub requirementNotFound {
 				if($_[1] =~ /\*nix|darwin/) {
 					system("chmod +x $util");
 				}
-					
+
 				print "\nNow rerun this script.\n\n";
 				$loop = 0;
 			}
@@ -502,7 +503,7 @@ sub writeEnvVars {
 		open(FILE, '>build.bat');
 		print FILE "\@set $_[0]\=$_[1]";
 		if($_[3] =~ /INFO/)  {
-			system("set $_[2]=")	
+			system("set $_[2]=")
 		}
 		else {
 			print FILE "\r\n\@set $_[2]\=$_[3]";
@@ -591,7 +592,7 @@ sub execChange {
 	}
 }
 
-sub showUsage {	
+sub showUsage {
 	print <<USAGE;
 usage: configure.pl [-h] [--usegnu] [--nojython] [--nogroovy] ... etc.
 
@@ -604,7 +605,7 @@ optional arguments:
   --nogroovy   Disable Groovy plug-in support
   --nonotify   Disable notification support
   --noplugins  Disable all plug-in support
-  --usegrowl   Use Growl as notification system over libnotify 
+  --usegrowl   Use Growl as notification system over libnotify
   --minbuild   Use only core functionality; disable plug-ins, disable
                notifications
   --log        Log output of script to file instead of terminal

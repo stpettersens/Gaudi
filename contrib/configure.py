@@ -301,7 +301,7 @@ def configureBuild(args):
 	writeExecutable(t_commands[0])
 
 	# Find required JAR libraries necessary to build Gaudi on this system.
-	l_names = [ 'JSON.simple', 'Commons-IO', 'jnr-posix' ]
+	l_names = [ 'JSON.simple', 'Commons-IO', 'JNR POSIX' ]
 	l_jars = [ all_libs['json'], all_libs['io'], all_libs['jnr'] ]
 
 	# When enabled, use plug-in support for Groovy and Jython.
