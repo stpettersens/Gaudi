@@ -1,6 +1,6 @@
 Gaudi platform agnostic build tool
 Copyright 2010-2014 Sam Saint-Pettersen.
-http://github.com/stpettersens/Gaudi
+https://github.com/stpettersens/Gaudi
 
 JSON.simple (simple Java toolkit for JSON)
 Copyright 2010 Yidong Fang et al. 
@@ -27,6 +27,11 @@ Licensed under the Python Software Foundation License
 and Jython 2.0, 2.1 License - http://www.jython.org/license.html
 http://www.jython.org
 
+jnr-posix: Lightweight POSIX emulation layer for Java
+Copyright 2014 Contributors to JNR Project.
+Licensed under triple CPL, GPL, LGPL Licenses - http://bit.ly/1vNzLiv
+https://github.com/jnr/jnr-posix
+
 Gaudi and its dependencies, except the Scala library and Jython, are 
 licensed under the Apache License, Version 2.0 (the "License");
 you may not use these files except in compliance with the License.
@@ -39,6 +44,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-The Software shall be used for Good, not Evil
-Fuck you, Google
