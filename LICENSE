@@ -29,7 +29,7 @@ http://www.jython.org
 
 jnr-posix: Lightweight POSIX emulation layer for Java
 Copyright 2014 Contributors to JNR Project.
-Licensed under triple CPL, GPL, LGPL Licenses - http://bit.ly/1vNzLiv
+Licensed under triple CPL, GPL & LGPL Licenses - http://bit.ly/1vNzLiv
 https://github.com/jnr/jnr-posix
 
 Gaudi and its dependencies, except the Scala library and Jython, are 
