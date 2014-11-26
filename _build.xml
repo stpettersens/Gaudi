@@ -152,10 +152,10 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 		<mkdir dir="/opt/gaudi"/>
 		<mkdir dir="/opt/gaudi/lib"/>
 		<copy file="Gaudi.jar" todir="/opt/gaudi"/>
-		<copy file="${json-simple}" todir="/opt/gaudi/lib"/>
-		<copy file="${commons-io}" todir="/opt/gaudi/lib"/>
-		<copy file="${scala-library}" todir="/opt/gaudi/lib"/>
-		<copy file="${jnr-posix}" todir="/opt/gaudi/lib"/>
+		<copy file="lib/json_simple-1.1.jar" todir="/opt/gaudi/lib"/>
+		<copy file="lib/commons-io-2.2.jar" todir="/opt/gaudi/lib"/>
+		<copy file="lib/scala-library.jar" todir="/opt/gaudi/lib"/>
+		<copy file="lib/jnr-posix-3.0.7.jar" todir="/opt/gaudi/lib"/>
 		<echo file="/usr/bin/gaudi" append="false">
 		#!/bin/sh${line.separator}java -jar /opt/gaudi/Gaudi.jar $@${line.separator}
 		</echo>
