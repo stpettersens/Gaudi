@@ -1,0 +1,20 @@
+{
+    "preamble": {
+        "source": "*",
+        "target": "Gaudi.jar",
+        "cc": "scalac"
+    },
+
+    "deps": [
+        { "echo": "Retrieving dependencies..." },
+        { "exec": "cat AUTHORS" }
+    ],
+
+    "build": [
+        { "echo": "TODO" }
+    ],
+
+    "test": [
+        { "echo": "TODO" }
+    ]
+}
