@@ -28,3 +28,5 @@ Manifest.mf
 GaudiApp.scala
 GaudiPluginSupport.scala
 IGaudiPlugin.scala
+gaudi
+
