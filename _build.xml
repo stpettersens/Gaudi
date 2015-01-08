@@ -60,7 +60,6 @@ http://www.steinbit.org/words/programming/setting-up-ant-for-your-scala-project
 			<pathelement location="${scala-library}"/>
 			<pathelement location="${commons-io}"/>
 			<pathelement location="${json-simple}"/>
-			<pathelement location="${jnr-posix}"/>
 			<!---->
 			<!---->
 			<!---->
