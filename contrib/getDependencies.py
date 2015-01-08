@@ -26,11 +26,11 @@ def getDependencies(client):
 	"http://www.scala-lang.org/files/archive/scala-2.9.3.tgz",
 	"https://raw.githubusercontent.com/stpettersens/txtrevise/master/python/txtrevise.py",
 	"http://json-simple.googlecode.com/files/json_simple-1.1.jar",
-	"http://mirror.gopotato.co.uk/apache//commons/io/binaries/commons-io-2.4-bin.zip",
-	"https://dl.dropboxusercontent.com/u/34600/jars/jnr-posix-3.0.7.jar"] #,
+	"http://mirror.gopotato.co.uk/apache//commons/io/binaries/commons-io-2.4-bin.zip"]
+	 #"https://dl.dropboxusercontent.com/u/34600/jars/jnr-posix-3.0.7.jar"] #,
 	 #"http://search.maven.org/remotecontent?filepath=com/google/guava/guava/18.0/guava-18.0.jar"]
 
-	dests = ["scala-2.9.3.tgz", "txtrevise.py", "json_simple-1.1.jar", "commons-2.4.bin.zip", "jnr-posix-3.0.7.jar"] #, "guava-18.0.jar"]
+	dests = ["scala-2.9.3.tgz", "txtrevise.py", "json_simple-1.1.jar", "commons-2.4.bin.zip"] #, "jnr-posix-3.0.7.jar", "guava-18.0.jar"]
 
 	if client == "travis":
 		pass
@@ -42,8 +42,8 @@ def getDependencies(client):
 	while len(deps) > 0:
 		current =  dests.pop(0)
 		print "Downloading {0}...".format(deps.pop(0))
-		urllib.urlretrieve(urls.pop(0), current)
-		#call(["wget", "-O", current, urls.pop(0)])
+		#urllib.urlretrieve(urls.pop(0), current)
+		call(["wget", "-O", current, urls.pop(0)])
 
 		# Extract TAR files.
 		if current.find(".tgz") != -1 or current.find("tar.gz") != -1:
