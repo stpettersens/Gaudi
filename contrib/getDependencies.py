@@ -20,7 +20,7 @@ from subprocess import call
 
 def getDependencies(client):
 
-	deps = ["Scala 2.9.3", "txtrevise utility", "JSON.simple 1.1", "Apache Commons IO 2.2", "JNR POSIX 3.0.7"] #, "Google Guava 18.0"]
+	deps = ["Scala 2.9.3", "txtrevise utility", "JSON.simple 1.1", "Apache Commons IO 2.2"] #, "JNR POSIX 3.0.7", "Google Guava 18.0"]
 
 	urls = [
 	"http://www.scala-lang.org/files/archive/scala-2.9.3.tgz",
