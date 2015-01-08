@@ -15,6 +15,7 @@
 #
 
 import sys
+import urllib
 from subprocess import call
 
 def getDependencies(client):
@@ -41,7 +42,8 @@ def getDependencies(client):
 	while len(deps) > 0:
 		current =  dests.pop(0)
 		print "Downloading {0}...".format(deps.pop(0))
-		call(["wget", "-O", current, urls.pop(0)])
+		urllib.urlretrieve(current, urls.pop(0))
+		#call(["wget", "-O", current, urls.pop(0)])
 
 		# Extract TAR files.
 		if current.find(".tgz") != -1 or current.find("tar.gz") != -1:
