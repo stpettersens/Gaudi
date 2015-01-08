@@ -132,7 +132,6 @@ def configureBuild(args):
 	all_libs = {
 	'json': 'json_simple-1.1.jar',
 	'io': 'commons-io-2.2.jar',
-	'jnr': 'jnr-posix-3.0.7.jar',
 	'groovy': 'groovy-all-1.8.0.jar',
 	'jython': 'jython.jar',
 	'gtk': 'gtk.jar',
@@ -301,8 +300,8 @@ def configureBuild(args):
 	writeExecutable(t_commands[0])
 
 	# Find required JAR libraries necessary to build Gaudi on this system.
-	l_names = [ 'JSON.simple', 'Commons-IO', 'JNR POSIX' ]
-	l_jars = [ all_libs['json'], all_libs['io'], all_libs['jnr'] ]
+	l_names = [ 'JSON.simple', 'Commons-IO' ]
+	l_jars = [ all_libs['json'], all_libs['io'] ]
 
 	# When enabled, use plug-in support for Groovy and Jython.
 	if use_groovy:
